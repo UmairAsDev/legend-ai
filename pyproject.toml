@@ -15,6 +15,7 @@ dependencies = [
     "langchain>=1.2.15",
     "langchain-core>=1.2.28",
     "langgraph>=1.1.6",
+    "logging>=0.4.9.6",
     "loguru>=0.7.3",
     "openai>=2.31.0",
     "pandas>=3.0.2",
