@@ -32,3 +32,13 @@
 2026-04-14 15:18:19,412 - __main__ - INFO - PostgreSQL connection module executed directly.
 2026-04-14 15:18:29,011 - __main__ - INFO - Connection Successful: 1
 2026-04-14 16:13:08,423 - database.pgdb.conn - ERROR - Session rollback due to error: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2026-04-16 19:44:28,760 - database.pgdb.conn - ERROR - Session rollback due to error: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: [0.005641937255859375, 0.04327392578125,... (expected str, got list)
+[SQL: 
+                    SELECT code_type, code, description,
+                    embedding <-> $1 AS distance
+                    FROM code_embeddings
+                    ORDER BY embedding <-> $1
+                    LIMIT $2
+                ]
+[parameters: ([0.005641937255859375, 0.04327392578125, 0.02374267578125, 0.04931640625, -0.033111572265625, 0.0120849609375, -0.009796142578125, 0.00225639343261718 ... (30645 characters truncated) ... 21875, -0.005748748779296875, -0.02825927734375, 0.0014390945434570312, 0.00926971435546875, 0.0216217041015625, 0.0191650390625, -0.0229339599609375], 20)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)

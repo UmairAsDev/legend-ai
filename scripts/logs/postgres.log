@@ -1,0 +1,89 @@
+2026-04-13 19:03:12,969 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:06:07,087 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:25:40,238 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:26:28,779 - __main__ - INFO - MySQL connection module executed directly.
+2026-04-13 19:26:33,225 - __main__ - INFO - Connection Successful: <sqlalchemy.engine.cursor.CursorResult object at 0x797903343150>
+2026-04-13 19:27:19,084 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:27:32,797 - __main__ - INFO - Connection Successful: <sqlalchemy.engine.cursor.CursorResult object at 0x7eb3a64a5fd0>
+2026-04-13 19:28:18,207 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:30:41,171 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:30:47,973 - __main__ - INFO - Connection Successful: <sqlalchemy.engine.cursor.CursorResult object at 0x76769ffa9fd0>
+2026-04-13 19:32:27,872 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:33:27,933 - __main__ - ERROR - Session rollback due to error: 
+2026-04-13 19:38:12,442 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:38:21,737 - __main__ - INFO - Connection Successful: 1
+2026-04-13 19:40:09,640 - __main__ - INFO - MySQL connection module executed directly.
+2026-04-13 19:41:04,989 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:41:04,990 - __main__ - ERROR - Session rollback due to error: connect() got an unexpected keyword argument 'timeout'
+2026-04-13 19:41:24,142 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:41:24,143 - __main__ - ERROR - Session rollback due to error: connect() got an unexpected keyword argument 'command_timeout'
+2026-04-13 19:41:38,436 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-13 19:41:40,058 - __main__ - ERROR - Session rollback due to error: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-04-13 19:41:40,058 - __main__ - ERROR - Database connection failed: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-04-13 19:47:11,452 - __main__ - INFO - MySQL connection module executed directly.
+2026-04-13 19:47:15,938 - __main__ - INFO - Connection Successful: 1
+2026-04-14 14:59:34,985 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-14 14:59:54,987 - __main__ - ERROR - Session rollback due to error: 
+2026-04-14 14:59:54,987 - __main__ - ERROR - Database connection timed out. Check network access, PGHOST/PGPORT, and SSL settings.
+2026-04-14 15:02:05,403 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-14 15:02:15,194 - __main__ - INFO - Connection Successful: 1
+2026-04-14 15:18:19,412 - __main__ - INFO - PostgreSQL connection module executed directly.
+2026-04-14 15:18:29,011 - __main__ - INFO - Connection Successful: 1
+2026-04-14 16:13:08,423 - database.pgdb.conn - ERROR - Session rollback due to error: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2026-04-16 17:36:43,235 - database.pgdb.conn - ERROR - Session rollback due to error: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.PostgresSyntaxError'>: cannot insert multiple commands into a prepared statement
+[SQL: 
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE IF NOT EXISTS code_embeddings (
+    id SERIAL PRIMARY KEY,
+    code_type TEXT,
+    code TEXT,
+    description TEXT,
+    embedding VECTOR(3072)
+);
+
+CREATE INDEX IF NOT EXISTS idx_embedding
+ON code_embeddings
+USING ivfflat (embedding vector_cosine_ops);
+]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-16 18:36:40,990 - database.pgdb.conn - ERROR - Session rollback due to error: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.PostgresSyntaxError'>: cannot insert multiple commands into a prepared statement
+[SQL: 
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE IF NOT EXISTS code_embeddings (
+    id SERIAL PRIMARY KEY,
+    code_type TEXT,
+    code TEXT,
+    description TEXT,
+    embedding VECTOR(3072)
+);
+
+CREATE INDEX IF NOT EXISTS idx_embedding
+ON code_embeddings
+USING ivfflat (embedding vector_cosine_ops);
+]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-16 18:40:29,993 - database.pgdb.conn - ERROR - Session rollback due to error: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ProgramLimitExceededError'>: column cannot have more than 2000 dimensions for ivfflat index
+[SQL: 
+    CREATE INDEX IF NOT EXISTS idx_embedding
+    ON code_embeddings
+    USING ivfflat (embedding vector_cosine_ops)
+    ]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-04-16 18:46:53,337 - database.pgdb.conn - ERROR - Session rollback due to error: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ProgramLimitExceededError'>: column cannot have more than 2000 dimensions for hnsw index
+[SQL: 
+    CREATE INDEX IF NOT EXISTS idx_embedding
+    ON code_embeddings
+    USING hnsw (embedding vector_cosine_ops)
+    ]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-04-16 19:15:31,681 - database.pgdb.conn - ERROR - Session rollback due to error: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $4: [0.0005273818969726562, 0.01614379882812... (expected str, got list)
+[SQL: 
+                        INSERT INTO code_embeddings (code_type, code, description, embedding)
+                        VALUES ($1, $2, $3, $4)
+                    ]
+[parameters: ('cpt', 'None', 'None', [0.0005273818969726562, 0.016143798828125, 0.05938720703125, -0.0036029815673828125, -0.05511474609375, -0.048004150390625, -0.01275634765625, -0.0033 ... (30708 characters truncated) ... 0305023193359375, -0.0011148452758789062, -0.0310211181640625, 0.00821685791015625, -0.0222320556640625, -0.006031036376953125, 0.0031909942626953125])]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
