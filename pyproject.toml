@@ -14,6 +14,7 @@ dependencies = [
     "fastapi>=0.135.3",
     "langchain>=1.2.15",
     "langchain-core>=1.2.28",
+    "langchain-openai>=1.1.13",
     "langgraph>=1.1.6",
     "logging>=0.4.9.6",
     "loguru>=0.7.3",

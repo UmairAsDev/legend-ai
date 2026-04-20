@@ -1,58 +1,56 @@
 # llm_layer/llm_client.py
 
-"""
-OpenAI async client with STRICT JSON output enforcement.
-"""
-
 import os
 from dotenv import load_dotenv
-from openai import AsyncOpenAI
+from loguru import logger
+
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage, HumanMessage
+from pydantic import SecretStr
+
 load_dotenv()
 
+
 class LLMClient:
-    """
-    Wrapper for OpenAI GPT-4o with strict JSON output.
-    """
 
-    def __init__(self, model: str = "gpt-4o"):
-        load_dotenv()
-
+    def __init__(self, model: str = "gpt-4o", temperature: float = 0.2):
         api_key = os.getenv("OPENAI_API_KEY")
+
         if not api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment variables")
+            raise ValueError("OPENAI_API_KEY not found")
 
-        self.client = AsyncOpenAI(api_key=api_key)
-        self.model = model
+        self.llm = ChatOpenAI(
+            model=model,
+            temperature=temperature,
+            api_key=SecretStr(api_key)
+        )
 
-    async def generate_response(self, prompt: str, temperature: float = 0) -> str:
+    async def generate_response(self, prompt: str, parser=None):
         """
-        Returns STRICT JSON string from GPT-4o.
+        Returns structured JSON (dict)
         """
 
         try:
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                temperature=temperature,
+            messages = [
+                SystemMessage(
+                    content="Return ONLY valid JSON output."
+                ),
+                HumanMessage(content=prompt),
+            ]
 
-                
-                response_format={"type": "json_object"},
+            response = await self.llm.ainvoke(messages)
 
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are a certified medical dermatology coding expert and cosmetic procedure expert specialized in CPT, ICD10, and E/M codes including modifiers. "
-                            "Return ONLY valid JSON. No markdown, no explanation."
-                        )
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-            )
+            content = response.content
 
-            content = response.choices[0].message.content
-            if content is None:
-                raise RuntimeError("LLM returned empty content")
-            return content.strip()
+            if not content:
+                raise RuntimeError("Empty LLM response")
+
+            # 🔹 Parse via JsonOutputParser
+            if parser:
+                return parser.parse(content)
+
+            return content
 
         except Exception as e:
+            logger.exception(f"❌ LLM failed: {e}")
             raise RuntimeError(f"LLM generation failed: {e}")
