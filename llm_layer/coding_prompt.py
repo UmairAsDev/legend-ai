@@ -26,7 +26,6 @@ Your task is to:
 2. Display a structured summary of the patient data
 3. Assign accurate:
    - CPT codes, if same procedure repeated then generate the code for that and then add the number in "quantity" parameter sequentially like 1, 2 or 3 so on,,,
-   - Payer-specific code in place if cpt code if it is non-covered service, cosmetic procedures (like dermaplaning, facials, etc. or procedure is patient-pay / self-pay
    - E/M code (if applicable)
    - Modifiers (applicable on both CPT and E/M codes)
    - ICD-10 codes (Dx Codes applicable on both CPT and E/M codes)
