@@ -6973,3 +6973,19 @@ Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound 
 2026-04-22 18:20:16.230 | INFO     | services.retriever:biopsy_filter:164 - ✅ Biopsy filter returned: 17 rows
 2026-04-22 18:20:16.781 | INFO     | app.services.medical_engine:retrieve:184 - ✅ Biopsy Candidates: 17
 2026-04-22 18:20:16.781 | INFO     | app.services.medical_engine:llm_call:239 - 🧠 Calling LLM with structured parser
+2026-04-22 18:24:39.012 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 506604
+2026-04-22 18:24:39.110 | INFO     | app.services.medical_engine:fetch:81 - 📥 Fetching note: 506604
+2026-04-22 18:24:42.719 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 506604
+2026-04-22 18:24:43.315 | INFO     | services.clinical_parser:parse:67 - 🧠 Biopsy detected
+2026-04-22 18:24:43.323 | INFO     | services.clinical_parser:parse:94 - 📊 Parser Output → biopsy_count: 1, mohs: False, procedure: True
+2026-04-22 18:24:43.324 | INFO     | app.services.medical_engine:parse:133 - 🧾 biopsyNotes AFTER CLEAN: A. Biopsy
+Clinical Diagnosis: L40.8 Psoriasis Plaque
+Location: 
+Method: 
+ The patient gave informed consent for this procedure. After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the area of interest. The superficial layers of the site were removed by method using a Number 15. The specimen was placed in a bottle labeled A. #AA22-1.
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-22 18:24:44.998 | INFO     | app.services.medical_engine:retrieve:161 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': True, 'biopsy_count': 1, 'biopsy_sections': [{'label': 'A', 'text': 'A. Biopsy\nClinical Diagnosis: L40.8 Psoriasis Plaque\nLocation: \nMethod: \n The patient gave informed consent for this procedure. After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the area of interest. The superficial layers of the site were removed by method using a Number 15. The specimen was placed in a bottle labeled A. #AA22-1.\nPressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'quantity': 1}], 'has_mohs': False, 'has_procedure': True}
+2026-04-22 18:24:45.007 | INFO     | app.services.medical_engine:retrieve:180 - 🔴 ONLY BIOPSY DETECTED
+2026-04-22 18:24:49.953 | INFO     | services.retriever:biopsy_filter:164 - ✅ Biopsy filter returned: 17 rows
+2026-04-22 18:24:50.186 | INFO     | app.services.medical_engine:retrieve:184 - ✅ Biopsy Candidates: 17
+2026-04-22 18:24:50.201 | INFO     | app.services.medical_engine:llm_call:239 - 🧠 Calling LLM with structured parser
