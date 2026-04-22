@@ -184,3 +184,79 @@ HINT:  Perhaps you meant to reference the column "cpt_embeddings.procode".
                 ]
 [parameters: ('[0.0229034423828125,0.0253143310546875,0.034698486328125,0.0478515625,-0.025726318359375,0.0163421630859375,-0.0035037994384765625,0.0096969604492187 ... (29074 characters truncated) ... 8116455078125,0.01593017578125,-0.01224517822265625,-0.00206756591796875,0.01273345947265625,0.018463134765625,0.024505615234375,-0.0250396728515625]', 25)]
 (Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-21 19:04:42,212 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "code_desc" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.codedesc".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                code_desc AS description,
+                pro_name,
+                associated_with_pro_code,
+                min_qty,
+                max_qty,
+                charge_per_unit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE 
+                LOWER(code_desc) LIKE '%biopsy%'
+                OR LOWER(pro_name) LIKE '%biopsy%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-21 19:06:01,459 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "code_desc" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.codedesc".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                code_desc AS description,
+                pro_name,
+                associated_with_pro_code,
+                min_qty,
+                max_qty,
+                charge_per_unit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE 
+                LOWER(code_desc) LIKE '%biopsy%'
+                OR LOWER(pro_name) LIKE '%biopsy%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-21 19:13:24,298 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "codesesc" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.codedesc".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeSesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE 
+                LOWER(code_desc) LIKE '%biopsy%'
+                OR LOWER(pro_name) LIKE '%biopsy%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-21 19:14:25,640 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "code_desc" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.codedesc".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE 
+                LOWER(code_desc) LIKE '%biopsy%'
+                OR LOWER(pro_name) LIKE '%biopsy%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)

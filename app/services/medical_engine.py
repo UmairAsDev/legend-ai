@@ -1,6 +1,7 @@
 # app/services/medical_engine.py
 
 from datetime import datetime
+from decimal import Decimal
 from typing import Dict, Any
 
 from loguru import logger
@@ -9,6 +10,7 @@ from src.data_layer.progressnote import notes
 from llm_layer.llm_client import LLMClient
 from llm_layer.coding_prompt import build_coding_prompt
 
+from services.clinical_parser import ClinicalParser
 from services.embeddings import EmbeddingService
 from services.retriever import CodeRetriever
 from services.reranker import Reranker
@@ -20,14 +22,20 @@ from services.reranker import Reranker
 
 def serialize_data(obj):
     """
-    Convert non-serializable types (datetime)
+    Convert non-serializable types (datetime, Decimal)
     """
     if isinstance(obj, dict):
         return {k: serialize_data(v) for k, v in obj.items()}
+
     elif isinstance(obj, list):
         return [serialize_data(i) for i in obj]
+
     elif isinstance(obj, datetime):
         return obj.isoformat()
+
+    elif isinstance(obj, Decimal):
+        return float(obj)  # 🔥 FIX
+
     return obj
 
 
@@ -44,8 +52,6 @@ def clean_note_data(note: Dict[str, Any]):
         "procedure",
         "biopsyNotes",
         "mohsNotes",
-        "allergy",
-        "examination",
         "patientSummary",
         "diagnoses",
         "PlaceOfService",
@@ -62,6 +68,7 @@ class CodingNodes:
 
     def __init__(self):
         self.embedder = EmbeddingService()
+        self.parser = ClinicalParser()
         self.retriever = CodeRetriever()
         self.reranker = Reranker()
         self.llm = LLMClient()
@@ -103,14 +110,29 @@ class CodingNodes:
     # -------------------------
     async def query(self, state):
         try:
-            query_text = " ".join(
-                [str(v) for v in state["cleaned_note"].values() if v]
-            )
+            query_parts = []
+            for k, v in state["cleaned_note"].items():
+                if v:
+                    query_parts.append(f"{k}: {v}")
+
+            query_text = " | ".join(query_parts)
 
             return {"query_text": query_text}
 
         except Exception as e:
             logger.exception(f"❌ Query creation failed: {e}")
+            raise
+
+
+    # -------------------------
+    # 🔹 PARSER
+    # -------------------------
+    async def parse(self, state):
+        try:
+            parsed = self.parser.parse(state["cleaned_note"])
+            logger.info(f"🧾 biopsyNotes AFTER CLEAN: {state['cleaned_note'].get('biopsyNotes')}")
+            return {"parsed": parsed}
+        except Exception as e:
             raise
 
     # -------------------------
@@ -133,13 +155,66 @@ class CodingNodes:
     # -------------------------
     async def retrieve(self, state):
         try:
-            results = await self.retriever.search(state["embedding"])
+            parsed = state.get("parsed", {})
+            cleaned = state.get("cleaned_note", {})
 
-            return {"candidates": results}
+            logger.info(f"🧠 Retrieval Decision | Parsed: {parsed}")
+
+            # -------------------------
+            # 🔴 STRICT ROUTING
+            # -------------------------
+
+            # 🔹 CASE 1: BOTH BIOPSY + MOHS
+            if parsed.get("has_biopsy") and parsed.get("has_mohs"):
+                logger.info("🔴 BOTH BIOPSY + MOHS DETECTED")
+
+                biopsy = await self.retriever.biopsy_filter()
+                mohs = await self.retriever.mohs_filter()
+                candidates = biopsy + mohs
+
+                logger.info(f"✅ Biopsy: {len(biopsy)} | Mohs: {len(mohs)}")
+                return {"candidates": candidates}
+
+            # 🔹 CASE 2: ONLY BIOPSY
+            if parsed.get("has_biopsy"):
+                logger.info("🔴 ONLY BIOPSY DETECTED")
+
+                candidates = await self.retriever.biopsy_filter()
+
+                logger.info(f"✅ Biopsy Candidates: {len(candidates)}")
+                return {"candidates": candidates}
+
+            # 🔹 CASE 3: ONLY MOHS
+            if parsed.get("has_mohs"):
+                logger.info("🔴 ONLY MOHS DETECTED")
+
+                candidates = await self.retriever.mohs_filter()
+
+                logger.info(f"✅ Mohs Candidates: {len(candidates)}")
+                return {"candidates": candidates}
+
+            # 🔹 CASE 4: PROCEDURE-BASED SEARCH
+            if parsed.get("has_procedure"):
+                logger.info("🟡 PROCEDURE DETECTED → semantic search")
+
+                embedding = state["embedding"]
+
+                candidates = await self.retriever.search(embedding)
+
+                logger.info(f"⚠️ Procedure-based candidates: {len(candidates)}")
+                return {"candidates": candidates}
+
+            # 🔹 CASE 5: FALLBACK
+            logger.warning("⚠️ FALLBACK SEARCH TRIGGERED")
+
+            candidates = await self.retriever.search(state["embedding"])
+
+            return {"candidates": candidates}
 
         except Exception as e:
             logger.exception(f"❌ Retrieval failed: {e}")
             raise
+
 
     # -------------------------
     # 🔹 RERANK
@@ -147,10 +222,9 @@ class CodingNodes:
     async def rerank(self, state):
         try:
             ranked = self.reranker.rerank(
-                state["candidates"],
-                state["query_text"]
-            )
-
+            state["candidates"],
+            state
+        )
             return {"reranked": ranked}
 
         except Exception as e:
@@ -167,7 +241,7 @@ class CodingNodes:
             # 🔹 Get prompt + parser
             prompt, parser, formatted_prompt = build_coding_prompt(
                 state["cleaned_note"],
-                state["reranked"]
+                state["candidates"]
             )
 
             # 🔹 LLM call with parser

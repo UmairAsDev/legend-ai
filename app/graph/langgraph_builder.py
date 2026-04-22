@@ -11,6 +11,7 @@ class CodingState(TypedDict, total=False):
     raw_note: dict
     cleaned_note: dict
     query_text: str
+    parsed: dict
     embedding: list
     candidates: list
     reranked: list
@@ -25,19 +26,21 @@ def build_graph():
     graph.add_node("fetch", nodes.fetch)
     graph.add_node("clean", nodes.clean)
     graph.add_node("query", nodes.query)
+    graph.add_node("parse", nodes.parse)
     graph.add_node("embed", nodes.embed)
     graph.add_node("retrieve", nodes.retrieve)
-    graph.add_node("rerank", nodes.rerank)
+    # graph.add_node("rerank", nodes.rerank)
     graph.add_node("llm", nodes.llm_call)
 
     graph.set_entry_point("fetch")
 
     graph.add_edge("fetch", "clean")
     graph.add_edge("clean", "query")
-    graph.add_edge("query", "embed")
+    graph.add_edge("query", "parse")
+    graph.add_edge("parse", "embed")
     graph.add_edge("embed", "retrieve")
-    graph.add_edge("retrieve", "rerank")
-    graph.add_edge("rerank", "llm")
+    # graph.add_edge("retrieve", "rerank")
+    graph.add_edge("retrieve", "llm")
 
     graph.set_finish_point("llm")
 

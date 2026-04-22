@@ -17,3 +17,8 @@ uv.lock
 
 # Data files
 data/
+
+biopsynotes.js
+biopsynote.py
+progressnotes.json
+test.py

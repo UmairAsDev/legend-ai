@@ -51,15 +51,72 @@ def build_coding_prompt(note_data: Dict[str, Any], retrieved_codes):
 You are a certified medical coding expert.
 
 Your task is to:
-1. Analyze the patient note carefully
-2. Display a structured summary of the patient data
+1. Analyze the FULL patient note carefully
+2. Generate structured patient summary
 3. Assign accurate:
-   - CPT codes, if same procedure repeated then generate the code for that and then add the number in "quantity" parameter sequentially like 1, 2 or 3 so on,,,
+   - CPT codes
    - E/M code (if applicable)
-   - Modifiers (applicable on both CPT and E/M codes)
-   - ICD-10 codes (Dx Codes applicable on both CPT and E/M codes)
-4. Correctly LINK diagnosis codes (ICD-10 codes) to procedures and E/M
+   - Modifiers
+   - ICD-10 codes
 
+-------------------------
+CRITICAL RULES:
+- For now just focus on assigning CPT codes related to biopsyNotes and mohsNotes from the note data and retrieved codes. Check if the there is data present in the biposyNotes and mohsNotes field, if yes then apply codes on both according to the following rules.
+- NEVER repeat the same CPT code multiple times
+- If a procedure is repeated:
+  → Use ONE entry
+  → quantity = total count
+
+  Ensure the sum of quantities across all biopsy CPT codes equals the total number of biopsies.
+  If there is 1 biopsy (e.g., A) → total CPT quantity must be 1
+  If there are 4 biopsies (A, B, C, D) → valid distributions include:
+    4 different codes with quantity 1 each, or
+    mixed quantities (e.g., one code = 1, another = 3)
+  Constraint: Total CPT quantity must always match total biopsy count.
+
+MOHS LOGIC (STRICT):
+If mohsNotes are present:
+
+1. Identify each site (A, B, etc.)
+
+2. For EACH site:
+   → stages = total stages
+   → first_stage = 1
+   → additional = (stages − 1)
+
+3. Mohs Location rule:
+   → For tumors/mohs on high risk areas: head, neck, face, scalp, ears, eyelids, nose, lips, hands, feet, genitalia → assign 17311 / 17312 as cpt code
+   → For tumors/mohs on TRUNK, ARMS, OR LEGS (e.g., chest, back, abdomen, shoulders, thighs) → assign 17313 / 17314 as cpt code
+
+4. Compute totals (MANDATORY):
+   → total_first_stage = number of sites
+   → total_additional_stage = sum(additional for all sites)
+
+5. FINAL ENFORCEMENT (CRITICAL):
+   → quantity(17311/17313) = total_first_stage
+   → quantity(17312/17314) = total_additional_stage
+   → MUST copy these values exactly (no recomputation)
+
+6. Output:
+   → Each CPT code only once
+
+- Ensure each retrieved code’s description is accurately matched against the biopsyNotes and mohsNotes in the note data, and assign the appropriate CPT codes accordingly.
+-------------------------
+CONTEXT:
+
+- Use ALL fields:
+  - biopsyNotes
+  - mohsNotes
+  - complaints
+  - assessment
+  - examination
+  - procedure
+
+-------------------------
+STRICT RULES:
+
+- DO NOT hallucinate codes outside retrieved
+- Code + description MUST EXACTLY match retrieved data
 -------------------------
 Retrieved Codes:
 {retrieved_codes}
@@ -67,12 +124,6 @@ Retrieved Codes:
 -------------------------
 Patient Note:
 {note_data}
-
--------------------------
-Rules:
-- Use valid CPT/E&M
-- Link ICD codes correctly
-- Apply modifiers properly
 
 -------------------------
 {format_instructions}

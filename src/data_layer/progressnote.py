@@ -58,7 +58,7 @@ if __name__ == "__main__":
     async def main():
         try:
             # Run your logic
-            data = await notes(719271)
+            data = await notes(706753)
             print(data)
         finally:
             await conn.dispose()
