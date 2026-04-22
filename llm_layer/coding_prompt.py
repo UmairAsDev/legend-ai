@@ -61,7 +61,7 @@ Your task is to:
 
 -------------------------
 CRITICAL RULES:
-- For now just focus on assigning CPT codes related to biopsyNotes and mohsNotes from the note data and retrieved codes. Check if the there is data present in the biposyNotes and mohsNotes field, if yes then apply codes on both according to the following rules.
+- For now just focus on assigning CPT codes related to biopsyNotes and mohsNotes from the note data and retrieved codes.
 - NEVER repeat the same CPT code multiple times
 - If a procedure is repeated:
   → Use ONE entry
@@ -97,7 +97,7 @@ If mohsNotes are present:
    → quantity(17312/17314) = total_additional_stage
    → MUST copy these values exactly (no recomputation)
 
-6. Output:
+6. Output for cpt codes:
    → Each CPT code only once
 
 - Ensure each retrieved code’s description is accurately matched against the biopsyNotes and mohsNotes in the note data, and assign the appropriate CPT codes accordingly.
