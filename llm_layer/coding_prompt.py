@@ -59,9 +59,24 @@ Your task is to:
    - Modifiers
    - ICD-10 codes
 
+RULES for Special Scenario:
+  - If the same CPT code applies to multiple findings:
+
+  → If ALL linked Dx codes are the SAME:
+      → Use ONE entry with quantity = total count
+
+  → If linked Dx codes are DIFFERENT:
+      → Create SEPARATE entries for each Dx
+      → Each entry must have:
+         - quantity = count for that Dx only
+         - correct linked_dx
+
+- NEVER merge CPT codes across different Dx codes
+- CPT grouping MUST be done by (code + Dx), not by code alone
+- When multiple lesions/sites/biopsy exist, map EACH site to its own Dx first, then group CPT codes by (code + Dx)
 -------------------------
 CRITICAL RULES:
-- For now just focus on assigning CPT codes related to biopsyNotes and mohsNotes from the note data and retrieved codes.
+- For now just focus on assigning E/M codes, and CPT codes related to biopsyNotes and mohsNotes from the note data and retrieved codes.
 - NEVER repeat the same CPT code multiple times
 - If a procedure is repeated:
   → Use ONE entry
@@ -85,8 +100,8 @@ If mohsNotes are present:
    → additional = (stages − 1)
 
 3. Mohs Location rule:
-   → For tumors/mohs on high risk areas: head, neck, face, scalp, ears, eyelids, nose, lips, hands, feet, genitalia → assign 17311 / 17312 as cpt code
-   → For tumors/mohs on TRUNK, ARMS, OR LEGS (e.g., chest, back, abdomen, shoulders, thighs) → assign 17313 / 17314 as cpt code
+   → For tumors/mohs on high risk areas: head, neck, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet, genitalia → assign 17311 / assign 17312(for each additional stage only)
+   → For tumors/mohs on TRUNK, ARMS, OR LEGS (e.g., chest, back, abdomen, shoulders, thighs) → assign 17313 / assign 17314(for each additional stage only)
 
 4. Compute totals (MANDATORY):
    → total_first_stage = number of sites
@@ -95,12 +110,13 @@ If mohsNotes are present:
 5. FINAL ENFORCEMENT (CRITICAL):
    → quantity(17311/17313) = total_first_stage
    → quantity(17312/17314) = total_additional_stage
-   → MUST copy these values exactly (no recomputation)
 
-6. Output for cpt codes:
-   → Each CPT code only once
+6. OUTPUT RULE (CRITICAL):
+   → Include additional-stage CPT codes (17312/17314) ONLY if total_additional_stage > 0
+   → If total_additional_stage = 0 → DO NOT include 17312/17314 at all
 
-- Ensure each retrieved code’s description is accurately matched against the biopsyNotes and mohsNotes in the note data, and assign the appropriate CPT codes accordingly.
+- NEVER output CPT codes with quantity = 0
+- If quantity = 0 → remove that CPT code from final output
 -------------------------
 CONTEXT:
 
@@ -111,7 +127,6 @@ CONTEXT:
   - assessment
   - examination
   - procedure
-
 -------------------------
 STRICT RULES:
 
