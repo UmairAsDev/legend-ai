@@ -13,7 +13,7 @@ load_dotenv()
 
 class LLMClient:
 
-    def __init__(self, model: str = "gpt-4o", temperature: float = 0.2):
+    def __init__(self, model: str = "gpt-4o", temperature: float = 0):
         api_key = os.getenv("OPENAI_API_KEY")
 
         if not api_key:
