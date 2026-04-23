@@ -3,6 +3,7 @@
 from datetime import datetime
 from decimal import Decimal
 from typing import Dict, Any
+import re
 
 from loguru import logger
 
@@ -163,6 +164,29 @@ class CodingNodes:
             # -------------------------
             # 🔴 STRICT ROUTING
             # -------------------------
+            # 🔹 CASE: EXCISION DETECTED
+            if parsed.get("has_excision"):
+                logger.info("🔴 EXCISION DETECTED")
+
+                all_candidates = []
+
+                for sec in parsed.get("excision_sections", []):
+                    size = sec.get("size")
+                    text = sec.get("text", "")
+
+                    # 🔹 extract location
+                    loc_match = re.search(r"Location:\s*(.*)", text)
+                    location = loc_match.group(1) if loc_match else ""
+
+                    logger.info(f"📌 Section → size={size}, location={location}")
+
+                    if size:
+                        res = await self.retriever.excision_filter(size, location)
+                        all_candidates.extend(res)
+
+                logger.info(f"✅ Total excision candidates: {len(all_candidates)}")
+
+                return {"candidates": all_candidates}
 
             # 🔹 CASE 1: BOTH BIOPSY + MOHS
             if parsed.get("has_biopsy") and parsed.get("has_mohs"):

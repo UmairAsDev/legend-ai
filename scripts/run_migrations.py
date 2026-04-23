@@ -37,6 +37,7 @@ SQL_STATEMENTS = [
         minqty INT,
         maxqty INT,
         minsize TEXT,
+        maxsize TEXT,
         chargeperunit FLOAT,
         embedding VECTOR(1536)
     )

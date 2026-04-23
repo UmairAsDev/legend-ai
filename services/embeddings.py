@@ -83,6 +83,7 @@ class EmbeddingService:
                             "min_qty": row.get("minQty"),
                             "max_qty": row.get("maxQty"),
                             "min_size": row.get("minSize"),
+                            "max_size": row.get("maxSize"),
                             "charge_per_unit": row.get("chargePerUnit"),
                             "embedding": emb
                         })

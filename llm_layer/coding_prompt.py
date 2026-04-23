@@ -117,6 +117,12 @@ If mohsNotes are present:
 
 - NEVER output CPT codes with quantity = 0
 - If quantity = 0 → remove that CPT code from final output
+
+EXCISION LOGIC:
+  Determine the following before assigning cpt codes to the excisions, if same excision is performed on more than 1 lesions at same location than quantity of that cpt code will increase by 1 and so on.
+- Use excision size (prefer size with margins)
+- Match size range with CPT minSize–maxSize
+- Match anatomical location category
 -------------------------
 CONTEXT:
 

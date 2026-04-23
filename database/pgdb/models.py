@@ -16,6 +16,7 @@ class CPTEmbedding(Base):
     min_qty = Column("minqty", Integer)
     max_qty = Column("maxqty", Integer)
     min_size = Column("minsize", Text)
+    max_size = Column("maxsize", Text)
     charge_per_unit = Column("chargeperunit", Float)
     embedding = Column(Vector(1536))
 

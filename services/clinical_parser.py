@@ -4,6 +4,7 @@ from loguru import logger
 
 
 BIOPSY_KEYWORDS = ["biopsy", "bx"]
+EXCISION_KEYWORDS = ["excision"]
 MOHS_KEYWORDS = ["mohs"]
 
 
@@ -32,6 +33,45 @@ class ClinicalParser:
             })
 
         return results
+    
+
+    def extract_excision_sections(self, text: str) -> List[Dict]:
+        if not text:
+            return []
+
+        pattern = r"([A-Z])\.\s*Excision.*?(?=(?:\n[A-Z]\.|$))"
+
+        matches = list(re.finditer(pattern, text, re.IGNORECASE | re.DOTALL))
+
+        results = []
+        for match in matches:
+            section_text = match.group(0)
+
+            # 🔹 Extract size (priority: with margins)
+            size_match = re.search(
+                r"Excision Size.*?:\s*([\d\.]+)\s*x\s*([\d\.]+)",
+                section_text,
+                re.IGNORECASE
+            )
+
+            if not size_match:
+                size_match = re.search(
+                    r"Lesion Size:\s*([\d\.]+)\s*[-x]\s*([\d\.]+)",
+                    section_text,
+                    re.IGNORECASE
+                )
+
+            size = None
+            if size_match:
+                size = max(float(size_match.group(1)), float(size_match.group(2)))
+
+            results.append({
+                "label": match.group(1),
+                "text": section_text.strip(),
+                "size": size
+            })
+
+        return results
 
     # -------------------------
     # 🔹 KEYWORD MATCH
@@ -54,6 +94,7 @@ class ClinicalParser:
         combined_text = f"{biopsy_text} {assessment_text} {procedure_text}".lower()
 
         biopsy_data = []
+        excision_data = []
         mohs_present = False
         has_procedure = bool(procedure_text.strip())
 
@@ -78,6 +119,12 @@ class ClinicalParser:
                     "quantity": 1
                 }]
 
+        if self.detect_keyword(biopsy_text, EXCISION_KEYWORDS):
+
+            logger.info("🧠 Excision detected")
+            excision_data = self.extract_excision_sections(biopsy_text)
+            logger.info(f"📊 Excision sections: {len(excision_data)}")
+
         # -------------------------
         # 🔴 MOHS DETECTION (FIXED)
         # -------------------------
@@ -101,5 +148,7 @@ class ClinicalParser:
             "biopsy_count": len(biopsy_data),
             "biopsy_sections": biopsy_data,
             "has_mohs": mohs_present,
-            "has_procedure": has_procedure
+            "has_procedure": has_procedure,
+            "has_excision": len(excision_data) > 0,
+            "excision_sections": excision_data
         }

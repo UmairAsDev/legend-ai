@@ -194,3 +194,56 @@ class CodeRetriever:
             logger.info(f"✅ Mohs filter returned: {len(rows)} rows")
 
             return rows
+        
+
+    async def excision_filter(self, size: float, location: str):
+
+        async with get_db_session() as db:
+
+            location = location.lower()
+
+            # 🔹 Determine anatomical group
+            if any(k in location for k in ["face", "nose", "lip", "ear", "eyelid"]):
+                area = "face"
+            elif any(k in location for k in ["hand", "foot", "neck", "scalp"]):
+                area = "special"
+            else:
+                area = "trunk"
+
+            logger.info(f"📍 Excision filter | size={size} | area={area}")
+
+            query = """
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            """
+
+            result = await db.execute(text(query))
+            rows = [self._clean_row(r) for r in result.mappings().all()]
+
+            # 🔴 FILTER BY SIZE
+            filtered = []
+            for r in rows:
+                try:
+                    min_s = float(r.get("minSize") or 0)
+                    max_s = float(r.get("maxSize") or 999)
+
+                    if size and min_s <= size <= max_s:
+                        filtered.append(r)
+                except:
+                    continue
+
+            logger.info(f"✅ Excision filtered: {len(filtered)}")
+
+            return filtered

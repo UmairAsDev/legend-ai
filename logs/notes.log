@@ -7479,3 +7479,1495 @@ Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound si
 2026-04-23 16:21:50.630 | INFO     | services.retriever:mohs_filter:194 - ✅ Mohs filter returned: 5 rows
 2026-04-23 16:21:50.871 | INFO     | app.services.medical_engine:retrieve:193 - ✅ Mohs Candidates: 5
 2026-04-23 16:21:50.876 | INFO     | app.services.medical_engine:llm_call:239 - 🧠 Calling LLM with structured parser
+2026-04-23 20:48:49.214 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 613315
+2026-04-23 20:48:49.283 | INFO     | app.services.medical_engine:fetch:82 - 📥 Fetching note: 613315
+2026-04-23 20:48:52.891 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 613315
+2026-04-23 20:48:53.488 | INFO     | services.clinical_parser:parse:124 - 🧠 Excision detected
+2026-04-23 20:48:53.490 | INFO     | services.clinical_parser:parse:126 - 📊 Excision sections: 2
+2026-04-23 20:48:53.491 | INFO     | services.clinical_parser:parse:135 - 🧠 Mohs detected
+2026-04-23 20:48:53.491 | INFO     | services.clinical_parser:parse:141 - 📊 Parser Output → biopsy_count: 0, mohs: True, procedure: False
+2026-04-23 20:48:53.491 | INFO     | app.services.medical_engine:parse:134 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: BCC exc 
+Location: Mid Lower Back
+Method: Excision
+Lesion Size: 0.5 x 0.8 cm
+Excision Size, including margins: 3.6 x 2.4 cm
+During Excision a 2nd lesion was adjacent to the site and was removed within this excision. 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & Margins
+Clinical Diagnosis: cyst exc
+Location: Rt 2nd Finger
+Lesion Size: 0.3 x 0.2 cm
+Excision Size, including margins: 0.3 x 0.2 cm
+Removed as courtesy.
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-23 20:48:55.699 | INFO     | app.services.medical_engine:retrieve:162 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_mohs': True, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: BCC exc \nLocation: Mid Lower Back\nMethod: Excision\nLesion Size: 0.5 x 0.8 cm\nExcision Size, including margins: 3.6 x 2.4 cm\nDuring Excision a 2nd lesion was adjacent to the site and was removed within this excision.\xa0\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. \nRepair: Complex Closure \nThe wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. \nPressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'size': 3.6}, {'label': 'C', 'text': 'C. Excision Benign Lesion & Margins\nClinical Diagnosis: cyst exc\nLocation: Rt 2nd Finger\nLesion Size: 0.3 x 0.2 cm\nExcision Size, including margins:\xa00.3 x 0.2 cm\nRemoved as courtesy.\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. \nRepair: Simple Closure \nThe wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. \nPressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'size': 0.3}]}
+2026-04-23 20:48:55.704 | INFO     | app.services.medical_engine:retrieve:169 - 🔴 EXCISION DETECTED
+2026-04-23 20:48:55.705 | INFO     | app.services.medical_engine:retrieve:181 - 📌 Section → size=3.6, location=Mid Lower Back
+2026-04-23 20:48:55.707 | INFO     | services.retriever:excision_filter:213 - 📍 Excision filter | size=3.6 | area=trunk
+2026-04-23 20:49:01.338 | ERROR    | app.services.medical_engine:retrieve:239 - ❌ Retrieval failed: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                      │                └ <function AsyncAdapt_asyncpg_connection._prepare at 0x0000023DF9727740>
+                                      └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000023D841C6990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                          │    └ <member '_connection' of 'AdaptedConnection' objects>
+                          └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000023D841C6990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 638, in prepare
+    return await self._prepare(
+                 │    └ <function Connection._prepare at 0x0000023DF9B53100>
+                 └ <asyncpg.connection.Connection object at 0x0000023D841C6990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+                 │    └ <function Connection._get_statement at 0x0000023DF9B52DE0>
+                 └ <asyncpg.connection.Connection object at 0x0000023D841C6990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                      │    └ <member '_protocol' of 'Connection' objects>
+                      └ <asyncpg.connection.Connection object at 0x0000023D841C6990>
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+    return await waiter
+
+asyncpg.exceptions.UndefinedColumnError: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000023DF5487E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x0000023DF9747680>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x0000023DF9726AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000023D84247540 (otid=0x0000023DF44CDD20) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x0000023DF97268E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 328
+               │     └ 3
+               └ <function _main at 0x0000023DF1907420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 328
+           │    └ <function BaseProcess._bootstrap at 0x0000023DF17F9800>
+           └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000023DF17F8D60>
+    └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000023D84126B70>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+    │    └ <function subprocess_started at 0x0000023DF3CD68E0>
+    └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=1056, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x0000023D8416C590>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x0000023DF3C27380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x0000023D84126B70>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x0000023D8416C590>
+           │           │    │             └ [<socket.socket fd=1056, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x0000023DF3CD5E40>
+           │           └ <uvicorn.server.Server object at 0x0000023D8416C590>
+           └ <function run at 0x0000023DF390A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x0000023DF1774BA0>
+           │      └ <function Runner.run at 0x0000023DF395BA60>
+           └ <asyncio.runners.Runner object at 0x0000023DF3C52B40>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x0000023DF3959620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000023DF3C52B40>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x0000023DF3959580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x0000023DF395B380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000023DF1D27880>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.retrieve of <app.services.medical_engine.CodingNodes object at 0x0000023D82A52300>>
+                └ retrieve(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 184, in retrieve
+    res = await self.retriever.excision_filter(size, location)
+                │    │         │               │     └ 'Mid Lower Back'
+                │    │         │               └ 3.6
+                │    │         └ <function CodeRetriever.excision_filter at 0x0000023D83C2F240>
+                │    └ <services.retriever.CodeRetriever object at 0x0000023DF9B99FD0>
+                └ <app.services.medical_engine.CodingNodes object at 0x0000023D82A52300>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\services\retriever.py", line 232, in excision_filter
+    result = await db.execute(text(query))
+                   │  │       │    └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+                   │  │       └ <function text at 0x0000023DF5391940>
+                   │  └ <function AsyncSession.execute at 0x0000023DF686D800>
+                   └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x0000023D84126DE0>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+                   └ <function greenlet_spawn at 0x0000023DF4F18860>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             │       │      │   └ <built-in function exc_info>
+             │       │      └ <module 'sys' (built-in)>
+             │       └ <method 'throw' of 'greenlet.greenlet' objects>
+             └ <_AsyncIoGreenlet object at 0x0000023D84247540 (otid=0x0000023DF44CDD20) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           │    └ <function Session._execute_internal at 0x0000023DF6793CE0>
+           └ <sqlalchemy.orm.session.Session object at 0x0000023D8408E7B0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2258, in _execute_internal
+    result = conn.execute(
+             │    └ <function Connection.execute at 0x0000023DF53FC680>
+             └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           └ <bound method ClauseElement._execute_on_connection of <sqlalchemy.sql.elements.TextClause object at 0x0000023D8416FF20>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           │          └ <function Connection._execute_clauseelement at 0x0000023DF53FC9A0>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          │    └ <function Connection._execute_context at 0x0000023DF53FCB80>
+          └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           │    └ <function Connection._exec_single_context at 0x0000023DF53FCC20>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    │    └ <function Connection._handle_dbapi_exception at 0x0000023DF53FCEA0>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+          │                    │              │                 └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+          │                    │              └ (<class 'sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError'>, ProgrammingError('<class \'async...
+          │                    └ <method 'with_traceback' of 'BaseException' objects>
+          └ ProgrammingError('(sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class \'asyncpg.exceptions.UndefinedColumnError\...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000023DF5487E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x0000023DF9747680>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x0000023DF9726AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000023D84247540 (otid=0x0000023DF44CDD20) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x0000023DF97268E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-23 20:49:01.886 | ERROR    | app.services.engine_runner:process:28 - ❌ Pipeline failed: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                      │                └ <function AsyncAdapt_asyncpg_connection._prepare at 0x0000023DF9727740>
+                                      └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000023D841C6990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                          │    └ <member '_connection' of 'AdaptedConnection' objects>
+                          └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000023D841C6990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 638, in prepare
+    return await self._prepare(
+                 │    └ <function Connection._prepare at 0x0000023DF9B53100>
+                 └ <asyncpg.connection.Connection object at 0x0000023D841C6990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+                 │    └ <function Connection._get_statement at 0x0000023DF9B52DE0>
+                 └ <asyncpg.connection.Connection object at 0x0000023D841C6990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                      │    └ <member '_protocol' of 'Connection' objects>
+                      └ <asyncpg.connection.Connection object at 0x0000023D841C6990>
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+    return await waiter
+
+asyncpg.exceptions.UndefinedColumnError: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000023DF5487E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x0000023DF9747680>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x0000023DF9726AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000023D84247540 (otid=0x0000023DF44CDD20) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x0000023DF97268E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 328
+               │     └ 3
+               └ <function _main at 0x0000023DF1907420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 328
+           │    └ <function BaseProcess._bootstrap at 0x0000023DF17F9800>
+           └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000023DF17F8D60>
+    └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000023D84126B70>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+    │    └ <function subprocess_started at 0x0000023DF3CD68E0>
+    └ <SpawnProcess name='SpawnProcess-177' parent=10296 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=1056, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x0000023D8416C590>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x0000023DF3C27380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x0000023D84126B70>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x0000023D8416C590>
+           │           │    │             └ [<socket.socket fd=1056, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x0000023DF3CD5E40>
+           │           └ <uvicorn.server.Server object at 0x0000023D8416C590>
+           └ <function run at 0x0000023DF390A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x0000023DF1774BA0>
+           │      └ <function Runner.run at 0x0000023DF395BA60>
+           └ <asyncio.runners.Runner object at 0x0000023DF3C52B40>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x0000023DF3959620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000023DF3C52B40>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x0000023DF3959580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x0000023DF395B380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000023DF1D27880>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 415, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+                   └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x0000023D8408C200>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190D10>>
+                 │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+                 │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+                 │    └ <fastapi.applications.FastAPI object at 0x0000023D8416EC30>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x0000023D8408C200>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190D10>>
+                           │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+                           └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190D10>>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000023D8416FC50>
+          └ <fastapi.applications.FastAPI object at 0x0000023D8416EC30>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000023D8415D9E0>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000023D8416FC80>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000023D8416FC50>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000023D8415D9E0>
+          │                            │    │    │     │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x0000023D84190470>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000023D8416FE90>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000023D8416FC80>
+          └ <function wrap_app_handling_exceptions at 0x0000023DF4C58E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000023D8418CE00>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000023D8416FE90>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000023D8418CE00>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <fastapi.routing.APIRouter object at 0x0000023D8416ED20>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000023D8416FE90>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000023D8418CE00>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x0000023D8416ED20>>
+          └ <fastapi.routing.APIRouter object at 0x0000023D8416ED20>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000023D8418CE00>
+          │     │      │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │     └ <function Route.handle at 0x0000023DF4C5A2A0>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000023D8418CE00>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <function request_response.<locals>.app at 0x0000023D8418C5E0>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000023D8418CE00>
+          │                            │    │        │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x0000023D841908F0>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x0000023D8418CEA0>
+          └ <function wrap_app_handling_exceptions at 0x0000023DF4C58E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000023D8418CFE0>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000023D84190...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x0000023D8418CEA0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x0000023D841908F0>
+                     └ <function get_request_handler.<locals>.app at 0x0000023D8418C680>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x0000023DF4C7C2C0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'note_id': 613315}
+                 │         └ <function process_note_endpoint at 0x0000023D8415C4A0>
+                 └ Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='note_id', mode='validation', config=None)], query...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\api\route.py", line 24, in process_note_endpoint
+    result = await service.process(note_id)
+                   │       │       └ 613315
+                   │       └ <function MedicalCodingService.process at 0x0000023DF773DC60>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x0000023DFFFDEEA0>
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\engine_runner.py", line 16, in process
+    result = await self.graph.ainvoke({
+                   │    │     └ <function Pregel.ainvoke at 0x0000023DF772EE80>
+                   │    └ <langgraph.graph.state.CompiledStateGraph object at 0x0000023D84126390>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x0000023DFFFDEEA0>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3479, in ainvoke
+    async for chunk in self.astream(
+              │        │    └ <function Pregel.astream at 0x0000023DF772E840>
+              │        └ <langgraph.graph.state.CompiledStateGraph object at 0x0000023D84126390>
+              └ ('values', {'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0,...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3128, in astream
+    async for _ in runner.atick(
+              │    │      └ <function PregelRunner.atick at 0x0000023DF772C2C0>
+              │    └ <langgraph.pregel._runner.PregelRunner object at 0x0000023D84191F40>
+              └ None
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_runner.py", line 304, in atick
+    await arun_with_retry(
+          └ <function arun_with_retry at 0x0000023DF7707880>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_retry.py", line 242, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+                 │    │            │    │      └ {'configurable': {'__pregel_runtime': Runtime(context=None, store=None, stream_writer=<function Pregel.astream.<locals>.strea...
+                 │    │            │    └ <member 'input' of 'PregelExecutableTask' objects>
+                 │    │            └ PregelExecutableTask(name='retrieve', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician'...
+                 │    └ <member 'proc' of 'PregelExecutableTask' objects>
+                 └ PregelExecutableTask(name='retrieve', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician'...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 705, in ainvoke
+    input = await asyncio.create_task(
+                  │       └ <function create_task at 0x0000023DF3940E00>
+                  └ <module 'asyncio' from 'C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\__init__.py'>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.retrieve of <app.services.medical_engine.CodingNodes object at 0x0000023D82A52300>>
+                └ retrieve(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 184, in retrieve
+    res = await self.retriever.excision_filter(size, location)
+                │    │         │               │     └ 'Mid Lower Back'
+                │    │         │               └ 3.6
+                │    │         └ <function CodeRetriever.excision_filter at 0x0000023D83C2F240>
+                │    └ <services.retriever.CodeRetriever object at 0x0000023DF9B99FD0>
+                └ <app.services.medical_engine.CodingNodes object at 0x0000023D82A52300>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\services\retriever.py", line 232, in excision_filter
+    result = await db.execute(text(query))
+                   │  │       │    └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+                   │  │       └ <function text at 0x0000023DF5391940>
+                   │  └ <function AsyncSession.execute at 0x0000023DF686D800>
+                   └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x0000023D84126DE0>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+                   └ <function greenlet_spawn at 0x0000023DF4F18860>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             │       │      │   └ <built-in function exc_info>
+             │       │      └ <module 'sys' (built-in)>
+             │       └ <method 'throw' of 'greenlet.greenlet' objects>
+             └ <_AsyncIoGreenlet object at 0x0000023D84247540 (otid=0x0000023DF44CDD20) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           │    └ <function Session._execute_internal at 0x0000023DF6793CE0>
+           └ <sqlalchemy.orm.session.Session object at 0x0000023D8408E7B0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2258, in _execute_internal
+    result = conn.execute(
+             │    └ <function Connection.execute at 0x0000023DF53FC680>
+             └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           └ <bound method ClauseElement._execute_on_connection of <sqlalchemy.sql.elements.TextClause object at 0x0000023D8416FF20>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           │          └ <function Connection._execute_clauseelement at 0x0000023DF53FC9A0>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          │    └ <function Connection._execute_context at 0x0000023DF53FCB80>
+          └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           │    └ <function Connection._exec_single_context at 0x0000023DF53FCC20>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    │    └ <function Connection._handle_dbapi_exception at 0x0000023DF53FCEA0>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+          │                    │              │                 └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+          │                    │              └ (<class 'sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError'>, ProgrammingError('<class \'async...
+          │                    └ <method 'with_traceback' of 'BaseException' objects>
+          └ ProgrammingError('(sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class \'asyncpg.exceptions.UndefinedColumnError\...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000023DF5487E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x0000023DF9747680>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000023DF7DB5F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x0000023DF9726AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000023D84247540 (otid=0x0000023DF44CDD20) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000023D84111000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x0000023DF97268E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000023D841C9180>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+During task with name 'retrieve' and id '3f016894-35a8-acc7-7e8b-a4fd39677d9b'
+2026-04-23 20:59:12.436 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 613315
+2026-04-23 20:59:12.445 | INFO     | app.services.medical_engine:fetch:82 - 📥 Fetching note: 613315
+2026-04-23 20:59:15.968 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 613315
+2026-04-23 20:59:16.560 | INFO     | services.clinical_parser:parse:124 - 🧠 Excision detected
+2026-04-23 20:59:16.561 | INFO     | services.clinical_parser:parse:126 - 📊 Excision sections: 2
+2026-04-23 20:59:16.562 | INFO     | services.clinical_parser:parse:135 - 🧠 Mohs detected
+2026-04-23 20:59:16.562 | INFO     | services.clinical_parser:parse:141 - 📊 Parser Output → biopsy_count: 0, mohs: True, procedure: False
+2026-04-23 20:59:16.563 | INFO     | app.services.medical_engine:parse:134 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: BCC exc 
+Location: Mid Lower Back
+Method: Excision
+Lesion Size: 0.5 x 0.8 cm
+Excision Size, including margins: 3.6 x 2.4 cm
+During Excision a 2nd lesion was adjacent to the site and was removed within this excision. 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & Margins
+Clinical Diagnosis: cyst exc
+Location: Rt 2nd Finger
+Lesion Size: 0.3 x 0.2 cm
+Excision Size, including margins: 0.3 x 0.2 cm
+Removed as courtesy.
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-23 20:59:17.091 | INFO     | app.services.medical_engine:retrieve:162 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_mohs': True, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: BCC exc \nLocation: Mid Lower Back\nMethod: Excision\nLesion Size: 0.5 x 0.8 cm\nExcision Size, including margins: 3.6 x 2.4 cm\nDuring Excision a 2nd lesion was adjacent to the site and was removed within this excision.\xa0\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. \nRepair: Complex Closure \nThe wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. \nPressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'size': 3.6}, {'label': 'C', 'text': 'C. Excision Benign Lesion & Margins\nClinical Diagnosis: cyst exc\nLocation: Rt 2nd Finger\nLesion Size: 0.3 x 0.2 cm\nExcision Size, including margins:\xa00.3 x 0.2 cm\nRemoved as courtesy.\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. \nRepair: Simple Closure \nThe wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. \nPressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'size': 0.3}]}
+2026-04-23 20:59:17.098 | INFO     | app.services.medical_engine:retrieve:169 - 🔴 EXCISION DETECTED
+2026-04-23 20:59:17.098 | INFO     | app.services.medical_engine:retrieve:181 - 📌 Section → size=3.6, location=Mid Lower Back
+2026-04-23 20:59:17.099 | INFO     | services.retriever:excision_filter:213 - 📍 Excision filter | size=3.6 | area=trunk
+2026-04-23 20:59:25.076 | ERROR    | app.services.medical_engine:retrieve:239 - ❌ Retrieval failed: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                      │                └ <function AsyncAdapt_asyncpg_connection._prepare at 0x000002528CFB7740>
+                                      └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000025297A26990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                          │    └ <member '_connection' of 'AdaptedConnection' objects>
+                          └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000025297A26990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 638, in prepare
+    return await self._prepare(
+                 │    └ <function Connection._prepare at 0x000002528D3E3100>
+                 └ <asyncpg.connection.Connection object at 0x0000025297A26990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+                 │    └ <function Connection._get_statement at 0x000002528D3E2DE0>
+                 └ <asyncpg.connection.Connection object at 0x0000025297A26990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                      │    └ <member '_protocol' of 'Connection' objects>
+                      └ <asyncpg.connection.Connection object at 0x0000025297A26990>
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+    return await waiter
+
+asyncpg.exceptions.UndefinedColumnError: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000025288D27E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x000002528CFD7410>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x000002528CFB6AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000025297AA3580 (otid=0x000002528727A150) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x000002528CFB68E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 344
+               │     └ 3
+               └ <function _main at 0x0000025285287420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 344
+           │    └ <function BaseProcess._bootstrap at 0x0000025285179800>
+           └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000025285178D60>
+    └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000025297987E60>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+    │    └ <function subprocess_started at 0x00000252875C68E0>
+    └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=760, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x00000252979C8650>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x0000025287527380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x0000025297987E60>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x00000252979C8650>
+           │           │    │             └ [<socket.socket fd=760, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x00000252875C5E40>
+           │           └ <uvicorn.server.Server object at 0x00000252979C8650>
+           └ <function run at 0x0000025286E5A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x00000252850F4BA0>
+           │      └ <function Runner.run at 0x0000025286EABA60>
+           └ <asyncio.runners.Runner object at 0x0000025297984290>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x0000025286EA9620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000025297984290>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x0000025286EA9580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x0000025286EAB380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000025285697880>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.retrieve of <app.services.medical_engine.CodingNodes object at 0x000002528A373530>>
+                └ retrieve(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 184, in retrieve
+    res = await self.retriever.excision_filter(size, location)
+                │    │         │               │     └ 'Mid Lower Back'
+                │    │         │               └ 3.6
+                │    │         └ <function CodeRetriever.excision_filter at 0x000002529748F2E0>
+                │    └ <services.retriever.CodeRetriever object at 0x00000252974953A0>
+                └ <app.services.medical_engine.CodingNodes object at 0x000002528A373530>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\services\retriever.py", line 232, in excision_filter
+    result = await db.execute(text(query))
+                   │  │       │    └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+                   │  │       └ <function text at 0x0000025288C31940>
+                   │  └ <function AsyncSession.execute at 0x000002528A10D800>
+                   └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000002528B0C7980>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+                   └ <function greenlet_spawn at 0x00000252887B8860>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             │       │      │   └ <built-in function exc_info>
+             │       │      └ <module 'sys' (built-in)>
+             │       └ <method 'throw' of 'greenlet.greenlet' objects>
+             └ <_AsyncIoGreenlet object at 0x0000025297AA3580 (otid=0x000002528727A150) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           │    └ <function Session._execute_internal at 0x000002528A033CE0>
+           └ <sqlalchemy.orm.session.Session object at 0x0000025297986BD0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2258, in _execute_internal
+    result = conn.execute(
+             │    └ <function Connection.execute at 0x0000025288C9C680>
+             └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           └ <bound method ClauseElement._execute_on_connection of <sqlalchemy.sql.elements.TextClause object at 0x000002528B659DC0>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           │          └ <function Connection._execute_clauseelement at 0x0000025288C9C9A0>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          │    └ <function Connection._execute_context at 0x0000025288C9CB80>
+          └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           │    └ <function Connection._exec_single_context at 0x0000025288C9CC20>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    │    └ <function Connection._handle_dbapi_exception at 0x0000025288C9CEA0>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+          │                    │              │                 └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+          │                    │              └ (<class 'sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError'>, ProgrammingError('<class \'async...
+          │                    └ <method 'with_traceback' of 'BaseException' objects>
+          └ ProgrammingError('(sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class \'asyncpg.exceptions.UndefinedColumnError\...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000025288D27E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x000002528CFD7410>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x000002528CFB6AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000025297AA3580 (otid=0x000002528727A150) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x000002528CFB68E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-23 20:59:25.216 | ERROR    | app.services.engine_runner:process:28 - ❌ Pipeline failed: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                      │                └ <function AsyncAdapt_asyncpg_connection._prepare at 0x000002528CFB7740>
+                                      └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000025297A26990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                          │    └ <member '_connection' of 'AdaptedConnection' objects>
+                          └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000025297A26990>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 638, in prepare
+    return await self._prepare(
+                 │    └ <function Connection._prepare at 0x000002528D3E3100>
+                 └ <asyncpg.connection.Connection object at 0x0000025297A26990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+                 │    └ <function Connection._get_statement at 0x000002528D3E2DE0>
+                 └ <asyncpg.connection.Connection object at 0x0000025297A26990>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\asyncpg\connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                      │    └ <member '_protocol' of 'Connection' objects>
+                      └ <asyncpg.connection.Connection object at 0x0000025297A26990>
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+    return await waiter
+
+asyncpg.exceptions.UndefinedColumnError: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000025288D27E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x000002528CFD7410>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x000002528CFB6AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000025297AA3580 (otid=0x000002528727A150) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x000002528CFB68E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 344
+               │     └ 3
+               └ <function _main at 0x0000025285287420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 344
+           │    └ <function BaseProcess._bootstrap at 0x0000025285179800>
+           └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000025285178D60>
+    └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000025297987E60>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+    │    └ <function subprocess_started at 0x00000252875C68E0>
+    └ <SpawnProcess name='SpawnProcess-180' parent=10296 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=760, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x00000252979C8650>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x0000025287527380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x0000025297987E60>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x00000252979C8650>
+           │           │    │             └ [<socket.socket fd=760, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x00000252875C5E40>
+           │           └ <uvicorn.server.Server object at 0x00000252979C8650>
+           └ <function run at 0x0000025286E5A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x00000252850F4BA0>
+           │      └ <function Runner.run at 0x0000025286EABA60>
+           └ <asyncio.runners.Runner object at 0x0000025297984290>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x0000025286EA9620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000025297984290>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x0000025286EA9580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x0000025286EAB380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000025285697880>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 415, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+                   └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x00000252978EB710>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4F50>>
+                 │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+                 │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+                 │    └ <fastapi.applications.FastAPI object at 0x0000025297987F50>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x00000252978EB710>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4F50>>
+                           │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+                           └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4F50>>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x00000252979CBF50>
+          └ <fastapi.applications.FastAPI object at 0x0000025297987F50>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x00000252979F0C20>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x00000252979CBFB0>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x00000252979CBF50>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x00000252979F0C20>
+          │                            │    │    │     │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x00000252979F46B0>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x00000252979CB410>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x00000252979CBFB0>
+          └ <function wrap_app_handling_exceptions at 0x00000252884F8E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000252979F0EA0>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x00000252979CB410>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000252979F0EA0>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <fastapi.routing.APIRouter object at 0x00000252979CAF90>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x00000252979CB410>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000252979F0EA0>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x00000252979CAF90>>
+          └ <fastapi.routing.APIRouter object at 0x00000252979CAF90>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000252979F0EA0>
+          │     │      │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │     └ <function Route.handle at 0x00000252884FA2A0>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000252979F0EA0>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <function request_response.<locals>.app at 0x00000252979F0680>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000252979F0EA0>
+          │                            │    │        │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x00000252979F4B00>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x00000252979F0F40>
+          └ <function wrap_app_handling_exceptions at 0x00000252884F8E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000252979F1080>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x00000252979F4...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x00000252979F0F40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x00000252979F4B00>
+                     └ <function get_request_handler.<locals>.app at 0x00000252979F0720>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x000002528851C2C0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'note_id': 613315}
+                 │         └ <function process_note_endpoint at 0x00000252979BC540>
+                 └ Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='note_id', mode='validation', config=None)], query...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\api\route.py", line 24, in process_note_endpoint
+    result = await service.process(note_id)
+                   │       │       └ 613315
+                   │       └ <function MedicalCodingService.process at 0x000002528AFDDC60>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x000002528A373470>
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\engine_runner.py", line 16, in process
+    result = await self.graph.ainvoke({
+                   │    │     └ <function Pregel.ainvoke at 0x000002528AFCEE80>
+                   │    └ <langgraph.graph.state.CompiledStateGraph object at 0x00000252979864B0>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x000002528A373470>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3479, in ainvoke
+    async for chunk in self.astream(
+              │        │    └ <function Pregel.astream at 0x000002528AFCE840>
+              │        └ <langgraph.graph.state.CompiledStateGraph object at 0x00000252979864B0>
+              └ ('values', {'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0,...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3128, in astream
+    async for _ in runner.atick(
+              │    │      └ <function PregelRunner.atick at 0x000002528AFCC2C0>
+              │    └ <langgraph.pregel._runner.PregelRunner object at 0x00000252979F51F0>
+              └ None
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_runner.py", line 304, in atick
+    await arun_with_retry(
+          └ <function arun_with_retry at 0x000002528AFA7880>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_retry.py", line 242, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+                 │    │            │    │      └ {'configurable': {'__pregel_runtime': Runtime(context=None, store=None, stream_writer=<function Pregel.astream.<locals>.strea...
+                 │    │            │    └ <member 'input' of 'PregelExecutableTask' objects>
+                 │    │            └ PregelExecutableTask(name='retrieve', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician'...
+                 │    └ <member 'proc' of 'PregelExecutableTask' objects>
+                 └ PregelExecutableTask(name='retrieve', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician'...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 705, in ainvoke
+    input = await asyncio.create_task(
+                  │       └ <function create_task at 0x0000025286E90E00>
+                  └ <module 'asyncio' from 'C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\__init__.py'>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.retrieve of <app.services.medical_engine.CodingNodes object at 0x000002528A373530>>
+                └ retrieve(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 184, in retrieve
+    res = await self.retriever.excision_filter(size, location)
+                │    │         │               │     └ 'Mid Lower Back'
+                │    │         │               └ 3.6
+                │    │         └ <function CodeRetriever.excision_filter at 0x000002529748F2E0>
+                │    └ <services.retriever.CodeRetriever object at 0x00000252974953A0>
+                └ <app.services.medical_engine.CodingNodes object at 0x000002528A373530>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\services\retriever.py", line 232, in excision_filter
+    result = await db.execute(text(query))
+                   │  │       │    └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+                   │  │       └ <function text at 0x0000025288C31940>
+                   │  └ <function AsyncSession.execute at 0x000002528A10D800>
+                   └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000002528B0C7980>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+                   └ <function greenlet_spawn at 0x00000252887B8860>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             │       │      │   └ <built-in function exc_info>
+             │       │      └ <module 'sys' (built-in)>
+             │       └ <method 'throw' of 'greenlet.greenlet' objects>
+             └ <_AsyncIoGreenlet object at 0x0000025297AA3580 (otid=0x000002528727A150) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           │    └ <function Session._execute_internal at 0x000002528A033CE0>
+           └ <sqlalchemy.orm.session.Session object at 0x0000025297986BD0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2258, in _execute_internal
+    result = conn.execute(
+             │    └ <function Connection.execute at 0x0000025288C9C680>
+             └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           └ <bound method ClauseElement._execute_on_connection of <sqlalchemy.sql.elements.TextClause object at 0x000002528B659DC0>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           │          └ <function Connection._execute_clauseelement at 0x0000025288C9C9A0>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          │    └ <function Connection._execute_context at 0x0000025288C9CB80>
+          └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           │    └ <function Connection._exec_single_context at 0x0000025288C9CC20>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    │    └ <function Connection._handle_dbapi_exception at 0x0000025288C9CEA0>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+          │                    │              │                 └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+          │                    │              └ (<class 'sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError'>, ProgrammingError('<class \'async...
+          │                    └ <method 'with_traceback' of 'BaseException' objects>
+          └ ProgrammingError('(sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class \'asyncpg.exceptions.UndefinedColumnError\...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000025288D27E20>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x000002528CFD7410>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025297A92390>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ "\n            SELECT \n                proCode AS code,\n                codeDesc AS description,\n                proName,\...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x000002528CFB6AC0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000025297AA3580 (otid=0x000002528727A150) dead>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025297971000>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x000002528CFB68E0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column "maxsize" does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025297A2CF40>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column "maxsize" does not exist')
+          └ ProgrammingError('<class \'asyncpg.exceptions.UndefinedColumnError\'>: column "maxsize" does not exist\nHINT:  Perhaps you me...
+
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+During task with name 'retrieve' and id '5e062484-66dd-8d8e-1af2-231f36939586'

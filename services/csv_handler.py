@@ -50,6 +50,7 @@ class CSVHandler:
                     "minQty": self._safe_int(row.get("minQty")),
                     "maxQty": self._safe_int(row.get("maxQty")),
                     "minSize": self._safe_str(row.get("minSize")),
+                    "maxSize": self._safe_str(row.get("maxSize")),
                     "chargePerUnit": self._safe_float(row.get("chargePerUnit")),
                 })
 

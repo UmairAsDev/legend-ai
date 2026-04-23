@@ -260,3 +260,41 @@ HINT:  Perhaps you meant to reference the column "cpt_embeddings.codedesc".
                 OR LOWER(pro_name) LIKE '%biopsy%'
             ]
 (Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-23 20:49:01,305 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-23 20:59:25,074 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "maxsize" does not exist
+HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
+[SQL: 
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) LIKE '%excision%'
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
