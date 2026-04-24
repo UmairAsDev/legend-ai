@@ -161,63 +161,73 @@ class CodingNodes:
 
             logger.info(f"🧠 Retrieval Decision | Parsed: {parsed}")
 
+            all_candidates = []
+
             # -------------------------
-            # 🔴 STRICT ROUTING
+            # 🔴 EXCISION (FIRST PRIORITY BUT NOT EXCLUSIVE)
             # -------------------------
-            # 🔹 CASE: EXCISION DETECTED
             if parsed.get("has_excision"):
                 logger.info("🔴 EXCISION DETECTED")
-
-                all_candidates = []
 
                 for sec in parsed.get("excision_sections", []):
                     size = sec.get("size")
                     text = sec.get("text", "")
 
-                    # 🔹 extract location
+                    # 🔹 Extract location
                     loc_match = re.search(r"Location:\s*(.*)", text)
-                    location = loc_match.group(1) if loc_match else ""
+                    location = loc_match.group(1).strip() if loc_match else ""
 
-                    logger.info(f"📌 Section → size={size}, location={location}")
+                    logger.info(f"📌 Excision Section → size={size}, location={location}")
 
                     if size:
                         res = await self.retriever.excision_filter(size, location)
+                        logger.info(f"   ↳ Retrieved {len(res)} excision candidates")
                         all_candidates.extend(res)
+                    else:
+                        logger.warning("⚠️ Excision section missing size → skipped")
 
-                logger.info(f"✅ Total excision candidates: {len(all_candidates)}")
-
-                return {"candidates": all_candidates}
-
-            # 🔹 CASE 1: BOTH BIOPSY + MOHS
-            if parsed.get("has_biopsy") and parsed.get("has_mohs"):
-                logger.info("🔴 BOTH BIOPSY + MOHS DETECTED")
+            # -------------------------
+            # 🔴 BIOPSY (ALWAYS ADD IF PRESENT)
+            # -------------------------
+            if parsed.get("has_biopsy"):
+                logger.info("🔴 BIOPSY DETECTED")
 
                 biopsy = await self.retriever.biopsy_filter()
-                mohs = await self.retriever.mohs_filter()
-                candidates = biopsy + mohs
+                logger.info(f"   ↳ Retrieved {len(biopsy)} biopsy candidates")
 
-                logger.info(f"✅ Biopsy: {len(biopsy)} | Mohs: {len(mohs)}")
-                return {"candidates": candidates}
+                all_candidates.extend(biopsy)
 
-            # 🔹 CASE 2: ONLY BIOPSY
-            if parsed.get("has_biopsy"):
-                logger.info("🔴 ONLY BIOPSY DETECTED")
-
-                candidates = await self.retriever.biopsy_filter()
-
-                logger.info(f"✅ Biopsy Candidates: {len(candidates)}")
-                return {"candidates": candidates}
-
-            # 🔹 CASE 3: ONLY MOHS
+            # -------------------------
+            # 🔴 MOHS (ALWAYS ADD IF PRESENT)
+            # -------------------------
             if parsed.get("has_mohs"):
-                logger.info("🔴 ONLY MOHS DETECTED")
+                logger.info("🔴 MOHS DETECTED")
 
-                candidates = await self.retriever.mohs_filter()
+                mohs = await self.retriever.mohs_filter()
+                logger.info(f"   ↳ Retrieved {len(mohs)} mohs candidates")
 
-                logger.info(f"✅ Mohs Candidates: {len(candidates)}")
-                return {"candidates": candidates}
+                all_candidates.extend(mohs)
 
-            # 🔹 CASE 4: PROCEDURE-BASED SEARCH
+            # -------------------------
+            # 🔴 IF ANY PROCEDURAL CODES FOUND → RETURN
+            # -------------------------
+            if all_candidates:
+                # 🔹 Deduplicate (important)
+                unique = {}
+                for c in all_candidates:
+                    key = (c.get("code"), c.get("type"))
+                    if key not in unique:
+                        unique[key] = c
+
+                final_candidates = list(unique.values())
+
+                logger.info(f"✅ Total combined candidates (deduped): {len(final_candidates)}")
+
+                return {"candidates": final_candidates}
+
+            # -------------------------
+            # 🟡 PROCEDURE-BASED FALLBACK (SEMANTIC)
+            # -------------------------
             if parsed.get("has_procedure"):
                 logger.info("🟡 PROCEDURE DETECTED → semantic search")
 
@@ -226,12 +236,17 @@ class CodingNodes:
                 candidates = await self.retriever.search(embedding)
 
                 logger.info(f"⚠️ Procedure-based candidates: {len(candidates)}")
+
                 return {"candidates": candidates}
 
-            # 🔹 CASE 5: FALLBACK
+            # -------------------------
+            # ⚠️ FINAL FALLBACK
+            # -------------------------
             logger.warning("⚠️ FALLBACK SEARCH TRIGGERED")
 
             candidates = await self.retriever.search(state["embedding"])
+
+            logger.info(f"⚠️ Fallback candidates: {len(candidates)}")
 
             return {"candidates": candidates}
 

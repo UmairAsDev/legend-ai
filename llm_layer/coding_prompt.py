@@ -117,12 +117,38 @@ If mohsNotes are present:
 
 - NEVER output CPT codes with quantity = 0
 - If quantity = 0 → remove that CPT code from final output
+-------------------------
+EXCISION LOGIC (STRICT):
 
-EXCISION LOGIC:
-  Determine the following before assigning cpt codes to the excisions, if same excision is performed on more than 1 lesions at same location than quantity of that cpt code will increase by 1 and so on.
-- Use excision size (prefer size with margins)
-- Match size range with CPT minSize–maxSize
-- Match anatomical location category
+1. Identify each excision section
+
+2. SIZE PRIORITY:
+   → Excision Size → Wound Size → Final Closure Size  
+   ❌ NEVER use Lesion Size
+
+3. Diameter:
+   → If (X x Y) → use MAX(X,Y)
+
+4. CODE:
+   → Match size range + anatomical location
+
+5. MULTIPLE LESIONS:
+   - If multiple lesions in SAME section/location:
+     → DO NOT repeat CPT
+     → quantity = lesion count
+
+6. GROUPING:
+   - Group by (CPT + Dx)
+   - Same CPT + same Dx → ONE entry with summed quantity
+
+7. RESTRICTIONS:
+   ❌ No closure codes  
+   ❌ No size inference  
+   ❌ No quantity = 0  
+
+8. VALIDATION:
+   - Size must fall in CPT range
+   - Location must match CPT description
 -------------------------
 CONTEXT:
 

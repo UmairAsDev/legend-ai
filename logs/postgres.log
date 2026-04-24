@@ -298,3 +298,6 @@ HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
             WHERE LOWER(proName) LIKE '%excision%'
             ]
 (Background on this error at: https://sqlalche.me/e/20/f405)
+2026-04-24 17:56:35,646 - ERROR - Session rollback: 'minSize'
+2026-04-24 18:05:26,923 - ERROR - Session rollback: 'minSize'
+2026-04-24 19:39:18,001 - ERROR - Session rollback: insufficient data in buffer: requested 8 remaining 3

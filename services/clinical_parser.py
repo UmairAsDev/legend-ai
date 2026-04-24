@@ -40,39 +40,84 @@ class ClinicalParser:
             return []
 
         pattern = r"([A-Z])\.\s*Excision.*?(?=(?:\n[A-Z]\.|$))"
-
         matches = list(re.finditer(pattern, text, re.IGNORECASE | re.DOTALL))
 
         results = []
+
         for match in matches:
             section_text = match.group(0)
 
-            # 🔹 Extract size (priority: with margins)
+            logger.info(f"🔍 Processing excision section: {match.group(1)}")
+
+            size = None
+
+            # -------------------------
+            # 🔴 PRIORITY 1: Excision Size (with margins)
+            # -------------------------
             size_match = re.search(
-                r"Excision Size.*?:\s*([\d\.]+)\s*x\s*([\d\.]+)",
+                r"Excision Size.*?:\s*([\d\.]+)\s*[x\-]\s*([\d\.]+)",
                 section_text,
                 re.IGNORECASE
             )
 
-            if not size_match:
-                size_match = re.search(
-                    r"Lesion Size:\s*([\d\.]+)\s*[-x]\s*([\d\.]+)",
+            if size_match:
+                size = max(float(size_match.group(1)), float(size_match.group(2)))
+                logger.info(f"✅ Using Excision Size: {size}")
+
+            # -------------------------
+            # 🔴 PRIORITY 2: Wound size
+            # -------------------------
+            if not size:
+                wound_match = re.search(
+                    r"wound size.*?:?\s*([\d\.]+)\s*[x\-]?\s*([\d\.]+)?",
                     section_text,
                     re.IGNORECASE
                 )
 
-            size = None
-            if size_match:
-                size = max(float(size_match.group(1)), float(size_match.group(2)))
+                if wound_match:
+                    values = [v for v in wound_match.groups() if v]
+                    size = max(map(float, values))
+                    logger.info(f"✅ Using Wound Size: {size}")
+
+            # -------------------------
+            # 🔴 PRIORITY 3: Final closure size
+            # -------------------------
+            if not size:
+                closure_match = re.search(
+                    r"final closure size.*?:?\s*([\d\.]+)",
+                    section_text,
+                    re.IGNORECASE
+                )
+
+                if closure_match:
+                    size = float(closure_match.group(1))
+                    logger.info(f"✅ Using Final Closure Size: {size}")
+
+            # -------------------------
+            # 🔴 DO NOT fallback to lesion size
+            # -------------------------
+            if not size:
+                logger.warning("⚠️ No valid excision size found → SKIPPING section")
+
+            # -------------------------
+            # 🔴 REMOVE CLOSURE TEXT (CRITICAL)
+            # -------------------------
+            cleaned_text = re.sub(
+                r"Repair:.*",
+                "",
+                section_text,
+                flags=re.IGNORECASE | re.DOTALL
+            )
 
             results.append({
                 "label": match.group(1),
-                "text": section_text.strip(),
+                "text": cleaned_text.strip(),
                 "size": size
             })
 
-        return results
+        logger.info(f"📊 Total excision sections parsed: {len(results)}")
 
+        return results
     # -------------------------
     # 🔹 KEYWORD MATCH
     # -------------------------

@@ -196,22 +196,27 @@ class CodeRetriever:
             return rows
         
 
-    async def excision_filter(self, size: float, location: str):
 
+    async def excision_filter(self, size: float, location: str):
         async with get_db_session() as db:
 
-            location = location.lower()
+            location = (location or "").lower()
 
-            # 🔹 Determine anatomical group
+            # -------------------------
+            # 🔴 AREA CLASSIFICATION
+            # -------------------------
             if any(k in location for k in ["face", "nose", "lip", "ear", "eyelid"]):
                 area = "face"
-            elif any(k in location for k in ["hand", "foot", "neck", "scalp"]):
+            elif any(k in location for k in ["hand", "foot", "neck", "scalp", "finger", "toe"]):
                 area = "special"
             else:
                 area = "trunk"
 
-            logger.info(f"📍 Excision filter | size={size} | area={area}")
+            logger.info(f"📍 Excision filter | size={size} | location={location} | area={area}")
 
+            # -------------------------
+            # 🔴 BASE QUERY
+            # -------------------------
             query = """
             SELECT 
                 proCode AS code,
@@ -226,24 +231,99 @@ class CodeRetriever:
                 0.0 AS distance,
                 'cpt' AS type
             FROM cpt_embeddings
-            WHERE LOWER(proName) LIKE '%excision%'
+            WHERE 
+                LOWER(proName) LIKE '%excision%'
+                AND LOWER(codeDesc) NOT LIKE '%closure%'
             """
 
             result = await db.execute(text(query))
             rows = [self._clean_row(r) for r in result.mappings().all()]
 
-            # 🔴 FILTER BY SIZE
+            logger.info(f"📦 Raw excision candidates: {len(rows)}")
+
             filtered = []
+
+            # -------------------------
+            # 🔴 STRICT FILTERING
+            # -------------------------
             for r in rows:
                 try:
+                    code = str(r.get("code", ""))
+                    desc = (r.get("description") or "").lower()
+                    pro_name = (r.get("proName") or "").lower()
+
+                    # -------------------------
+                    # 1. KEEP ONLY SKIN EXCISION (114xx, 116xx)
+                    # -------------------------
+                    if not (code.startswith("114") or code.startswith("116")):
+                        continue
+
+                    # -------------------------
+                    # 2. REMOVE IRRELEVANT TYPES
+                    # -------------------------
+                    if any(x in pro_name for x in [
+                        "soft tissue",
+                        "nail",
+                        "matrix",
+                        "chalazion",
+                        "non skin"
+                    ]):
+                        continue
+
+                    # -------------------------
+                    # 3. SIZE FILTER (STRICT)
+                    # -------------------------
                     min_s = float(r.get("minSize") or 0)
                     max_s = float(r.get("maxSize") or 999)
 
-                    if size and min_s <= size <= max_s:
-                        filtered.append(r)
-                except:
+                    if not size or not (min_s <= size <= max_s):
+                        continue
+
+                    # -------------------------
+                    # 4. LOCATION FILTER (STRICT)
+                    # -------------------------
+                    if area == "face":
+                        if not any(k in desc for k in ["face", "ear", "eyelid", "nose", "lip"]):
+                            continue
+
+                    elif area == "special":
+                        if not any(k in desc for k in ["scalp", "neck", "hand", "foot", "genital"]):
+                            continue
+
+                    elif area == "trunk":
+                        if not any(k in desc for k in ["trunk", "arm", "leg", "back", "chest"]):
+                            continue
+
+                    filtered.append(r)
+
+                except Exception as e:
+                    logger.warning(f"⚠️ Filter skip: {e}")
                     continue
 
-            logger.info(f"✅ Excision filtered: {len(filtered)}")
+            logger.info(f"🎯 Candidates after strict filtering: {len(filtered)}")
+
+            # -------------------------
+            # 🔴 SAFETY FALLBACK (if too strict)
+            # -------------------------
+            if not filtered:
+                logger.warning("⚠️ No strict matches → relaxing location constraint")
+
+                for r in rows:
+                    try:
+                        code = str(r.get("code", ""))
+
+                        if not (code.startswith("114") or code.startswith("116")):
+                            continue
+
+                        min_s = float(r.get("minSize") or 0)
+                        max_s = float(r.get("maxSize") or 999)
+
+                        if size and (min_s <= size <= max_s):
+                            filtered.append(r)
+
+                    except:
+                        continue
+
+                logger.info(f"🔁 Fallback candidates: {len(filtered)}")
 
             return filtered
