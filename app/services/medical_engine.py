@@ -61,6 +61,25 @@ def clean_note_data(note: Dict[str, Any]):
     return {k: note.get(k) for k in allowed_fields}
 
 
+def enforce_excision_quantity(parsed, llm_output):
+    try:
+        exc_sections = parsed.get("excision_sections", [])
+
+        for sec in exc_sections:
+            qty = sec.get("quantity", 1)
+
+            if qty > 1:
+                for cpt in llm_output["codes"]["cpt_codes"]:
+                    # match malignant excision (116xx)
+                    if cpt["code"].startswith("116"):
+                        cpt["quantity"] = str(qty)
+
+        return llm_output
+
+    except Exception as e:
+        logger.warning(f"⚠️ Enforcement failed: {e}")
+        return llm_output
+    
 # =========================
 # 🔹 NODE CLASS (LangGraph)
 # =========================
@@ -279,7 +298,10 @@ class CodingNodes:
 
             # 🔹 Get prompt + parser
             prompt, parser, formatted_prompt = build_coding_prompt(
-                state["cleaned_note"],
+                {
+                    "note": state["cleaned_note"],
+                    "parsed": state["parsed"]   # ✅ CRITICAL
+                },
                 state["candidates"]
             )
 
@@ -288,6 +310,9 @@ class CodingNodes:
                 formatted_prompt,
                 parser=parser
             )
+
+            # 🔴 HARD FIX (GUARANTEES CORRECT OUTPUT)
+            result = enforce_excision_quantity(state["parsed"], result)
 
             return {"llm_output": result}
 

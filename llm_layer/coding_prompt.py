@@ -164,6 +164,10 @@ STRICT RULES:
 
 - DO NOT hallucinate codes outside retrieved
 - Code + description MUST EXACTLY match retrieved data
+
+-------------------------
+PARSED DATA (DO NOT IGNORE):
+{parsed_data}
 -------------------------
 Retrieved Codes:
 {retrieved_codes}
@@ -175,11 +179,11 @@ Patient Note:
 -------------------------
 {format_instructions}
 """
-
     prompt = ChatPromptTemplate.from_template(template)
 
     return prompt, parser, prompt.format(
         retrieved_codes=json.dumps(retrieved_codes, indent=2),
-        note_data=json.dumps(note_data, indent=2),
+        parsed_data=json.dumps(note_data.get("parsed", {}), indent=2),
+        note_data=json.dumps(note_data.get("note", {}), indent=2),
         format_instructions=format_instructions,
     )

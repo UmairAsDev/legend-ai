@@ -20,9 +20,9 @@ class LLMClient:
             raise ValueError("OPENAI_API_KEY not found")
 
         self.llm = ChatOpenAI(
+            api_key=SecretStr(api_key),
             model=model,
-            temperature=temperature,
-            api_key=SecretStr(api_key)
+            temperature=temperature
         )
 
     async def generate_response(self, prompt: str, parser=None):

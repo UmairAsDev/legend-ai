@@ -11818,3 +11818,1266 @@ Traceback (most recent call last):
 
 AssertionError: insufficient data in buffer: requested 8 remaining 3
 During task with name 'retrieve' and id 'a22e9c2a-df72-b1b8-135a-b2842893a48e'
+2026-04-24 19:48:33.613 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 613315
+2026-04-24 19:48:33.922 | INFO     | app.services.medical_engine:fetch:82 - 📥 Fetching note: 613315
+2026-04-24 19:48:37.670 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 613315
+2026-04-24 19:48:38.302 | INFO     | services.clinical_parser:parse:169 - 🧠 Excision detected
+2026-04-24 19:48:38.304 | INFO     | services.clinical_parser:extract_excision_sections:50 - 🔍 Processing excision section: A
+2026-04-24 19:48:38.305 | INFO     | services.clinical_parser:extract_excision_sections:65 - ✅ Using Excision Size: 3.6
+2026-04-24 19:48:38.307 | INFO     | services.clinical_parser:extract_excision_sections:50 - 🔍 Processing excision section: C
+2026-04-24 19:48:38.310 | INFO     | services.clinical_parser:extract_excision_sections:65 - ✅ Using Excision Size: 0.3
+2026-04-24 19:48:38.310 | INFO     | services.clinical_parser:extract_excision_sections:118 - 📊 Total excision sections parsed: 2
+2026-04-24 19:48:38.311 | INFO     | services.clinical_parser:parse:171 - 📊 Excision sections: 2
+2026-04-24 19:48:38.312 | INFO     | services.clinical_parser:parse:180 - 🧠 Mohs detected
+2026-04-24 19:48:38.313 | INFO     | services.clinical_parser:parse:186 - 📊 Parser Output → biopsy_count: 0, mohs: True, procedure: False
+2026-04-24 19:48:38.313 | INFO     | app.services.medical_engine:parse:134 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: BCC exc 
+Location: Mid Lower Back
+Method: Excision
+Lesion Size: 0.5 x 0.8 cm
+Excision Size, including margins: 3.6 x 2.4 cm
+During Excision a 2nd lesion was adjacent to the site and was removed within this excision. 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & Margins
+Clinical Diagnosis: cyst exc
+Location: Rt 2nd Finger
+Lesion Size: 0.3 x 0.2 cm
+Excision Size, including margins: 0.3 x 0.2 cm
+Removed as courtesy.
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-24 19:48:39.067 | INFO     | app.services.medical_engine:retrieve:162 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_mohs': True, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: BCC exc \nLocation: Mid Lower Back\nMethod: Excision\nLesion Size: 0.5 x 0.8 cm\nExcision Size, including margins: 3.6 x 2.4 cm\nDuring Excision a 2nd lesion was adjacent to the site and was removed within this excision.\xa0\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109.', 'size': 3.6}, {'label': 'C', 'text': 'C. Excision Benign Lesion & Margins\nClinical Diagnosis: cyst exc\nLocation: Rt 2nd Finger\nLesion Size: 0.3 x 0.2 cm\nExcision Size, including margins:\xa00.3 x 0.2 cm\nRemoved as courtesy.\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111.', 'size': 0.3}]}
+2026-04-24 19:48:39.070 | INFO     | app.services.medical_engine:retrieve:170 - 🔴 EXCISION DETECTED
+2026-04-24 19:48:39.074 | INFO     | app.services.medical_engine:retrieve:180 - 📌 Excision Section → size=3.6, location=Mid Lower Back
+2026-04-24 19:48:39.074 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=3.6 | location=mid lower back | area=trunk
+2026-04-24 19:48:44.978 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 19:48:44.993 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 19:48:45.215 | INFO     | app.services.medical_engine:retrieve:184 -    ↳ Retrieved 12 excision candidates
+2026-04-24 19:48:45.215 | INFO     | app.services.medical_engine:retrieve:180 - 📌 Excision Section → size=0.3, location=Rt 2nd Finger
+2026-04-24 19:48:45.226 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=0.3 | location=rt 2nd finger | area=special
+2026-04-24 19:48:46.824 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 19:48:46.829 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 19:48:47.049 | INFO     | app.services.medical_engine:retrieve:184 -    ↳ Retrieved 12 excision candidates
+2026-04-24 19:48:47.049 | INFO     | app.services.medical_engine:retrieve:204 - 🔴 MOHS DETECTED
+2026-04-24 19:48:48.454 | INFO     | services.retriever:mohs_filter:194 - ✅ Mohs filter returned: 5 rows
+2026-04-24 19:48:48.683 | INFO     | app.services.medical_engine:retrieve:207 -    ↳ Retrieved 5 mohs candidates
+2026-04-24 19:48:48.683 | INFO     | app.services.medical_engine:retrieve:224 - ✅ Total combined candidates (deduped): 29
+2026-04-24 19:48:48.686 | INFO     | app.services.medical_engine:llm_call:278 - 🧠 Calling LLM with structured parser
+2026-04-24 19:58:46.970 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 613315
+2026-04-24 19:58:46.992 | INFO     | app.services.medical_engine:fetch:82 - 📥 Fetching note: 613315
+2026-04-24 19:58:50.689 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 613315
+2026-04-24 19:58:51.359 | INFO     | services.clinical_parser:parse:208 - 🧠 Excision detected
+2026-04-24 19:58:51.364 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: A
+2026-04-24 19:58:51.365 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 3.6
+2026-04-24 19:58:51.365 | INFO     | services.clinical_parser:_extract_lesion_count:47 - 🔢 Detected lesion count (numeric): 2
+2026-04-24 19:58:51.366 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section A: 2
+2026-04-24 19:58:51.367 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: C
+2026-04-24 19:58:51.367 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 0.3
+2026-04-24 19:58:51.367 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section C: 1
+2026-04-24 19:58:51.368 | INFO     | services.clinical_parser:extract_excision_sections:157 - 📊 Total excision sections parsed: 2
+2026-04-24 19:58:51.368 | INFO     | services.clinical_parser:parse:210 - 📊 Excision sections: 2
+2026-04-24 19:58:51.368 | INFO     | services.clinical_parser:parse:219 - 🧠 Mohs detected
+2026-04-24 19:58:51.368 | INFO     | services.clinical_parser:parse:225 - 📊 Parser Output → biopsy_count: 0, mohs: True, procedure: False
+2026-04-24 19:58:51.369 | INFO     | app.services.medical_engine:parse:134 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: BCC exc 
+Location: Mid Lower Back
+Method: Excision
+Lesion Size: 0.5 x 0.8 cm
+Excision Size, including margins: 3.6 x 2.4 cm
+During Excision a 2nd lesion was adjacent to the site and was removed within this excision. 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & Margins
+Clinical Diagnosis: cyst exc
+Location: Rt 2nd Finger
+Lesion Size: 0.3 x 0.2 cm
+Excision Size, including margins: 0.3 x 0.2 cm
+Removed as courtesy.
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-24 19:58:52.089 | INFO     | app.services.medical_engine:retrieve:162 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_mohs': True, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: BCC exc \nLocation: Mid Lower Back\nMethod: Excision\nLesion Size: 0.5 x 0.8 cm\nExcision Size, including margins: 3.6 x 2.4 cm\nDuring Excision a 2nd lesion was adjacent to the site and was removed within this excision.\xa0\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109.', 'size': 3.6, 'quantity': 2}, {'label': 'C', 'text': 'C. Excision Benign Lesion & Margins\nClinical Diagnosis: cyst exc\nLocation: Rt 2nd Finger\nLesion Size: 0.3 x 0.2 cm\nExcision Size, including margins:\xa00.3 x 0.2 cm\nRemoved as courtesy.\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111.', 'size': 0.3, 'quantity': 1}]}
+2026-04-24 19:58:52.089 | INFO     | app.services.medical_engine:retrieve:170 - 🔴 EXCISION DETECTED
+2026-04-24 19:58:52.092 | INFO     | app.services.medical_engine:retrieve:180 - 📌 Excision Section → size=3.6, location=Mid Lower Back
+2026-04-24 19:58:52.092 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=3.6 | location=mid lower back | area=trunk
+2026-04-24 19:58:58.468 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 19:58:58.468 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 19:58:58.706 | INFO     | app.services.medical_engine:retrieve:184 -    ↳ Retrieved 12 excision candidates
+2026-04-24 19:58:58.706 | INFO     | app.services.medical_engine:retrieve:180 - 📌 Excision Section → size=0.3, location=Rt 2nd Finger
+2026-04-24 19:58:58.713 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=0.3 | location=rt 2nd finger | area=special
+2026-04-24 19:59:00.322 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 19:59:00.325 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 19:59:00.547 | INFO     | app.services.medical_engine:retrieve:184 -    ↳ Retrieved 12 excision candidates
+2026-04-24 19:59:00.547 | INFO     | app.services.medical_engine:retrieve:204 - 🔴 MOHS DETECTED
+2026-04-24 19:59:01.921 | INFO     | services.retriever:mohs_filter:194 - ✅ Mohs filter returned: 5 rows
+2026-04-24 19:59:02.157 | INFO     | app.services.medical_engine:retrieve:207 -    ↳ Retrieved 5 mohs candidates
+2026-04-24 19:59:02.157 | INFO     | app.services.medical_engine:retrieve:224 - ✅ Total combined candidates (deduped): 29
+2026-04-24 19:59:02.163 | INFO     | app.services.medical_engine:llm_call:278 - 🧠 Calling LLM with structured parser
+2026-04-24 20:17:51.881 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 613315
+2026-04-24 20:17:51.929 | INFO     | app.services.medical_engine:fetch:101 - 📥 Fetching note: 613315
+2026-04-24 20:17:55.670 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 613315
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:parse:208 - 🧠 Excision detected
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: A
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 3.6
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:_extract_lesion_count:47 - 🔢 Detected lesion count (numeric): 2
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section A: 2
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: C
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 0.3
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section C: 1
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:extract_excision_sections:157 - 📊 Total excision sections parsed: 2
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:parse:210 - 📊 Excision sections: 2
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:parse:219 - 🧠 Mohs detected
+2026-04-24 20:17:56.266 | INFO     | services.clinical_parser:parse:225 - 📊 Parser Output → biopsy_count: 0, mohs: True, procedure: False
+2026-04-24 20:17:56.266 | INFO     | app.services.medical_engine:parse:153 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: BCC exc 
+Location: Mid Lower Back
+Method: Excision
+Lesion Size: 0.5 x 0.8 cm
+Excision Size, including margins: 3.6 x 2.4 cm
+During Excision a 2nd lesion was adjacent to the site and was removed within this excision. 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & Margins
+Clinical Diagnosis: cyst exc
+Location: Rt 2nd Finger
+Lesion Size: 0.3 x 0.2 cm
+Excision Size, including margins: 0.3 x 0.2 cm
+Removed as courtesy.
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-24 20:17:59.570 | INFO     | app.services.medical_engine:retrieve:181 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_mohs': True, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: BCC exc \nLocation: Mid Lower Back\nMethod: Excision\nLesion Size: 0.5 x 0.8 cm\nExcision Size, including margins: 3.6 x 2.4 cm\nDuring Excision a 2nd lesion was adjacent to the site and was removed within this excision.\xa0\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109.', 'size': 3.6, 'quantity': 2}, {'label': 'C', 'text': 'C. Excision Benign Lesion & Margins\nClinical Diagnosis: cyst exc\nLocation: Rt 2nd Finger\nLesion Size: 0.3 x 0.2 cm\nExcision Size, including margins:\xa00.3 x 0.2 cm\nRemoved as courtesy.\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111.', 'size': 0.3, 'quantity': 1}]}
+2026-04-24 20:17:59.570 | INFO     | app.services.medical_engine:retrieve:189 - 🔴 EXCISION DETECTED
+2026-04-24 20:17:59.570 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=3.6, location=Mid Lower Back
+2026-04-24 20:17:59.570 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=3.6 | location=mid lower back | area=trunk
+2026-04-24 20:18:12.071 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 20:18:12.071 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 20:18:12.296 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-24 20:18:12.296 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=0.3, location=Rt 2nd Finger
+2026-04-24 20:18:12.296 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=0.3 | location=rt 2nd finger | area=special
+2026-04-24 20:18:13.901 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 20:18:13.901 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 20:18:14.138 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-24 20:18:14.138 | INFO     | app.services.medical_engine:retrieve:223 - 🔴 MOHS DETECTED
+2026-04-24 20:18:15.512 | INFO     | services.retriever:mohs_filter:194 - ✅ Mohs filter returned: 5 rows
+2026-04-24 20:18:15.746 | INFO     | app.services.medical_engine:retrieve:226 -    ↳ Retrieved 5 mohs candidates
+2026-04-24 20:18:15.746 | INFO     | app.services.medical_engine:retrieve:243 - ✅ Total combined candidates (deduped): 29
+2026-04-24 20:18:15.746 | INFO     | app.services.medical_engine:llm_call:297 - 🧠 Calling LLM with structured parser
+2026-04-24 20:18:15.813 | ERROR    | app.services.medical_engine:llm_call:320 - ❌ LLM step failed: 'note_data'
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 324
+               │     └ 3
+               └ <function _main at 0x0000022705687420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 324
+           │    └ <function BaseProcess._bootstrap at 0x0000022705579800>
+           └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000022705578D60>
+    └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000022717B03CE0>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+    │    └ <function subprocess_started at 0x0000022707A128E0>
+    └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=1492, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x0000022717E94770>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x0000022707967380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x0000022717B03CE0>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x0000022717E94770>
+           │           │    │             └ [<socket.socket fd=1492, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x0000022707A11E40>
+           │           └ <uvicorn.server.Server object at 0x0000022717E94770>
+           └ <function run at 0x000002270725A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x00000227054F4BA0>
+           │      └ <function Runner.run at 0x00000227072ABA60>
+           └ <asyncio.runners.Runner object at 0x0000022717E2A5D0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x00000227072A9620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000022717E2A5D0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x00000227072A9580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x00000227072AB380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000022705A97880>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x0000022717F620E0>()>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle <_asyncio.TaskStepMethWrapper object at 0x0000022717F620E0>()>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle <_asyncio.TaskStepMethWrapper object at 0x0000022717F620E0>()>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x0000022717F620E0>()>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.llm_call of <app.services.medical_engine.CodingNodes object at 0x0000022715C90860>>
+                └ llm(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 300, in llm_call
+    prompt, parser, formatted_prompt = build_coding_prompt(
+                                       └ <function build_coding_prompt at 0x000002270B56DF80>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\llm_layer\coding_prompt.py", line 180, in build_coding_prompt
+    return prompt, parser, prompt.format(
+           │       │       │      └ <function BaseChatPromptTemplate.format at 0x000002270D2F0F40>
+           │       │       └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+           │       └ JsonOutputParser(pydantic_object=<class 'llm_layer.coding_prompt.OutputSchema'>)
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 709, in format
+    return self.format_prompt(**kwargs).to_string()
+           │    │               └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    └ <function BaseChatPromptTemplate.format_prompt at 0x000002270D2F0D60>
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 731, in format_prompt
+    messages = self.format_messages(**kwargs)
+               │    │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+               │    └ <function ChatPromptTemplate.format_messages at 0x000002270D2F16C0>
+               └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 1191, in format_messages
+    message = message_template.format_messages(**kwargs)
+              │                │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+              │                └ <function _StringImageMessagePromptTemplate.format_messages at 0x000002270D2F05E0>
+              └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], inp...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 561, in format_messages
+    return [self.format(**kwargs)]
+            │    │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+            │    └ <function _StringImageMessagePromptTemplate.format at 0x000002270D2F0900>
+            └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], inp...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 594, in format
+    text = self.prompt.format(**kwargs)
+           │    │      │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │      └ <function PromptTemplate.format at 0x000002270D2C79C0>
+           │    └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables={},...
+           └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], inp...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\prompt.py", line 201, in format
+    return DEFAULT_FORMATTER_MAPPING[self.template_format](self.template, **kwargs)
+           │                         │    │                │    │           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │                         │    │                │    └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │                         │    │                └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables={},...
+           │                         │    └ 'f-string'
+           │                         └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables={},...
+           └ {'f-string': <bound method Formatter.format of <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 190, in format
+    return self.vformat(format_string, args, kwargs)
+           │    │       │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │       │              └ ()
+           │    │       └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │    └ <function StrictFormatter.vformat at 0x000002270C1B8180>
+           └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\utils\formatting.py", line 48, in vformat
+    return super().vformat(format_string, args, kwargs)
+                           │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                           │              └ ()
+                           └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 194, in vformat
+    result, _ = self._vformat(format_string, args, kwargs, used_args, 2)
+                │    │        │              │     │       └ {'retrieved_codes'}
+                │    │        │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                │    │        │              └ ()
+                │    │        └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+                │    └ <function Formatter._vformat at 0x00000227059868E0>
+                └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 234, in _vformat
+    obj, arg_used = self.get_field(field_name, args, kwargs)
+    │               │    │         │           │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+    │               │    │         │           └ ()
+    │               │    │         └ 'note_data'
+    │               │    └ <function Formatter.get_field at 0x0000022705986CA0>
+    │               └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+    └ '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin tag (unless listed ...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 299, in get_field
+    obj = self.get_value(first, args, kwargs)
+          │    │         │      │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+          │    │         │      └ ()
+          │    │         └ 'note_data'
+          │    └ <function Formatter.get_value at 0x0000022705986980>
+          └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 256, in get_value
+    return kwargs[key]
+           │      └ 'note_data'
+           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+
+KeyError: 'note_data'
+2026-04-24 20:18:16.084 | ERROR    | app.services.engine_runner:process:28 - ❌ Pipeline failed: 'note_data'
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 324
+               │     └ 3
+               └ <function _main at 0x0000022705687420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 324
+           │    └ <function BaseProcess._bootstrap at 0x0000022705579800>
+           └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000022705578D60>
+    └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000022717B03CE0>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+    │    └ <function subprocess_started at 0x0000022707A128E0>
+    └ <SpawnProcess name='SpawnProcess-49' parent=4872 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=1492, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x0000022717E94770>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x0000022707967380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x0000022717B03CE0>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x0000022717E94770>
+           │           │    │             └ [<socket.socket fd=1492, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x0000022707A11E40>
+           │           └ <uvicorn.server.Server object at 0x0000022717E94770>
+           └ <function run at 0x000002270725A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x00000227054F4BA0>
+           │      └ <function Runner.run at 0x00000227072ABA60>
+           └ <asyncio.runners.Runner object at 0x0000022717E2A5D0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x00000227072A9620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000022717E2A5D0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x00000227072A9580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x00000227072AB380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000022705A97880>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 415, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+                   └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x000002270A644230>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC52B0>>
+                 │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+                 │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+                 │    └ <fastapi.applications.FastAPI object at 0x0000022717E96F60>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x000002270A644230>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC52B0>>
+                           │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+                           └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC52B0>>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000022717E97FB0>
+          └ <fastapi.applications.FastAPI object at 0x0000022717E96F60>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000022717EBCC20>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000022717E97E90>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000022717E97FB0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000022717EBCC20>
+          │                            │    │    │     │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x000002271796A960>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000022717E97F50>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000022717E97E90>
+          └ <function wrap_app_handling_exceptions at 0x0000022708998E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000022717EBCD60>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000022717E97F50>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000022717EBCD60>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <fastapi.routing.APIRouter object at 0x0000022717E97140>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000022717E97F50>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000022717EBCD60>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x0000022717E97140>>
+          └ <fastapi.routing.APIRouter object at 0x0000022717E97140>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000022717EBCD60>
+          │     │      │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │     └ <function Route.handle at 0x000002270899A2A0>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000022717EBCD60>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <function request_response.<locals>.app at 0x0000022717EBC540>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000022717EBCD60>
+          │                            │    │        │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x0000022717EC4BC0>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x0000022717EBCE00>
+          └ <function wrap_app_handling_exceptions at 0x0000022708998E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000022717EBCF40>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x0000022717EC5...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x0000022717EBCE00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x0000022717EC4BC0>
+                     └ <function get_request_handler.<locals>.app at 0x0000022717EBC5E0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x00000227089BC2C0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'note_id': 613315}
+                 │         └ <function process_note_endpoint at 0x0000022717EB4220>
+                 └ Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='note_id', mode='validation', config=None)], query...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\api\route.py", line 24, in process_note_endpoint
+    result = await service.process(note_id)
+                   │       │       └ 613315
+                   │       └ <function MedicalCodingService.process at 0x000002270A78BBA0>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x00000227167FAC30>
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\engine_runner.py", line 16, in process
+    result = await self.graph.ainvoke({
+                   │    │     └ <function Pregel.ainvoke at 0x000002270B42EE80>
+                   │    └ <langgraph.graph.state.CompiledStateGraph object at 0x0000022717E5A5A0>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x00000227167FAC30>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3479, in ainvoke
+    async for chunk in self.astream(
+              │        │    └ <function Pregel.astream at 0x000002270B42E840>
+              │        └ <langgraph.graph.state.CompiledStateGraph object at 0x0000022717E5A5A0>
+              └ ('values', {'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0,...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3128, in astream
+    async for _ in runner.atick(
+              │    │      └ <function PregelRunner.atick at 0x000002270B42C2C0>
+              │    └ <langgraph.pregel._runner.PregelRunner object at 0x0000022717EC5430>
+              └ None
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_runner.py", line 304, in atick
+    await arun_with_retry(
+          └ <function arun_with_retry at 0x000002270B407880>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_retry.py", line 242, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+                 │    │            │    │      └ {'configurable': {'__pregel_runtime': Runtime(context=None, store=None, stream_writer=<function Pregel.astream.<locals>.strea...
+                 │    │            │    └ <member 'input' of 'PregelExecutableTask' objects>
+                 │    │            └ PregelExecutableTask(name='llm', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 400...
+                 │    └ <member 'proc' of 'PregelExecutableTask' objects>
+                 └ PregelExecutableTask(name='llm', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 400...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 705, in ainvoke
+    input = await asyncio.create_task(
+                  │       └ <function create_task at 0x0000022707290E00>
+                  └ <module 'asyncio' from 'C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\__init__.py'>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.llm_call of <app.services.medical_engine.CodingNodes object at 0x0000022715C90860>>
+                └ llm(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 300, in llm_call
+    prompt, parser, formatted_prompt = build_coding_prompt(
+                                       └ <function build_coding_prompt at 0x000002270B56DF80>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\llm_layer\coding_prompt.py", line 180, in build_coding_prompt
+    return prompt, parser, prompt.format(
+           │       │       │      └ <function BaseChatPromptTemplate.format at 0x000002270D2F0F40>
+           │       │       └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+           │       └ JsonOutputParser(pydantic_object=<class 'llm_layer.coding_prompt.OutputSchema'>)
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 709, in format
+    return self.format_prompt(**kwargs).to_string()
+           │    │               └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    └ <function BaseChatPromptTemplate.format_prompt at 0x000002270D2F0D60>
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 731, in format_prompt
+    messages = self.format_messages(**kwargs)
+               │    │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+               │    └ <function ChatPromptTemplate.format_messages at 0x000002270D2F16C0>
+               └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 1191, in format_messages
+    message = message_template.format_messages(**kwargs)
+              │                │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+              │                └ <function _StringImageMessagePromptTemplate.format_messages at 0x000002270D2F05E0>
+              └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], inp...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 561, in format_messages
+    return [self.format(**kwargs)]
+            │    │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+            │    └ <function _StringImageMessagePromptTemplate.format at 0x000002270D2F0900>
+            └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], inp...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 594, in format
+    text = self.prompt.format(**kwargs)
+           │    │      │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │      └ <function PromptTemplate.format at 0x000002270D2C79C0>
+           │    └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables={},...
+           └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], inp...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\prompt.py", line 201, in format
+    return DEFAULT_FORMATTER_MAPPING[self.template_format](self.template, **kwargs)
+           │                         │    │                │    │           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │                         │    │                │    └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │                         │    │                └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables={},...
+           │                         │    └ 'f-string'
+           │                         └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'retrieved_codes'], input_types={}, partial_variables={},...
+           └ {'f-string': <bound method Formatter.format of <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 190, in format
+    return self.vformat(format_string, args, kwargs)
+           │    │       │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │       │              └ ()
+           │    │       └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │    └ <function StrictFormatter.vformat at 0x000002270C1B8180>
+           └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\utils\formatting.py", line 48, in vformat
+    return super().vformat(format_string, args, kwargs)
+                           │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                           │              └ ()
+                           └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 194, in vformat
+    result, _ = self._vformat(format_string, args, kwargs, used_args, 2)
+                │    │        │              │     │       └ {'retrieved_codes'}
+                │    │        │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                │    │        │              └ ()
+                │    │        └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+                │    └ <function Formatter._vformat at 0x00000227059868E0>
+                └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 234, in _vformat
+    obj, arg_used = self.get_field(field_name, args, kwargs)
+    │               │    │         │           │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+    │               │    │         │           └ ()
+    │               │    │         └ 'note_data'
+    │               │    └ <function Formatter.get_field at 0x0000022705986CA0>
+    │               └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+    └ '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin tag (unless listed ...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 299, in get_field
+    obj = self.get_value(first, args, kwargs)
+          │    │         │      │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+          │    │         │      └ ()
+          │    │         └ 'note_data'
+          │    └ <function Formatter.get_value at 0x0000022705986980>
+          └ <langchain_core.utils.formatting.StrictFormatter object at 0x000002270C18F470>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 256, in get_value
+    return kwargs[key]
+           │      └ 'note_data'
+           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+
+KeyError: 'note_data'
+During task with name 'llm' and id 'cb88de1d-85aa-b588-44b9-2c7fca294619'
+2026-04-24 20:21:43.248 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 613315
+2026-04-24 20:21:43.258 | INFO     | app.services.medical_engine:fetch:101 - 📥 Fetching note: 613315
+2026-04-24 20:21:46.976 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 613315
+2026-04-24 20:21:47.573 | INFO     | services.clinical_parser:parse:208 - 🧠 Excision detected
+2026-04-24 20:21:47.580 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: A
+2026-04-24 20:21:47.581 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 3.6
+2026-04-24 20:21:47.581 | INFO     | services.clinical_parser:_extract_lesion_count:47 - 🔢 Detected lesion count (numeric): 2
+2026-04-24 20:21:47.581 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section A: 2
+2026-04-24 20:21:47.582 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: C
+2026-04-24 20:21:47.582 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 0.3
+2026-04-24 20:21:47.582 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section C: 1
+2026-04-24 20:21:47.583 | INFO     | services.clinical_parser:extract_excision_sections:157 - 📊 Total excision sections parsed: 2
+2026-04-24 20:21:47.583 | INFO     | services.clinical_parser:parse:210 - 📊 Excision sections: 2
+2026-04-24 20:21:47.583 | INFO     | services.clinical_parser:parse:219 - 🧠 Mohs detected
+2026-04-24 20:21:47.583 | INFO     | services.clinical_parser:parse:225 - 📊 Parser Output → biopsy_count: 0, mohs: True, procedure: False
+2026-04-24 20:21:47.584 | INFO     | app.services.medical_engine:parse:153 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: BCC exc 
+Location: Mid Lower Back
+Method: Excision
+Lesion Size: 0.5 x 0.8 cm
+Excision Size, including margins: 3.6 x 2.4 cm
+During Excision a 2nd lesion was adjacent to the site and was removed within this excision. 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & Margins
+Clinical Diagnosis: cyst exc
+Location: Rt 2nd Finger
+Lesion Size: 0.3 x 0.2 cm
+Excision Size, including margins: 0.3 x 0.2 cm
+Removed as courtesy.
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-24 20:21:49.167 | INFO     | app.services.medical_engine:retrieve:181 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_mohs': True, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: BCC exc \nLocation: Mid Lower Back\nMethod: Excision\nLesion Size: 0.5 x 0.8 cm\nExcision Size, including margins: 3.6 x 2.4 cm\nDuring Excision a 2nd lesion was adjacent to the site and was removed within this excision.\xa0\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109.', 'size': 3.6, 'quantity': 2}, {'label': 'C', 'text': 'C. Excision Benign Lesion & Margins\nClinical Diagnosis: cyst exc\nLocation: Rt 2nd Finger\nLesion Size: 0.3 x 0.2 cm\nExcision Size, including margins:\xa00.3 x 0.2 cm\nRemoved as courtesy.\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111.', 'size': 0.3, 'quantity': 1}]}
+2026-04-24 20:21:49.167 | INFO     | app.services.medical_engine:retrieve:189 - 🔴 EXCISION DETECTED
+2026-04-24 20:21:49.178 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=3.6, location=Mid Lower Back
+2026-04-24 20:21:49.178 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=3.6 | location=mid lower back | area=trunk
+2026-04-24 20:21:53.996 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 20:21:53.997 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 20:21:54.215 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-24 20:21:54.231 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=0.3, location=Rt 2nd Finger
+2026-04-24 20:21:54.231 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=0.3 | location=rt 2nd finger | area=special
+2026-04-24 20:21:55.851 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 20:21:55.867 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 20:21:56.088 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-24 20:21:56.088 | INFO     | app.services.medical_engine:retrieve:223 - 🔴 MOHS DETECTED
+2026-04-24 20:21:57.502 | INFO     | services.retriever:mohs_filter:194 - ✅ Mohs filter returned: 5 rows
+2026-04-24 20:21:57.734 | INFO     | app.services.medical_engine:retrieve:226 -    ↳ Retrieved 5 mohs candidates
+2026-04-24 20:21:57.734 | INFO     | app.services.medical_engine:retrieve:243 - ✅ Total combined candidates (deduped): 29
+2026-04-24 20:21:57.740 | INFO     | app.services.medical_engine:llm_call:297 - 🧠 Calling LLM with structured parser
+2026-04-24 20:21:57.743 | ERROR    | app.services.medical_engine:llm_call:320 - ❌ LLM step failed: 'note_data'
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 176
+               │     └ 3
+               └ <function _main at 0x000002531A3A7420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 176
+           │    └ <function BaseProcess._bootstrap at 0x000002531A299800>
+           └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x000002531A298D60>
+    └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x000002532CB27B30>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+    │    └ <function subprocess_started at 0x000002531C6E28E0>
+    └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=324, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x000002532CB68470>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x000002531C647380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x000002532CB27B30>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x000002532CB68470>
+           │           │    │             └ [<socket.socket fd=324, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x000002531C6E1E40>
+           │           └ <uvicorn.server.Server object at 0x000002532CB68470>
+           └ <function run at 0x000002531C37A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x000002531A214BA0>
+           │      └ <function Runner.run at 0x000002531C3CBA60>
+           └ <asyncio.runners.Runner object at 0x000002532C669A90>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x000002531C3C9620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x000002532C669A90>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x000002531C3C9580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x000002531C3CB380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x000002531A7B7880>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000002532CC13AC0>()>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000002532CC13AC0>()>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000002532CC13AC0>()>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000002532CC13AC0>()>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.llm_call of <app.services.medical_engine.CodingNodes object at 0x000002532ABC1280>>
+                └ llm(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 300, in llm_call
+    prompt, parser, formatted_prompt = build_coding_prompt(
+                                       └ <function build_coding_prompt at 0x000002532018DC60>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\llm_layer\coding_prompt.py", line 184, in build_coding_prompt
+    return prompt, parser, prompt.format(
+           │       │       │      └ <function BaseChatPromptTemplate.format at 0x0000025322020F40>
+           │       │       └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+           │       └ JsonOutputParser(pydantic_object=<class 'llm_layer.coding_prompt.OutputSchema'>)
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 709, in format
+    return self.format_prompt(**kwargs).to_string()
+           │    │               └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    └ <function BaseChatPromptTemplate.format_prompt at 0x0000025322020D60>
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 731, in format_prompt
+    messages = self.format_messages(**kwargs)
+               │    │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+               │    └ <function ChatPromptTemplate.format_messages at 0x00000253220216C0>
+               └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 1191, in format_messages
+    message = message_template.format_messages(**kwargs)
+              │                │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+              │                └ <function _StringImageMessagePromptTemplate.format_messages at 0x00000253220205E0>
+              └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retriev...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 561, in format_messages
+    return [self.format(**kwargs)]
+            │    │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+            │    └ <function _StringImageMessagePromptTemplate.format at 0x0000025322020900>
+            └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retriev...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 594, in format
+    text = self.prompt.format(**kwargs)
+           │    │      │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │      └ <function PromptTemplate.format at 0x0000025321FF79C0>
+           │    └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, partia...
+           └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retriev...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\prompt.py", line 201, in format
+    return DEFAULT_FORMATTER_MAPPING[self.template_format](self.template, **kwargs)
+           │                         │    │                │    │           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │                         │    │                │    └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │                         │    │                └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, partia...
+           │                         │    └ 'f-string'
+           │                         └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, partia...
+           └ {'f-string': <bound method Formatter.format of <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 190, in format
+    return self.vformat(format_string, args, kwargs)
+           │    │       │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │       │              └ ()
+           │    │       └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │    └ <function StrictFormatter.vformat at 0x0000025320EF8180>
+           └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\utils\formatting.py", line 48, in vformat
+    return super().vformat(format_string, args, kwargs)
+                           │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                           │              └ ()
+                           └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 194, in vformat
+    result, _ = self._vformat(format_string, args, kwargs, used_args, 2)
+                │    │        │              │     │       └ {'parsed_data', 'retrieved_codes'}
+                │    │        │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                │    │        │              └ ()
+                │    │        └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+                │    └ <function Formatter._vformat at 0x000002531A6A68E0>
+                └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 234, in _vformat
+    obj, arg_used = self.get_field(field_name, args, kwargs)
+    │               │    │         │           │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+    │               │    │         │           └ ()
+    │               │    │         └ 'note_data'
+    │               │    └ <function Formatter.get_field at 0x000002531A6A6CA0>
+    │               └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+    └ '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin tag (unless listed ...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 299, in get_field
+    obj = self.get_value(first, args, kwargs)
+          │    │         │      │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+          │    │         │      └ ()
+          │    │         └ 'note_data'
+          │    └ <function Formatter.get_value at 0x000002531A6A6980>
+          └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 256, in get_value
+    return kwargs[key]
+           │      └ 'note_data'
+           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+
+KeyError: 'note_data'
+2026-04-24 20:21:57.771 | ERROR    | app.services.engine_runner:process:28 - ❌ Pipeline failed: 'note_data'
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 176
+               │     └ 3
+               └ <function _main at 0x000002531A3A7420>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 176
+           │    └ <function BaseProcess._bootstrap at 0x000002531A299800>
+           └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x000002531A298D60>
+    └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x000002532CB27B30>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+    │    └ <function subprocess_started at 0x000002531C6E28E0>
+    └ <SpawnProcess name='SpawnProcess-52' parent=4872 started>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=324, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x000002532CB68470>>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x000002531C647380>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x000002532CB27B30>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x000002532CB68470>
+           │           │    │             └ [<socket.socket fd=324, family=2, type=1, proto=6, laddr=('127.0.0.1', 8002)>]
+           │           │    └ <function Server.serve at 0x000002531C6E1E40>
+           │           └ <uvicorn.server.Server object at 0x000002532CB68470>
+           └ <function run at 0x000002531C37A0C0>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x000002531A214BA0>
+           │      └ <function Runner.run at 0x000002531C3CBA60>
+           └ <asyncio.runners.Runner object at 0x000002532C669A90>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x000002531C3C9620>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x000002532C669A90>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x000002531C3C9580>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x000002531C3CB380>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x000002531A7B7880>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finished result=None>)>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 415, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+                   └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x000002532CB6ABA0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99010>>
+                 │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+                 │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+                 │    └ <fastapi.applications.FastAPI object at 0x000002532CB6AC90>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x000002532CB6ABA0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99010>>
+                           │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+                           └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99010>>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x000002532CB6BE90>
+          └ <fastapi.applications.FastAPI object at 0x000002532CB6AC90>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x000002532CB90C20>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000002532CB6BCB0>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x000002532CB6BE90>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x000002532CB90C20>
+          │                            │    │    │     │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x000002532B4C9C70>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000002532CB6BBF0>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000002532CB6BCB0>
+          └ <function wrap_app_handling_exceptions at 0x000002531D658E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000002532CB90D60>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000002532CB6BBF0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000002532CB90D60>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <fastapi.routing.APIRouter object at 0x000002532CB6AE70>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000002532CB6BBF0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000002532CB90D60>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x000002532CB6AE70>>
+          └ <fastapi.routing.APIRouter object at 0x000002532CB6AE70>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000002532CB90D60>
+          │     │      │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │     └ <function Route.handle at 0x000002531D65A2A0>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000002532CB90D60>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │    └ <function request_response.<locals>.app at 0x000002532CB90540>
+          └ APIRoute(path='/api/v1/process-note/{note_id}', name='process_note_endpoint', methods=['GET'])
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000002532CB90D60>
+          │                            │    │        │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x000002532CB98C50>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x000002532CB90E00>
+          └ <function wrap_app_handling_exceptions at 0x000002531D658E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000002532CB90F40>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x000002532CB99...
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8002), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x000002532CB90E00>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x000002532CB98C50>
+                     └ <function get_request_handler.<locals>.app at 0x000002532CB905E0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x000002531D67C2C0>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'note_id': 613315}
+                 │         └ <function process_note_endpoint at 0x000002532CB84220>
+                 └ Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='note_id', mode='validation', config=None)], query...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\api\route.py", line 24, in process_note_endpoint
+    result = await service.process(note_id)
+                   │       │       └ 613315
+                   │       └ <function MedicalCodingService.process at 0x000002531F53BE20>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x000002532AFF1070>
+
+> File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\engine_runner.py", line 16, in process
+    result = await self.graph.ainvoke({
+                   │    │     └ <function Pregel.ainvoke at 0x000002532017EE80>
+                   │    └ <langgraph.graph.state.CompiledStateGraph object at 0x000002532CA8C0E0>
+                   └ <app.services.engine_runner.MedicalCodingService object at 0x000002532AFF1070>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3479, in ainvoke
+    async for chunk in self.astream(
+              │        │    └ <function Pregel.astream at 0x000002532017E840>
+              │        └ <langgraph.graph.state.CompiledStateGraph object at 0x000002532CA8C0E0>
+              └ ('values', {'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0,...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\main.py", line 3128, in astream
+    async for _ in runner.atick(
+              │    │      └ <function PregelRunner.atick at 0x000002532017C2C0>
+              │    └ <langgraph.pregel._runner.PregelRunner object at 0x000002532CB99FA0>
+              └ None
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_runner.py", line 304, in atick
+    await arun_with_retry(
+          └ <function arun_with_retry at 0x0000025320153880>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\pregel\_retry.py", line 242, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+                 │    │            │    │      └ {'configurable': {'__pregel_runtime': Runtime(context=None, store=None, stream_writer=<function Pregel.astream.<locals>.strea...
+                 │    │            │    └ <member 'input' of 'PregelExecutableTask' objects>
+                 │    │            └ PregelExecutableTask(name='llm', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 400...
+                 │    └ <member 'proc' of 'PregelExecutableTask' objects>
+                 └ PregelExecutableTask(name='llm', input={'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 400...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 705, in ainvoke
+    input = await asyncio.create_task(
+                  │       └ <function create_task at 0x000002531C3B0E00>
+                  └ <module 'asyncio' from 'C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\__init__.py'>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langgraph\_internal\_runnable.py", line 473, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+                │    │      │       └ {}
+                │    │      └ ({'note_id': 613315, 'raw_note': {'noteId': 613315, 'provider': 40001, 'physician': 40001, 'referringPhysician': 0, 'noteDate...
+                │    └ <bound method CodingNodes.llm_call of <app.services.medical_engine.CodingNodes object at 0x000002532ABC1280>>
+                └ llm(tags=None, recurse=True, explode_args=False, func_accepts={})
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\app\services\medical_engine.py", line 300, in llm_call
+    prompt, parser, formatted_prompt = build_coding_prompt(
+                                       └ <function build_coding_prompt at 0x000002532018DC60>
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\llm_layer\coding_prompt.py", line 184, in build_coding_prompt
+    return prompt, parser, prompt.format(
+           │       │       │      └ <function BaseChatPromptTemplate.format at 0x0000025322020F40>
+           │       │       └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+           │       └ JsonOutputParser(pydantic_object=<class 'llm_layer.coding_prompt.OutputSchema'>)
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 709, in format
+    return self.format_prompt(**kwargs).to_string()
+           │    │               └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    └ <function BaseChatPromptTemplate.format_prompt at 0x0000025322020D60>
+           └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 731, in format_prompt
+    messages = self.format_messages(**kwargs)
+               │    │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+               │    └ <function ChatPromptTemplate.format_messages at 0x00000253220216C0>
+               └ ChatPromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, pa...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 1191, in format_messages
+    message = message_template.format_messages(**kwargs)
+              │                │                 └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+              │                └ <function _StringImageMessagePromptTemplate.format_messages at 0x00000253220205E0>
+              └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retriev...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 561, in format_messages
+    return [self.format(**kwargs)]
+            │    │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+            │    └ <function _StringImageMessagePromptTemplate.format at 0x0000025322020900>
+            └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retriev...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\chat.py", line 594, in format
+    text = self.prompt.format(**kwargs)
+           │    │      │        └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │      └ <function PromptTemplate.format at 0x0000025321FF79C0>
+           │    └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, partia...
+           └ HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retriev...
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\prompts\prompt.py", line 201, in format
+    return DEFAULT_FORMATTER_MAPPING[self.template_format](self.template, **kwargs)
+           │                         │    │                │    │           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │                         │    │                │    └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │                         │    │                └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, partia...
+           │                         │    └ 'f-string'
+           │                         └ PromptTemplate(input_variables=['format_instructions', 'note_data', 'parsed_data', 'retrieved_codes'], input_types={}, partia...
+           └ {'f-string': <bound method Formatter.format of <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 190, in format
+    return self.vformat(format_string, args, kwargs)
+           │    │       │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+           │    │       │              └ ()
+           │    │       └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+           │    └ <function StrictFormatter.vformat at 0x0000025320EF8180>
+           └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+  File "D:\AXIS Projects\13- Legend EHR\legend-ai\.venv\Lib\site-packages\langchain_core\utils\formatting.py", line 48, in vformat
+    return super().vformat(format_string, args, kwargs)
+                           │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                           │              └ ()
+                           └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 194, in vformat
+    result, _ = self._vformat(format_string, args, kwargs, used_args, 2)
+                │    │        │              │     │       └ {'parsed_data', 'retrieved_codes'}
+                │    │        │              │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+                │    │        │              └ ()
+                │    │        └ '\nYou are a certified medical coding expert.\n\nYour task is to:\n1. Analyze the FULL patient note carefully\n2. Generate st...
+                │    └ <function Formatter._vformat at 0x000002531A6A68E0>
+                └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 234, in _vformat
+    obj, arg_used = self.get_field(field_name, args, kwargs)
+    │               │    │         │           │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+    │               │    │         │           └ ()
+    │               │    │         └ 'note_data'
+    │               │    └ <function Formatter.get_field at 0x000002531A6A6CA0>
+    │               └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+    └ '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin tag (unless listed ...
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 299, in get_field
+    obj = self.get_value(first, args, kwargs)
+          │    │         │      │     └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+          │    │         │      └ ()
+          │    │         └ 'note_data'
+          │    └ <function Formatter.get_value at 0x000002531A6A6980>
+          └ <langchain_core.utils.formatting.StrictFormatter object at 0x0000025320ECF350>
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python312\Lib\string.py", line 256, in get_value
+    return kwargs[key]
+           │      └ 'note_data'
+           └ {'retrieved_codes': '[\n  {\n    "code": "11401",\n    "description": "Excision, benign lesion including margins, except skin...
+
+KeyError: 'note_data'
+During task with name 'llm' and id 'd3cc1c36-5a68-a7a2-6b09-9fd3733f9403'
+2026-04-24 20:24:21.679 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 613315
+2026-04-24 20:24:21.683 | INFO     | app.services.medical_engine:fetch:101 - 📥 Fetching note: 613315
+2026-04-24 20:24:25.463 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 613315
+2026-04-24 20:24:26.099 | INFO     | services.clinical_parser:parse:208 - 🧠 Excision detected
+2026-04-24 20:24:26.099 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: A
+2026-04-24 20:24:26.112 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 3.6
+2026-04-24 20:24:26.114 | INFO     | services.clinical_parser:_extract_lesion_count:47 - 🔢 Detected lesion count (numeric): 2
+2026-04-24 20:24:26.115 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section A: 2
+2026-04-24 20:24:26.121 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: C
+2026-04-24 20:24:26.129 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 0.3
+2026-04-24 20:24:26.131 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section C: 1
+2026-04-24 20:24:26.132 | INFO     | services.clinical_parser:extract_excision_sections:157 - 📊 Total excision sections parsed: 2
+2026-04-24 20:24:26.133 | INFO     | services.clinical_parser:parse:210 - 📊 Excision sections: 2
+2026-04-24 20:24:26.133 | INFO     | services.clinical_parser:parse:219 - 🧠 Mohs detected
+2026-04-24 20:24:26.134 | INFO     | services.clinical_parser:parse:225 - 📊 Parser Output → biopsy_count: 0, mohs: True, procedure: False
+2026-04-24 20:24:26.134 | INFO     | app.services.medical_engine:parse:153 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: BCC exc 
+Location: Mid Lower Back
+Method: Excision
+Lesion Size: 0.5 x 0.8 cm
+Excision Size, including margins: 3.6 x 2.4 cm
+During Excision a 2nd lesion was adjacent to the site and was removed within this excision. 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 05-20-2024. The wound size with margins is 3.6 - 2.4 cm. The defect was undermined extensively (2.4 cm) to reduce tension and distortion of the adjacent structures. Buried absorbable sutures were also used to close the subcutaneous and dermal components of the defect. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & Margins
+Clinical Diagnosis: cyst exc
+Location: Rt 2nd Finger
+Lesion Size: 0.3 x 0.2 cm
+Excision Size, including margins: 0.3 x 0.2 cm
+Removed as courtesy.
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 05-20-2024. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 1.1 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-24 20:24:27.047 | INFO     | app.services.medical_engine:retrieve:181 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_mohs': True, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: BCC exc \nLocation: Mid Lower Back\nMethod: Excision\nLesion Size: 0.5 x 0.8 cm\nExcision Size, including margins: 3.6 x 2.4 cm\nDuring Excision a 2nd lesion was adjacent to the site and was removed within this excision.\xa0\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA24-1109.', 'size': 3.6, 'quantity': 2}, {'label': 'C', 'text': 'C. Excision Benign Lesion & Margins\nClinical Diagnosis: cyst exc\nLocation: Rt 2nd Finger\nLesion Size: 0.3 x 0.2 cm\nExcision Size, including margins:\xa00.3 x 0.2 cm\nRemoved as courtesy.\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA24-1111.', 'size': 0.3, 'quantity': 1}]}
+2026-04-24 20:24:27.047 | INFO     | app.services.medical_engine:retrieve:189 - 🔴 EXCISION DETECTED
+2026-04-24 20:24:27.048 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=3.6, location=Mid Lower Back
+2026-04-24 20:24:27.048 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=3.6 | location=mid lower back | area=trunk
+2026-04-24 20:24:32.895 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 20:24:32.898 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 20:24:33.126 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-24 20:24:33.126 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=0.3, location=Rt 2nd Finger
+2026-04-24 20:24:33.126 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=0.3 | location=rt 2nd finger | area=special
+2026-04-24 20:24:34.743 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 20:24:34.743 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 20:24:34.975 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-24 20:24:34.975 | INFO     | app.services.medical_engine:retrieve:223 - 🔴 MOHS DETECTED
+2026-04-24 20:24:36.348 | INFO     | services.retriever:mohs_filter:194 - ✅ Mohs filter returned: 5 rows
+2026-04-24 20:24:36.594 | INFO     | app.services.medical_engine:retrieve:226 -    ↳ Retrieved 5 mohs candidates
+2026-04-24 20:24:36.600 | INFO     | app.services.medical_engine:retrieve:243 - ✅ Total combined candidates (deduped): 29
+2026-04-24 20:24:36.601 | INFO     | app.services.medical_engine:llm_call:297 - 🧠 Calling LLM with structured parser
+2026-04-24 20:50:48.828 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 711220
+2026-04-24 20:50:48.831 | INFO     | app.services.medical_engine:fetch:101 - 📥 Fetching note: 711220
+2026-04-24 20:50:49.444 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 711220
+2026-04-24 20:50:50.067 | INFO     | services.clinical_parser:parse:192 - 🧠 Biopsy detected
+2026-04-24 20:50:50.069 | INFO     | services.clinical_parser:parse:208 - 🧠 Excision detected
+2026-04-24 20:50:50.070 | INFO     | services.clinical_parser:extract_excision_sections:82 - 🔍 Processing excision section: C
+2026-04-24 20:50:50.071 | INFO     | services.clinical_parser:extract_excision_sections:97 - ✅ Using Excision Size: 2.0
+2026-04-24 20:50:50.071 | INFO     | services.clinical_parser:extract_excision_sections:138 - 📊 Lesion count for section C: 1
+2026-04-24 20:50:50.071 | INFO     | services.clinical_parser:extract_excision_sections:157 - 📊 Total excision sections parsed: 1
+2026-04-24 20:50:50.072 | INFO     | services.clinical_parser:parse:210 - 📊 Excision sections: 1
+2026-04-24 20:50:50.072 | INFO     | services.clinical_parser:parse:225 - 📊 Parser Output → biopsy_count: 2, mohs: False, procedure: False
+2026-04-24 20:50:50.073 | INFO     | app.services.medical_engine:parse:153 - 🧾 biopsyNotes AFTER CLEAN: A. Biopsy
+Clinical Diagnosis: MM
+Location: Left Neck
+Method: Shave
+ The patient gave informed consent for this procedure. After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the area of interest. The superficial layers of the site were removed by Shave method using a Blue Dermablade. The specimen was placed in a bottle labeled A. #MAD26-159.
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+B. BiopsyClinical Diagnosis: MM Location: Right Post Shoulder
+Method: Shave
+ The patient gave informed consent for this procedure. After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the area of interest. The superficial layers of the site were removed by Shave method using a Number 15. The specimen was placed in a bottle labeled B. #MAD26-160.
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Excision Benign Lesion & MarginsClinical Diagnosis: L72.0 Cyst Epidermoid vs otherLocation: Left Mid Chest
+Lesion Size: 1.5 x 1.5 cm
+Excision Size, including margins: 2.0 x 2.0 cm
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 11 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #MAD26-161. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 02-03-2026. The wound size with margins is 2.0 x 2.0 cm. 
+Complex repair was performed because the defect extended into of the deep subcutaneous tissue and superficial non-muscular fascia. Extensive wide undermining was performed to a distance of 2 cm (defect width perpendicular to closure is 2 cm) along the edge of the entire surgical defect to mobilize adjacent tissue, reduce wound tension and minimize the distortion of the adjacent functional structure.
+Buried, absorbable retention sutures were placed to close the deep subcutaneous tissue and superficial non-muscular fascia. Retention suture placement was necessary: to avoid deforming, a depressed and contracted scar, anatomic distortion and functional deficit in adjacent fixed structures, injury to tendons and nerves in the area, to ensure proper range of motion, maintain function in the area, preserve the normal anatomy, reduce subcutaneous dead space to reduce the risk of hematoma, to reduce tension to skin to allow closure, and to reduce the risk of necrosis, infection and wound dehiscence.
+The deep subcutaneous tissue, superficial non-muscular fascia and dermis was closed with 4-O Vicryl sutures followed by meticulous epidermal approximation.Epidermal closure was achieved with 4-O Nylon sutures.
+Closure necessitated advanced layered techniques beyond a routine intermediate repair due to the defect size, depth, and location. The final closure size was 2.0 cm.
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-24 20:50:52.552 | INFO     | app.services.medical_engine:retrieve:181 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': True, 'biopsy_count': 2, 'biopsy_sections': [{'label': 'A', 'text': 'A. Biopsy\nClinical Diagnosis: MM\nLocation: Left Neck\nMethod: Shave\n The patient gave informed consent for this procedure. After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the area of interest. The superficial layers of the site were removed by Shave method using a Blue Dermablade. The specimen was placed in a bottle labeled A. #MAD26-159.\nPressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'quantity': 1}, {'label': 'B', 'text': 'B. BiopsyClinical Diagnosis: MM Location: Right Post Shoulder\nMethod: Shave\n The patient gave informed consent for this procedure. After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the area of interest. The superficial layers of the site were removed by Shave method using a Number 15. The specimen was placed in a bottle labeled B. #MAD26-160.\nPressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.\nC. Excision Benign Lesion & MarginsClinical Diagnosis: L72.0 Cyst Epidermoid vs otherLocation: Left Mid Chest\nLesion Size: 1.5 x 1.5 cm\nExcision Size, including margins: 2.0 x 2.0 cm\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 11 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #MAD26-161. \nRepair: Complex Closure \nThe wound was closed with a complex closure on 02-03-2026. The wound size with margins is 2.0 x 2.0 cm. \nComplex repair was performed because the defect extended into of the deep subcutaneous tissue and superficial non-muscular fascia. Extensive wide undermining was performed to a distance of 2 cm (defect width perpendicular to closure is 2 cm) along the edge of the entire surgical defect to mobilize adjacent tissue, reduce wound tension and minimize the distortion of the adjacent functional structure.\nBuried, absorbable retention sutures were placed to close the deep subcutaneous tissue and superficial non-muscular fascia. Retention suture placement was necessary: to avoid deforming, a depressed and contracted scar, anatomic distortion and functional deficit in adjacent fixed structures, injury to tendons and nerves in the area, to ensure proper range of motion, maintain function in the area, preserve the normal anatomy, reduce subcutaneous dead space to reduce the risk of hematoma, to reduce tension to skin to allow closure, and to reduce the risk of necrosis, infection and wound dehiscence.\nThe deep subcutaneous tissue, superficial non-muscular fascia and dermis was closed with 4-O Vicryl sutures followed by meticulous epidermal approximation.Epidermal closure was achieved with 4-O Nylon sutures.\nClosure necessitated advanced layered techniques beyond a routine intermediate repair due to the defect size, depth, and location. The final closure size was 2.0 cm.\nPressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'quantity': 1}], 'has_mohs': False, 'has_procedure': False, 'has_excision': True, 'excision_sections': [{'label': 'C', 'text': 'C. Excision Benign Lesion & MarginsClinical Diagnosis: L72.0 Cyst Epidermoid vs otherLocation: Left Mid Chest\nLesion Size: 1.5 x 1.5 cm\nExcision Size, including margins: 2.0 x 2.0 cm\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 11 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #MAD26-161.', 'size': 2.0, 'quantity': 1}]}
+2026-04-24 20:50:52.553 | INFO     | app.services.medical_engine:retrieve:189 - 🔴 EXCISION DETECTED
+2026-04-24 20:50:52.553 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=2.0, location=Left Mid Chest
+2026-04-24 20:50:52.553 | INFO     | services.retriever:excision_filter:215 - 📍 Excision filter | size=2.0 | location=left mid chest | area=trunk
+2026-04-24 20:51:02.746 | INFO     | services.retriever:excision_filter:242 - 📦 Raw excision candidates: 67
+2026-04-24 20:51:02.750 | INFO     | services.retriever:excision_filter:303 - 🎯 Candidates after strict filtering: 12
+2026-04-24 20:51:02.984 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-24 20:51:02.985 | INFO     | app.services.medical_engine:retrieve:212 - 🔴 BIOPSY DETECTED
+2026-04-24 20:51:04.596 | INFO     | services.retriever:biopsy_filter:164 - ✅ Biopsy filter returned: 17 rows
+2026-04-24 20:51:04.826 | INFO     | app.services.medical_engine:retrieve:215 -    ↳ Retrieved 17 biopsy candidates
+2026-04-24 20:51:04.832 | INFO     | app.services.medical_engine:retrieve:243 - ✅ Total combined candidates (deduped): 29
+2026-04-24 20:51:04.833 | INFO     | app.services.medical_engine:llm_call:297 - 🧠 Calling LLM with structured parser

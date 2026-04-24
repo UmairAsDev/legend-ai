@@ -35,6 +35,38 @@ class ClinicalParser:
         return results
     
 
+    def _extract_lesion_count(self, text: str) -> int:
+        text_lower = text.lower()
+
+        # -------------------------
+        # 🔴 Explicit numeric patterns (e.g., "2nd lesion", "3rd lesion")
+        # -------------------------
+        matches = re.findall(r'(\d+)\s*(?:st|nd|rd|th)?\s*lesion', text_lower)
+        if matches:
+            count = max(map(int, matches))
+            logger.info(f"🔢 Detected lesion count (numeric): {count}")
+            return count
+
+        # -------------------------
+        # 🔴 Word-based patterns
+        # -------------------------
+        if "second lesion" in text_lower:
+            logger.info("🔢 Detected lesion count: 2 (word match)")
+            return 2
+        if "third lesion" in text_lower:
+            logger.info("🔢 Detected lesion count: 3 (word match)")
+            return 3
+
+        # -------------------------
+        # 🔴 Generic plural hint
+        # -------------------------
+        if "lesions" in text_lower and "lesion" in text_lower:
+            logger.info("🔢 Detected multiple lesions (generic) → defaulting to 2")
+            return 2
+
+        return 1
+
+
     def extract_excision_sections(self, text: str) -> List[Dict]:
         if not text:
             return []
@@ -100,6 +132,12 @@ class ClinicalParser:
                 logger.warning("⚠️ No valid excision size found → SKIPPING section")
 
             # -------------------------
+            # 🔴 LESION COUNT (NEW LOGIC)
+            # -------------------------
+            lesion_count = self._extract_lesion_count(section_text)
+            logger.info(f"📊 Lesion count for section {match.group(1)}: {lesion_count}")
+
+            # -------------------------
             # 🔴 REMOVE CLOSURE TEXT (CRITICAL)
             # -------------------------
             cleaned_text = re.sub(
@@ -112,7 +150,8 @@ class ClinicalParser:
             results.append({
                 "label": match.group(1),
                 "text": cleaned_text.strip(),
-                "size": size
+                "size": size,
+                "quantity": lesion_count   # ✅ NEW FIELD
             })
 
         logger.info(f"📊 Total excision sections parsed: {len(results)}")
