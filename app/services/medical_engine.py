@@ -217,15 +217,29 @@ class CodingNodes:
                 all_candidates.extend(biopsy)
 
             # -------------------------
-            # 🔴 MOHS (ALWAYS ADD IF PRESENT)
+            # 🔴 MOHS (FINAL SAFE VERSION)
             # -------------------------
             if parsed.get("has_mohs"):
                 logger.info("🔴 MOHS DETECTED")
+                logger.info(f"🧠 Mohs Sections: {parsed.get('mohs_sections')}")
 
-                mohs = await self.retriever.mohs_filter()
-                logger.info(f"   ↳ Retrieved {len(mohs)} mohs candidates")
+                for sec in parsed.get("mohs_sections", []):
+                    location = sec.get("location", "")
 
-                all_candidates.extend(mohs)
+                    if not location:
+                        logger.error("❌ Mohs location missing → fallback mode")
+
+                    logger.info(f"📌 Mohs → location={location}")
+
+                    res = await self.retriever.mohs_filter(location) or []
+
+                    logger.info(f"   ↳ Mohs candidates: {len(res)}")
+
+                    # tag source
+                    for r in res:
+                        r["source"] = "mohs"
+
+                    all_candidates.extend(res)
 
             # -------------------------
             # 🔴 IF ANY PROCEDURAL CODES FOUND → RETURN
@@ -234,7 +248,7 @@ class CodingNodes:
                 # 🔹 Deduplicate (important)
                 unique = {}
                 for c in all_candidates:
-                    key = (c.get("code"), c.get("type"))
+                    key = (c.get("code"), c.get("type"), c.get("source"), c.get("location"))
                     if key not in unique:
                         unique[key] = c
 

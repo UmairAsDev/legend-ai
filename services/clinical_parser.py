@@ -13,60 +13,55 @@ class ClinicalParser:
     def _normalize(self, text: str) -> str:
         return text.lower() if text else ""
 
-    # -------------------------
-    # 🔹 COUNT BIOPSY SECTIONS
-    # -------------------------
+    # =========================================================
+    # 🔹 BIOPSY EXTRACTION
+    # =========================================================
     def extract_biopsy_sections(self, text: str) -> List[Dict]:
         if not text:
             return []
 
         pattern = r"([A-Z])\.\s*Biopsy.*?(?=(?:\n[A-Z]\.\s*Biopsy|$))"
-
         matches = list(re.finditer(pattern, text, re.IGNORECASE | re.DOTALL))
 
         results = []
         for match in matches:
+            logger.info(f"🔍 Processing biopsy section: {match.group(1)}")
+
             results.append({
                 "label": match.group(1),
                 "text": match.group(0).strip(),
                 "quantity": 1
             })
 
+        logger.info(f"📊 Total biopsy sections: {len(results)}")
         return results
-    
 
+    # =========================================================
+    # 🔹 LESION COUNT
+    # =========================================================
     def _extract_lesion_count(self, text: str) -> int:
         text_lower = text.lower()
 
-        # -------------------------
-        # 🔴 Explicit numeric patterns (e.g., "2nd lesion", "3rd lesion")
-        # -------------------------
         matches = re.findall(r'(\d+)\s*(?:st|nd|rd|th)?\s*lesion', text_lower)
         if matches:
             count = max(map(int, matches))
             logger.info(f"🔢 Detected lesion count (numeric): {count}")
             return count
 
-        # -------------------------
-        # 🔴 Word-based patterns
-        # -------------------------
         if "second lesion" in text_lower:
-            logger.info("🔢 Detected lesion count: 2 (word match)")
             return 2
         if "third lesion" in text_lower:
-            logger.info("🔢 Detected lesion count: 3 (word match)")
             return 3
 
-        # -------------------------
-        # 🔴 Generic plural hint
-        # -------------------------
         if "lesions" in text_lower and "lesion" in text_lower:
-            logger.info("🔢 Detected multiple lesions (generic) → defaulting to 2")
+            logger.info("🔢 Multiple lesions detected → default 2")
             return 2
 
         return 1
 
-
+    # =========================================================
+    # 🔹 EXCISION EXTRACTION
+    # =========================================================
     def extract_excision_sections(self, text: str) -> List[Dict]:
         if not text:
             return []
@@ -78,95 +73,186 @@ class ClinicalParser:
 
         for match in matches:
             section_text = match.group(0)
+            label = match.group(1)
 
-            logger.info(f"🔍 Processing excision section: {match.group(1)}")
+            logger.info(f"🔍 Processing excision section: {label}")
 
             size = None
 
-            # -------------------------
-            # 🔴 PRIORITY 1: Excision Size (with margins)
-            # -------------------------
+            # PRIORITY 1: Excision Size
             size_match = re.search(
                 r"Excision Size.*?:\s*([\d\.]+)\s*[x\-]\s*([\d\.]+)",
-                section_text,
-                re.IGNORECASE
+                section_text, re.IGNORECASE
             )
 
             if size_match:
                 size = max(float(size_match.group(1)), float(size_match.group(2)))
                 logger.info(f"✅ Using Excision Size: {size}")
 
-            # -------------------------
-            # 🔴 PRIORITY 2: Wound size
-            # -------------------------
+            # PRIORITY 2: Wound Size
             if not size:
                 wound_match = re.search(
                     r"wound size.*?:?\s*([\d\.]+)\s*[x\-]?\s*([\d\.]+)?",
-                    section_text,
-                    re.IGNORECASE
+                    section_text, re.IGNORECASE
                 )
-
                 if wound_match:
                     values = [v for v in wound_match.groups() if v]
                     size = max(map(float, values))
                     logger.info(f"✅ Using Wound Size: {size}")
 
-            # -------------------------
-            # 🔴 PRIORITY 3: Final closure size
-            # -------------------------
+            # PRIORITY 3: Final Closure Size
             if not size:
                 closure_match = re.search(
                     r"final closure size.*?:?\s*([\d\.]+)",
-                    section_text,
-                    re.IGNORECASE
+                    section_text, re.IGNORECASE
                 )
-
                 if closure_match:
                     size = float(closure_match.group(1))
                     logger.info(f"✅ Using Final Closure Size: {size}")
 
-            # -------------------------
-            # 🔴 DO NOT fallback to lesion size
-            # -------------------------
             if not size:
-                logger.warning("⚠️ No valid excision size found → SKIPPING section")
+                logger.warning("⚠️ No valid excision size → SKIPPED")
 
-            # -------------------------
-            # 🔴 LESION COUNT (NEW LOGIC)
-            # -------------------------
             lesion_count = self._extract_lesion_count(section_text)
-            logger.info(f"📊 Lesion count for section {match.group(1)}: {lesion_count}")
 
-            # -------------------------
-            # 🔴 REMOVE CLOSURE TEXT (CRITICAL)
-            # -------------------------
             cleaned_text = re.sub(
-                r"Repair:.*",
-                "",
+                r"Repair:.*", "",
                 section_text,
                 flags=re.IGNORECASE | re.DOTALL
             )
 
             results.append({
-                "label": match.group(1),
+                "label": label,
                 "text": cleaned_text.strip(),
                 "size": size,
-                "quantity": lesion_count   # ✅ NEW FIELD
+                "quantity": lesion_count
             })
 
-        logger.info(f"📊 Total excision sections parsed: {len(results)}")
-
+        logger.info(f"📊 Total excision sections: {len(results)}")
         return results
-    # -------------------------
-    # 🔹 KEYWORD MATCH
-    # -------------------------
+
+    # =========================================================
+    # 🔹 MOHS EXTRACTION (NEW - CRITICAL FIX)
+    # =========================================================
+    def extract_mohs_sections(self, text: str) -> List[Dict]:
+        if not text:
+            return []
+
+        logger.info("🔍 Extracting Mohs sections (multi-site mode)...")
+
+        sections = []
+
+        # 🔴 Split by multiple "Location:"
+        parts = re.split(r"(?=Location:\s*)", text, flags=re.IGNORECASE)
+
+        for i, part in enumerate(parts):
+            part = part.strip()
+
+            if not part or "Location:" not in part:
+                continue
+
+            logger.info(f"🔍 Processing Mohs segment {i+1}")
+
+            location = self._extract_mohs_location(part)
+            stages = self._extract_mohs_stages(part)
+
+            sections.append({
+                "label": f"site_{i+1}",
+                "text": part,
+                "location": location,
+                "stages": stages
+            })
+
+        logger.info(f"📊 Total Mohs sections: {len(sections)}")
+        return sections
+
+
+    # =========================================================
+    # 🔹 MOHS LOCATION EXTRACTION (FIXED + FALLBACK)
+    # =========================================================
+    def _extract_mohs_location(self, text: str) -> str:
+
+        # -------------------------
+        # 🔴 PRIMARY: Explicit "Location:"
+        # -------------------------
+        match = re.search(r"Location:\s*([^\n\r]+)", text, re.IGNORECASE)
+        if match:
+            location = match.group(1).strip()
+            logger.info(f"📍 Mohs location detected (explicit): {location}")
+            return location
+
+        # -------------------------
+        # 🔴 SECONDARY: complaint-style pattern
+        # e.g. "- Location: Left Temple"
+        # -------------------------
+        match = re.search(r"-\s*Location:\s*([^\n\r]+)", text, re.IGNORECASE)
+        if match:
+            location = match.group(1).strip()
+            logger.info(f"📍 Mohs location detected (bullet): {location}")
+            return location
+
+        # -------------------------
+        # 🔴 FALLBACK: keyword inference
+        # -------------------------
+        logger.warning("⚠️ Primary location not found → fallback detection")
+
+        fallback_match = re.search(
+            r"(temple|face|nose|lip|ear|scalp|neck|hand|foot|genital)",
+            text.lower()
+        )
+
+        if fallback_match:
+            location = fallback_match.group(1)
+            logger.info(f"📍 Mohs location inferred (fallback): {location}")
+            return location
+
+        logger.error("❌ Mohs location could not be determined")
+        return ""
+
+
+    # =========================================================
+    # 🔹 MOHS STAGE EXTRACTION (IMPROVED)
+    # =========================================================
+    def _extract_mohs_stages(self, text: str) -> int:
+
+        # -------------------------
+        # 🔴 Pattern: "1st Stage", "2nd Stage"
+        # -------------------------
+        matches = re.findall(
+            r"(\d+)(?:st|nd|rd|th)?\s*Stage",
+            text,
+            re.IGNORECASE
+        )
+
+        if matches:
+            stages = max(map(int, matches))
+            logger.info(f"🔢 Mohs stages detected (explicit): {stages}")
+            return stages
+
+        # -------------------------
+        # 🔴 Pattern: multiple "Stage:" mentions
+        # -------------------------
+        stage_mentions = len(re.findall(r"Stage:", text, re.IGNORECASE))
+        if stage_mentions > 0:
+            logger.info(f"🔢 Mohs stages inferred (count): {stage_mentions}")
+            return stage_mentions
+
+        # -------------------------
+        # 🔴 DEFAULT
+        # -------------------------
+        logger.info("🔢 No stage explicitly found → default = 1")
+        return 1
+
+    # =========================================================
+    # 🔹 KEYWORD DETECTION
+    # =========================================================
     def detect_keyword(self, text: str, keywords: List[str]) -> bool:
         text = self._normalize(text)
         return any(k in text for k in keywords)
 
-    # -------------------------
+    # =========================================================
     # 🔹 MAIN PARSER
-    # -------------------------
+    # =========================================================
     def parse(self, note: Dict[str, Any]) -> Dict[str, Any]:
 
         biopsy_text = note.get("biopsyNotes") or ""
@@ -174,65 +260,68 @@ class ClinicalParser:
         procedure_text = note.get("procedure") or ""
         assessment_text = note.get("assesment") or ""
 
-        # 🔴 Combined fallback context
         combined_text = f"{biopsy_text} {assessment_text} {procedure_text}".lower()
 
         biopsy_data = []
         excision_data = []
-        mohs_present = False
+        mohs_data = []
+
         has_procedure = bool(procedure_text.strip())
 
         # -------------------------
-        # 🔴 BIOPSY DETECTION
+        # 🔴 BIOPSY
         # -------------------------
-        if (
-            self.detect_keyword(biopsy_text, BIOPSY_KEYWORDS) or
-            any(k in combined_text for k in BIOPSY_KEYWORDS)
-        ):
+        if self.detect_keyword(biopsy_text, BIOPSY_KEYWORDS):
             logger.info("🧠 Biopsy detected")
-
             biopsy_data = self.extract_biopsy_sections(biopsy_text)
 
-            # 🔴 fallback if structure missing
             if not biopsy_data:
-                logger.warning("⚠️ No structured biopsy sections → fallback mode")
-
+                logger.warning("⚠️ Biopsy fallback mode")
                 biopsy_data = [{
                     "label": "single",
                     "text": combined_text,
                     "quantity": 1
                 }]
 
+        # -------------------------
+        # 🔴 EXCISION
+        # -------------------------
         if self.detect_keyword(biopsy_text, EXCISION_KEYWORDS):
-
             logger.info("🧠 Excision detected")
             excision_data = self.extract_excision_sections(biopsy_text)
-            logger.info(f"📊 Excision sections: {len(excision_data)}")
 
         # -------------------------
-        # 🔴 MOHS DETECTION (FIXED)
+        # 🔴 MOHS (STRUCTURED FIRST)
         # -------------------------
-        if (
-            self.detect_keyword(mohs_text, MOHS_KEYWORDS) or
-            any(k in combined_text for k in MOHS_KEYWORDS)
-        ):
-            logger.info("🧠 Mohs detected")
-            mohs_present = True
+        if self.detect_keyword(mohs_text, MOHS_KEYWORDS):
+            logger.info("🧠 Mohs detected (from mohsNotes)")
+            mohs_data = self.extract_mohs_sections(mohs_text)
+
+        elif any(k in combined_text for k in MOHS_KEYWORDS):
+            logger.warning("⚠️ Mohs detected from fallback context")
+            mohs_data = self.extract_mohs_sections(combined_text)
 
         # -------------------------
-        # 🔹 DEBUG
+        # 🔹 FINAL DEBUG
         # -------------------------
         logger.info(
-            f"📊 Parser Output → biopsy_count: {len(biopsy_data)}, "
-            f"mohs: {mohs_present}, procedure: {has_procedure}"
+            f"📊 FINAL PARSER OUTPUT → "
+            f"biopsy={len(biopsy_data)}, "
+            f"excision={len(excision_data)}, "
+            f"mohs={len(mohs_data)}, "
+            f"procedure={has_procedure}"
         )
 
         return {
             "has_biopsy": len(biopsy_data) > 0,
             "biopsy_count": len(biopsy_data),
             "biopsy_sections": biopsy_data,
-            "has_mohs": mohs_present,
-            "has_procedure": has_procedure,
+
             "has_excision": len(excision_data) > 0,
-            "excision_sections": excision_data
+            "excision_sections": excision_data,
+
+            "has_mohs": len(mohs_data) > 0,
+            "mohs_sections": mohs_data,
+
+            "has_procedure": has_procedure
         }

@@ -166,10 +166,14 @@ class CodeRetriever:
             return rows
 
     # -------------------------
-    # 🔴 MOHS FILTER
+    # 🔴 MOHS FILTER (FINAL FIXED)
     # -------------------------
-    async def mohs_filter(self):
+    async def mohs_filter(self, location: str):
         async with get_db_session() as db:
+
+            location = (location or "").lower()
+
+            logger.info(f"📍 Mohs filter | location={location}")
 
             query = """
             SELECT 
@@ -191,9 +195,55 @@ class CodeRetriever:
             result = await db.execute(text(query))
             rows = [self._clean_row(row) for row in result.mappings().all()]
 
-            logger.info(f"✅ Mohs filter returned: {len(rows)} rows")
+            logger.info(f"📦 Raw Mohs candidates: {len(rows)}")
 
-            return rows
+            filtered = []
+
+            # -------------------------
+            # 🔴 LOCATION FILTER
+            # -------------------------
+            high_risk = [
+                "head", "neck", "temple", "face", "jaw",
+                "scalp", "ear", "eyelid", "nose", "lip",
+                "hand", "foot", "genital"
+            ]
+
+            is_high_risk = any(k in location for k in high_risk)
+
+            logger.info(f"🧠 Mohs classification → high_risk={is_high_risk}")
+
+            for r in rows:
+                code = str(r.get("code", ""))
+
+                # High-risk → 17311/17312
+                if is_high_risk and code in ["17311", "17312"]:
+                    filtered.append(r)
+
+                # Trunk → 17313/17314
+                elif not is_high_risk and code in ["17313", "17314"]:
+                    filtered.append(r)
+
+            logger.info(f"🎯 Mohs filtered candidates: {len(filtered)}")
+
+            # -------------------------
+            # 🔴 SAFETY: missing location
+            # -------------------------
+            if not location:
+                logger.warning("⚠️ Missing Mohs location → returning ALL Mohs codes (no filtering)")
+                return rows
+
+            # -------------------------
+            # 🔴 SAFETY: no match after filtering
+            # -------------------------
+            if not filtered:
+                logger.warning("⚠️ No filtered Mohs match → returning ALL Mohs codes")
+                return rows
+
+            # -------------------------
+            # ✅ FINAL RETURN (CRITICAL FIX)
+            # -------------------------
+            logger.info(f"✅ Returning {len(filtered)} filtered Mohs candidates")
+            return filtered
         
 
 

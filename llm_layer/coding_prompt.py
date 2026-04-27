@@ -11,7 +11,6 @@ from pydantic import BaseModel, Field
 # =========================
 # 🔹 OUTPUT SCHEMA
 # =========================
-
 class CPTCode(BaseModel):
     code: str
     description: str
@@ -19,23 +18,19 @@ class CPTCode(BaseModel):
     linked_dx: list[str]
     quantity: str
 
-
 class EMCode(BaseModel):
     code: str
     modifier: str | None = None
     linked_dx: list[str]
 
-
 class Codes(BaseModel):
     cpt_codes: list[CPTCode]
     em_code: EMCode
-
 
 class OutputSchema(BaseModel):
     patient_summary: str
     codes: Codes
     justification: dict
-
 
 # =========================
 # 🔹 PROMPT BUILDER
@@ -44,9 +39,7 @@ class OutputSchema(BaseModel):
 def build_coding_prompt(note_data: Dict[str, Any], retrieved_codes):
 
     parser = JsonOutputParser(pydantic_object=OutputSchema)
-
     format_instructions = parser.get_format_instructions()
-
     template = """
 You are a certified medical coding expert.
 
@@ -59,124 +52,167 @@ Your task is to:
    - Modifiers
    - ICD-10 codes
 
-RULES for Special Scenario:
-  - If the same CPT code applies to multiple findings:
+--------------------------------------------------
+🔴 CORE GROUPING RULE (HIGHEST PRIORITY)
 
-  → If ALL linked Dx codes are the SAME:
-      → Use ONE entry with quantity = total count
+ALL CPT assignment MUST follow this grouping key:
 
-  → If linked Dx codes are DIFFERENT:
-      → Create SEPARATE entries for each Dx
-      → Each entry must have:
-         - quantity = count for that Dx only
-         - correct linked_dx
+- (CPT code + Dx + Location)
 
-- NEVER merge CPT codes across different Dx codes
-- CPT grouping MUST be done by (code + Dx), not by code alone
-- When multiple lesions/sites/biopsy exist, map EACH site to its own Dx first, then group CPT codes by (code + Dx)
--------------------------
-CRITICAL RULES:
-- For now just focus on assigning E/M codes, and CPT codes related to biopsyNotes and mohsNotes from the note data and retrieved codes.
-- NEVER repeat the same CPT code multiple times
-- If a procedure is repeated:
-  → Use ONE entry
-  → quantity = total count
+Rules:
+1. SAME CPT + SAME Dx + SAME location or site
+   → ONE entry
+   → quantity = total count
 
-  Ensure the sum of quantities across all biopsy CPT codes equals the total number of biopsies.
-  If there is 1 biopsy (e.g., A) → total CPT quantity must be 1
-  If there are 4 biopsies (A, B, C, D) → valid distributions include:
-    4 different codes with quantity 1 each, or
-    mixed quantities (e.g., one code = 1, another = 3)
-  Constraint: Total CPT quantity must always match total biopsy count.
+2. SAME CPT + DIFFERENT Dx
+   → SEPARATE entries for each entry
+   → quantity = per Dx
 
-MOHS LOGIC (STRICT):
-If mohsNotes are present:
+3. SAME CPT + SAME Dx + DIFFERENT location
+   → SEPARATE entries for each location
+   → quantity = 1 per location
 
-1. Identify each site (A, B, etc.)
+❌ NEVER merge across:
+   - different Dx or icd10 codes
+   - different anatomical locations
+
+--------------------------------------------------
+🔴 GENERAL RULES
+
+- NEVER hallucinate codes outside retrieved list
+- CPT code + description MUST EXACTLY match retrieved data
+- NEVER output quantity = 0
+- If quantity = 0 → remove the CPT
+- ALWAYS map EACH site → Dx first → THEN assign CPT
+
+--------------------------------------------------
+🔴 BIOPSY LOGIC
+
+1. Identify each biopsy site (A, B, C, etc.)
+
+2. For each site:
+   → assign correct biopsy CPT
+
+3. MULTIPLE BIOPSIES:
+   - Same CPT + same Dx → combine quantity
+   - Different Dx OR different location → separate entries
+
+4. VALIDATION:
+   - Total CPT quantity MUST equal total biopsy count
+
+--------------------------------------------------
+🔴 MOHS LOGIC (STRICT – OVERRIDES GENERAL RULES)
+
+If mohsNotes present:
+
+1. Identify EACH Mohs site (from parsed_data)
 
 2. For EACH site:
-   → stages = total stages
-   → first_stage = 1
-   → additional = (stages − 1)
+   → determine:
+      - location
+      - Dx
+      - stages
 
-3. Mohs Location rule:
-   → For tumors/mohs on high risk areas: head, neck, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet, genitalia → assign 17311 / assign 17312(for each additional stage only)
-   → For tumors/mohs on TRUNK, ARMS, OR LEGS (e.g., chest, back, abdomen, shoulders, thighs) → assign 17313 / assign 17314(for each additional stage only)
+3. LOCATION CLASSIFICATION:
+   HIGH RISK:
+   head, neck, temple, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet, genitalia
+      → 17311 (first stage)
+      → 17312 (additional stages)
 
-4. Compute totals (MANDATORY):
-   → total_first_stage = number of sites
-   → total_additional_stage = sum(additional for all sites)
+   TRUNK / EXTREMITIES:
+      → 17313 (first stage)
+      → 17314 (additional stages)
 
-5. FINAL ENFORCEMENT (CRITICAL):
-   → quantity(17311/17313) = total_first_stage
-   → quantity(17312/17314) = total_additional_stage
+4. CRITICAL RULE (MOST IMPORTANT):
 
-6. OUTPUT RULE (CRITICAL):
-   → Include additional-stage CPT codes (17312/17314) ONLY if total_additional_stage > 0
-   → If total_additional_stage = 0 → DO NOT include 17312/17314 at all
+   - EACH SITE = SEPARATE CPT ENTRY
 
-- NEVER output CPT codes with quantity = 0
-- If quantity = 0 → remove that CPT code from final output
--------------------------
-EXCISION LOGIC (STRICT):
+Even if:
+   - CPT code is SAME
+   - stages are SAME
+
+   DO NOT MERGE SITES
+
+5. STAGE LOGIC:
+
+For EACH site:
+   first_stage = 1
+   additional = stages - 1
+
+6. OUTPUT:
+
+   - Create separate CPT entry per site:
+      → quantity = 1
+
+   - Additional stage codes:
+      → include ONLY if stages > 1
+      → quantity = additional
+
+7. VALIDATION:
+   - Location must match CPT description
+   - Dx must match that specific site
+
+--------------------------------------------------
+🔴 EXCISION LOGIC
 
 1. Identify each excision section
 
 2. SIZE PRIORITY:
    → Excision Size → Wound Size → Final Closure Size  
-   ❌ NEVER use Lesion Size
+   ❌ NEVER use lesion size
 
 3. Diameter:
-   → If (X x Y) → use MAX(X,Y)
+   → If X × Y → use MAX(X, Y)
 
 4. CODE:
    → Match size range + anatomical location
 
 5. MULTIPLE LESIONS:
-   - If multiple lesions in SAME section/location:
-     → DO NOT repeat CPT
+   - SAME section/location:
      → quantity = lesion count
+     → DO NOT repeat CPT
+
+   - DIFFERENT location:
+     → separate entries
 
 6. GROUPING:
-   - Group by (CPT + Dx)
-   - Same CPT + same Dx → ONE entry with summed quantity
+   - Use (CPT + Dx + Location)
 
 7. RESTRICTIONS:
    ❌ No closure codes  
-   ❌ No size inference  
+   ❌ No inferred sizes  
    ❌ No quantity = 0  
 
-8. VALIDATION:
-   - Size must fall in CPT range
-   - Location must match CPT description
--------------------------
-CONTEXT:
+--------------------------------------------------
+🔴 E/M CODING
 
-- Use ALL fields:
-  - biopsyNotes
-  - mohsNotes
-  - complaints
-  - assessment
-  - examination
-  - procedure
--------------------------
-STRICT RULES:
+- Assign E/M only if supported by office visit level in the note
+- Link all relevant Dx
 
-- DO NOT hallucinate codes outside retrieved
-- Code + description MUST EXACTLY match retrieved data
+--------------------------------------------------
+🔴 CONTEXT
 
--------------------------
-PARSED DATA (DO NOT IGNORE):
+Use ALL relevant fields:
+- biopsyNotes
+- mohsNotes
+- complaints
+- assessment
+- examination
+- procedure
+
+--------------------------------------------------
+🔴 PARSED DATA (HIGHEST PRIORITY INPUT):
 {parsed_data}
--------------------------
+
+--------------------------------------------------
 Retrieved Codes:
 {retrieved_codes}
 
--------------------------
+--------------------------------------------------
 Patient Note:
 {note_data}
 
--------------------------
+--------------------------------------------------
 {format_instructions}
 """
     prompt = ChatPromptTemplate.from_template(template)
