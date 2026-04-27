@@ -241,6 +241,29 @@ class CodingNodes:
 
                     all_candidates.extend(res)
 
+
+            # -------------------------
+            # 🔴 CLOSURE
+            # -------------------------
+            if parsed.get("has_closure"):
+                logger.info("🔴 CLOSURE DETECTED")
+
+                for sec in parsed.get("closure_sections", []):
+                    size = sec.get("size")
+                    location = sec.get("location")
+                    ctype = sec.get("type")
+
+                    logger.info(f"📌 Closure → type={ctype}, size={size}, location={location}")
+
+                    if size:
+                        res = await self.retriever.closure_filter(size, location, ctype)
+                        for r in res:
+                            r["source"] = "closure"
+                        logger.info(f"   ↳ Closure candidates: {len(res)}")
+                        all_candidates.extend(res)
+                    else:
+                        logger.warning("⚠️ Closure missing size → skipped")
+
             # -------------------------
             # 🔴 IF ANY PROCEDURAL CODES FOUND → RETURN
             # -------------------------

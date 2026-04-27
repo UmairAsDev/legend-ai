@@ -242,6 +242,84 @@ class ClinicalParser:
         # -------------------------
         logger.info("🔢 No stage explicitly found → default = 1")
         return 1
+    
+
+    # =========================================================
+    # 🔹 CLOSURE EXTRACTION
+    # =========================================================
+    def extract_closure_sections(self, text: str) -> List[Dict]:
+        if not text:
+            return []
+
+        logger.info("🔍 Extracting closure sections...")
+
+        sections = []
+
+        # 🔴 Detect closure blocks
+        pattern = r"(Repair:\s*.*?Closure.*?)(?=(?:\n[A-Z]\.|$))"
+
+        matches = re.finditer(pattern, text, re.IGNORECASE | re.DOTALL)
+
+        for i, match in enumerate(matches):
+            block = match.group(1)
+
+            logger.info(f"🔍 Processing closure block {i+1}")
+
+            # -------------------------
+            # TYPE
+            # -------------------------
+            if "complex" in block.lower():
+                ctype = "complex"
+            elif "intermediate" in block.lower() or "layered" in block.lower():
+                ctype = "intermediate"
+
+            elif "deficit size" in block.lower():
+                logger.info("⚠️ Skipping deficit size (not closure)")
+                continue
+            else:
+                logger.info("⚠️ Simple closure detected → skipping")
+                continue  # ignore simple closures
+
+            # -------------------------
+            # 🔴 SIZE EXTRACTION (ROBUST)
+            # -------------------------
+            size = None
+
+            patterns = [
+                r"final closure size.*?:?\s*([\d\.]+)",
+                r"closure size.*?:?\s*([\d\.]+)",
+                r"closure length.*?:?\s*([\d\.]+)",
+                r"length of closure.*?:?\s*([\d\.]+)",
+                r"final closure length.*?:?\s*([\d\.]+)",
+                r"final size.*?:?\s*([\d\.]+)",
+                r"measuring\s*([\d\.]+)\s*cm",
+            ]
+
+            for p in patterns:
+                match = re.search(p, block, re.IGNORECASE)
+                if match:
+                    size = float(match.group(1))
+                    logger.info(f"📏 Closure size detected via pattern '{p}': {size}")
+                    break
+
+            if not size:
+                logger.warning("⚠️ Closure size not found")
+
+            # -------------------------
+            # LOCATION (fallback)
+            # -------------------------
+            loc_match = re.search(r"Location:\s*(.*)", text)
+            location = loc_match.group(1).strip() if loc_match else ""
+
+            sections.append({
+                "type": ctype,
+                "size": size,
+                "location": location,
+                "text": block.strip()
+            })
+
+        logger.info(f"📊 Total closure sections: {len(sections)}")
+        return sections
 
     # =========================================================
     # 🔹 KEYWORD DETECTION
@@ -265,7 +343,10 @@ class ClinicalParser:
         biopsy_data = []
         excision_data = []
         mohs_data = []
+        closure_data = []
 
+        combined = f"{biopsy_text} {mohs_text} {procedure_text}"
+        closure_data = self.extract_closure_sections(combined)
         has_procedure = bool(procedure_text.strip())
 
         # -------------------------
@@ -322,6 +403,9 @@ class ClinicalParser:
 
             "has_mohs": len(mohs_data) > 0,
             "mohs_sections": mohs_data,
+
+            "has_closure": len(closure_data) > 0,
+            "closure_sections": closure_data,
 
             "has_procedure": has_procedure
         }

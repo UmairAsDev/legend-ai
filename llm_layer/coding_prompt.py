@@ -179,10 +179,29 @@ For EACH site:
    - Use (CPT + Dx + Location)
 
 7. RESTRICTIONS:
-   ❌ No closure codes  
    ❌ No inferred sizes  
    ❌ No quantity = 0  
 
+--------------------------------------------------
+🔴 CLOSURE LOGIC
+
+1. Identify closure type:
+   - Complex → 131xx
+   - Intermediate / layered → 120xx
+   - Simple → IGNORE
+
+2. SIZE:
+   → Use FINAL CLOSURE SIZE or CLOSURE SIZE (cm)
+
+3. CODE SELECTION:
+   → Match size range + anatomical location
+
+4. RULES:
+   - Complex / Intermediate → ALWAYS separate CPT
+   - Simple closure → DO NOT code
+
+5. GROUPING:
+   - Use (CPT + Dx + Location)
 --------------------------------------------------
 🔴 E/M CODING
 
@@ -199,6 +218,7 @@ Use ALL relevant fields:
 - assessment
 - examination
 - procedure
+- diagnoses
 
 --------------------------------------------------
 🔴 PARSED DATA (HIGHEST PRIORITY INPUT):

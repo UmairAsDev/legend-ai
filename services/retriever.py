@@ -377,3 +377,106 @@ class CodeRetriever:
                 logger.info(f"🔁 Fallback candidates: {len(filtered)}")
 
             return filtered
+        
+
+    # -------------------------
+    # 🔴 CLOSURE FILTER
+    # -------------------------
+    async def closure_filter(self, size: float, location: str, ctype: str):
+        async with get_db_session() as db:
+
+            location = (location or "").lower()
+            ctype = (ctype or "").lower()
+
+            logger.info(f"🔍 Closure filter | type={ctype}, size={size}, location={location}")
+
+            # -------------------------
+            # 🔴 LOAD ALL POSSIBLE CLOSURE CODES
+            # -------------------------
+            query = """
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE 
+                proCode LIKE '120%%' OR proCode LIKE '131%%'
+            """
+
+            result = await db.execute(text(query))
+            rows = [self._clean_row(row) for row in result.mappings().all()]
+
+            logger.info(f"📦 Raw closure candidates: {len(rows)}")
+
+            filtered = []
+
+            # -------------------------
+            # 🔴 TYPE FILTER (CODE-BASED ONLY)
+            # -------------------------
+            for r in rows:
+                try:
+                    code = str(r.get("code") or "")
+
+                    # -------------------------
+                    # TYPE FILTER
+                    # -------------------------
+                    if ctype == "complex":
+                        if not code.startswith("131"):
+                            continue
+
+                    elif ctype == "intermediate":
+                        if not code.startswith("120"):
+                            continue
+
+                    else:
+                        logger.warning(f"⚠️ Unknown closure type: {ctype}")
+                        continue
+
+                    # -------------------------
+                    # SIZE FILTER (CRITICAL)
+                    # -------------------------
+                    min_size = float(r.get("minSize") or 0)
+                    max_size = float(r.get("maxSize") or 999)
+
+                    if size and (min_size <= size <= max_size):
+                        filtered.append(r)
+
+                except Exception as e:
+                    logger.warning(f"⚠️ Closure filter skip: {e}")
+                    continue
+
+            logger.info(f"🎯 Closure filtered (strict): {len(filtered)}")
+
+            # -------------------------
+            # 🔴 FALLBACK (size only)
+            # -------------------------
+            if not filtered:
+                logger.warning("⚠️ No strict closure match → fallback to size-only")
+
+                for r in rows:
+                    try:
+                        min_size = float(r.get("minSize") or 0)
+                        max_size = float(r.get("maxSize") or 999)
+
+                        if size and (min_size <= size <= max_size):
+                            filtered.append(r)
+
+                    except:
+                        continue
+
+                logger.info(f"🔁 Fallback closure candidates: {len(filtered)}")
+
+            # -------------------------
+            # 🔴 FINAL SAFETY
+            # -------------------------
+            if not filtered:
+                logger.warning("⚠️ Closure filter empty → returning all closure codes")
+                return rows
+
+            return filtered

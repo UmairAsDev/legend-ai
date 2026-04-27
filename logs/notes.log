@@ -14074,3 +14074,112 @@ Pressure was applied to achieve hemostasis. Vaseline was applied at the wound si
 2026-04-27 15:07:48.861 | INFO     | app.services.medical_engine:retrieve:236 -    ↳ Mohs candidates: 2
 2026-04-27 15:07:48.862 | INFO     | app.services.medical_engine:retrieve:257 - ✅ Total combined candidates (deduped): 2
 2026-04-27 15:07:48.862 | INFO     | app.services.medical_engine:llm_call:311 - 🧠 Calling LLM with structured parser
+2026-04-27 16:20:28.550 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 703933
+2026-04-27 16:20:28.618 | INFO     | app.services.medical_engine:fetch:101 - 📥 Fetching note: 703933
+2026-04-27 16:20:32.397 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 703933
+2026-04-27 16:20:33.025 | INFO     | services.clinical_parser:parse:290 - 🧠 Excision detected
+2026-04-27 16:20:33.026 | INFO     | services.clinical_parser:extract_excision_sections:78 - 🔍 Processing excision section: A
+2026-04-27 16:20:33.026 | INFO     | services.clinical_parser:extract_excision_sections:90 - ✅ Using Excision Size: 1.6
+2026-04-27 16:20:33.029 | INFO     | services.clinical_parser:extract_excision_sections:131 - 📊 Total excision sections: 1
+2026-04-27 16:20:33.029 | INFO     | services.clinical_parser:parse:307 - 📊 FINAL PARSER OUTPUT → biopsy=0, excision=1, mohs=0, procedure=False
+2026-04-27 16:20:33.029 | INFO     | app.services.medical_engine:parse:153 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Benign Lesion & Margins
+Clinical Diagnosis: EXC r/o Digital Mucous Cyst
+Location: Left 3rd Finger
+Lesion Size: 0.2 x 0.3 cm
+Excision Size, including margins: 0.7 x 1.6 cm
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA25-2418. 
+Repair: Simple Closure 
+The wound was closed with a simple closure on 12-15-2025. The wound size with margins is 0.7 - 1.6 cm. The wound was approximated utilizing Using 4-O Nylon sutures. The final closure size is 2.5 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-27 16:20:35.778 | INFO     | app.services.medical_engine:retrieve:181 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Benign Lesion & Margins\nClinical Diagnosis: EXC r/o Digital Mucous Cyst\nLocation: Left 3rd Finger\nLesion Size: 0.2 x 0.3 cm\nExcision Size, including margins: 0.7 x 1.6 cm\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with hibiclens. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA25-2418.', 'size': 1.6, 'quantity': 1}], 'has_mohs': False, 'mohs_sections': [], 'has_procedure': False}
+2026-04-27 16:20:35.781 | INFO     | app.services.medical_engine:retrieve:189 - 🔴 EXCISION DETECTED
+2026-04-27 16:20:35.782 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=1.6, location=Left 3rd Finger
+2026-04-27 16:20:35.782 | INFO     | services.retriever:excision_filter:265 - 📍 Excision filter | size=1.6 | location=left 3rd finger | area=special
+2026-04-27 16:20:42.131 | INFO     | services.retriever:excision_filter:292 - 📦 Raw excision candidates: 67
+2026-04-27 16:20:42.134 | INFO     | services.retriever:excision_filter:353 - 🎯 Candidates after strict filtering: 12
+2026-04-27 16:20:42.373 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-27 16:20:42.374 | INFO     | app.services.medical_engine:retrieve:257 - ✅ Total combined candidates (deduped): 12
+2026-04-27 16:20:42.374 | INFO     | app.services.medical_engine:llm_call:311 - 🧠 Calling LLM with structured parser
+2026-04-27 16:31:32.322 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 683231
+2026-04-27 16:31:32.330 | INFO     | app.services.medical_engine:fetch:101 - 📥 Fetching note: 683231
+2026-04-27 16:31:36.423 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 683231
+2026-04-27 16:31:37.029 | INFO     | services.clinical_parser:parse:290 - 🧠 Excision detected
+2026-04-27 16:31:37.038 | INFO     | services.clinical_parser:extract_excision_sections:78 - 🔍 Processing excision section: A
+2026-04-27 16:31:37.039 | INFO     | services.clinical_parser:extract_excision_sections:90 - ✅ Using Excision Size: 2.3
+2026-04-27 16:31:37.039 | INFO     | services.clinical_parser:extract_excision_sections:131 - 📊 Total excision sections: 1
+2026-04-27 16:31:37.040 | WARNING  | services.clinical_parser:parse:301 - ⚠️ Mohs detected from fallback context
+2026-04-27 16:31:37.040 | INFO     | services.clinical_parser:extract_mohs_sections:141 - 🔍 Extracting Mohs sections (multi-site mode)...
+2026-04-27 16:31:37.040 | INFO     | services.clinical_parser:extract_mohs_sections:166 - 📊 Total Mohs sections: 0
+2026-04-27 16:31:37.041 | INFO     | services.clinical_parser:parse:307 - 📊 FINAL PARSER OUTPUT → biopsy=0, excision=1, mohs=0, procedure=False
+2026-04-27 16:31:37.041 | INFO     | app.services.medical_engine:parse:153 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: EXC SCC
+Location: Right Upper Back
+Method: Excision
+Lesion Size: 1.3 x 0.8 cm
+Excision Size, including margins: 2.3 x 1.8 cm
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA25-1480. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 08-11-2025. The wound size with margins is 2.3 - 1.8 cm. The defect extended into the deep subcutaneous tissue and superficial fascia. The wound was undermined extensively (1.8 cm) to mobilize adjacent tissue, reduce wound tension and minimize the distortion of the adjacent functional structures. Buried absorbable sutures were placed to close the subcutaneous tissue and superficial fascia, followed by meticulous epidermal approximation. Closure necessitated advanced layered techniques beyond a routine intermediate repair due to the defect size, depth, and location. The wound was approximated utilizing 3-O Vicryl and Using 3-O Nylon sutures. The final closure size is 4.2 cm. 
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-27 16:31:39.357 | INFO     | app.services.medical_engine:retrieve:181 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: EXC SCC\nLocation: Right Upper Back\nMethod: Excision\nLesion Size: 1.3 x 0.8 cm\nExcision Size, including margins: 2.3 x 1.8 cm\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA25-1480.', 'size': 2.3, 'quantity': 1}], 'has_mohs': False, 'mohs_sections': [], 'has_procedure': False}
+2026-04-27 16:31:39.360 | INFO     | app.services.medical_engine:retrieve:189 - 🔴 EXCISION DETECTED
+2026-04-27 16:31:39.362 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=2.3, location=Right Upper Back
+2026-04-27 16:31:39.363 | INFO     | services.retriever:excision_filter:265 - 📍 Excision filter | size=2.3 | location=right upper back | area=trunk
+2026-04-27 16:31:44.994 | INFO     | services.retriever:excision_filter:292 - 📦 Raw excision candidates: 67
+2026-04-27 16:31:45.000 | INFO     | services.retriever:excision_filter:353 - 🎯 Candidates after strict filtering: 12
+2026-04-27 16:31:45.239 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-27 16:31:45.239 | INFO     | app.services.medical_engine:retrieve:257 - ✅ Total combined candidates (deduped): 12
+2026-04-27 16:31:45.239 | INFO     | app.services.medical_engine:llm_call:311 - 🧠 Calling LLM with structured parser
+2026-04-27 18:34:23.814 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 683231
+2026-04-27 18:34:23.896 | INFO     | app.services.medical_engine:fetch:101 - 📥 Fetching note: 683231
+2026-04-27 18:34:27.696 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 683231
+2026-04-27 18:34:28.312 | INFO     | services.clinical_parser:extract_closure_sections:254 - 🔍 Extracting closure sections...
+2026-04-27 18:34:28.318 | INFO     | services.clinical_parser:extract_closure_sections:266 - 🔍 Processing closure block 1
+2026-04-27 18:34:28.319 | INFO     | services.clinical_parser:extract_closure_sections:302 - 📏 Closure size detected via pattern 'final closure size.*?:?\s*([\d\.]+)': 4.2
+2026-04-27 18:34:28.321 | INFO     | services.clinical_parser:extract_closure_sections:321 - 📊 Total closure sections: 1
+2026-04-27 18:34:28.322 | INFO     | services.clinical_parser:parse:371 - 🧠 Excision detected
+2026-04-27 18:34:28.325 | INFO     | services.clinical_parser:extract_excision_sections:78 - 🔍 Processing excision section: A
+2026-04-27 18:34:28.327 | INFO     | services.clinical_parser:extract_excision_sections:90 - ✅ Using Excision Size: 2.3
+2026-04-27 18:34:28.330 | INFO     | services.clinical_parser:extract_excision_sections:131 - 📊 Total excision sections: 1
+2026-04-27 18:34:28.330 | WARNING  | services.clinical_parser:parse:382 - ⚠️ Mohs detected from fallback context
+2026-04-27 18:34:28.331 | INFO     | services.clinical_parser:extract_mohs_sections:141 - 🔍 Extracting Mohs sections (multi-site mode)...
+2026-04-27 18:34:28.333 | INFO     | services.clinical_parser:extract_mohs_sections:166 - 📊 Total Mohs sections: 0
+2026-04-27 18:34:28.333 | INFO     | services.clinical_parser:parse:388 - 📊 FINAL PARSER OUTPUT → biopsy=0, excision=1, mohs=0, procedure=False
+2026-04-27 18:34:28.334 | INFO     | app.services.medical_engine:parse:153 - 🧾 biopsyNotes AFTER CLEAN: A. Excision Malignant Lesion & Margins
+Clinical Diagnosis: EXC SCC
+Location: Right Upper Back
+Method: Excision
+Lesion Size: 1.3 x 0.8 cm
+Excision Size, including margins: 2.3 x 1.8 cm
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA25-1480. 
+Repair: Complex Closure 
+The wound was closed with a complex closure on 08-11-2025. The wound size with margins is 2.3 - 1.8 cm. 
+Complex repair was performed because the defect extended into of the deep subcutaneous tissue and superficial non-muscular fascia. Extensive wide undermining was performed to a distance of 2.3 cm (defect width perpendicular to closure is 2.3 cm) along the edge of the entire surgical defect to mobilize adjacent tissue, reduce wound tension and minimize the distortion of the adjacent functional structure.
+Buried, absorbable retention sutures were placed to close the deep subcutaneous tissue and superficial non-muscular fascia. Retention suture placement was necessary: to avoid deforming, a depressed and contracted scar, anatomic distortion and functional deficit in adjacent fixed structures, injury to tendons and nerves in the area, to ensure proper range of motion, maintain function in the area, preserve the normal anatomy, reduce subcutaneous dead space to reduce the risk of hematoma, to reduce tension to skin to allow closure, and to reduce the risk of necrosis, infection and wound dehiscence.
+The deep subcutaneous tissue, superficial non-muscular fascia and dermis was closed with 3-O Vicryl sutures followed by meticulous epidermal approximation.Epidermal closure was achieved with 3-O Nylon sutures.
+Closure necessitated advanced layered techniques beyond a routine intermediate repair due to the defect size, depth, and location. The final closure size was 4.2 cm.
+Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-04-27 18:34:29.294 | INFO     | app.services.medical_engine:retrieve:181 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_count': 0, 'biopsy_sections': [], 'has_excision': True, 'excision_sections': [{'label': 'A', 'text': 'A. Excision Malignant Lesion & Margins\nClinical Diagnosis: EXC SCC\nLocation: Right Upper Back\nMethod: Excision\nLesion Size: 1.3 x 0.8 cm\nExcision Size, including margins: 2.3 x 1.8 cm\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA25-1480.', 'size': 2.3, 'quantity': 1}], 'has_mohs': False, 'mohs_sections': [], 'has_closure': True, 'closure_sections': [{'type': 'complex', 'size': 4.2, 'location': 'Right Upper Back', 'text': 'Repair: Complex Closure \nThe wound was closed with a complex closure on 08-11-2025. The wound size with margins is 2.3 - 1.8 cm. \nComplex repair was performed because the defect extended into of the deep subcutaneous tissue and superficial non-muscular fascia. Extensive wide undermining was performed to a distance of 2.3 cm (defect width perpendicular to closure is 2.3 cm) along the edge of the entire surgical defect to mobilize adjacent tissue, reduce wound tension and minimize the distortion of the adjacent functional structure.\nBuried, absorbable retention sutures were placed to close the deep subcutaneous tissue and superficial non-muscular fascia. Retention suture placement was necessary: to avoid deforming, a depressed and contracted scar, anatomic distortion and functional deficit in adjacent fixed structures, injury to tendons and nerves in the area, to ensure proper range of motion, maintain function in the area, preserve the normal anatomy, reduce subcutaneous dead space to reduce the risk of hematoma, to reduce tension to skin to allow closure, and to reduce the risk of necrosis, infection and wound dehiscence.\nThe deep subcutaneous tissue, superficial non-muscular fascia and dermis was closed with 3-O Vicryl sutures followed by meticulous epidermal approximation.Epidermal closure was achieved with 3-O Nylon sutures.\nClosure necessitated advanced layered techniques beyond a routine intermediate repair due to the defect size, depth, and location. The final closure size was 4.2 cm.\nPressure was applied to achieve hemostasis. Aquaphor was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.'}], 'has_procedure': False}
+2026-04-27 18:34:29.294 | INFO     | app.services.medical_engine:retrieve:189 - 🔴 EXCISION DETECTED
+2026-04-27 18:34:29.294 | INFO     | app.services.medical_engine:retrieve:199 - 📌 Excision Section → size=2.3, location=Right Upper Back
+2026-04-27 18:34:29.296 | INFO     | services.retriever:excision_filter:265 - 📍 Excision filter | size=2.3 | location=right upper back | area=trunk
+2026-04-27 18:34:37.265 | INFO     | services.retriever:excision_filter:292 - 📦 Raw excision candidates: 67
+2026-04-27 18:34:37.273 | INFO     | services.retriever:excision_filter:353 - 🎯 Candidates after strict filtering: 12
+2026-04-27 18:34:37.504 | INFO     | app.services.medical_engine:retrieve:203 -    ↳ Retrieved 12 excision candidates
+2026-04-27 18:34:37.504 | INFO     | app.services.medical_engine:retrieve:249 - 🔴 CLOSURE DETECTED
+2026-04-27 18:34:37.509 | INFO     | app.services.medical_engine:retrieve:256 - 📌 Closure → type=complex, size=4.2, location=Right Upper Back
+2026-04-27 18:34:37.509 | INFO     | services.retriever:closure_filter:391 - 🔍 Closure filter | type=complex, size=4.2, location=right upper back
+2026-04-27 18:34:39.379 | INFO     | services.retriever:closure_filter:415 - 📦 Raw closure candidates: 42
+2026-04-27 18:34:39.394 | INFO     | services.retriever:closure_filter:454 - 🎯 Closure filtered (strict): 14
+2026-04-27 18:34:39.621 | INFO     | app.services.medical_engine:retrieve:262 -    ↳ Closure candidates: 14
+2026-04-27 18:34:39.621 | INFO     | app.services.medical_engine:retrieve:280 - ✅ Total combined candidates (deduped): 26
+2026-04-27 18:34:39.629 | INFO     | app.services.medical_engine:llm_call:334 - 🧠 Calling LLM with structured parser
