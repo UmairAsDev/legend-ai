@@ -19,14 +19,15 @@ class CodeRetriever:
     # -------------------------
     # 🔹 CRITICAL: Clean DB row (Decimal fix)
     # -------------------------
-    def _clean_row(self, row: RowMapping) -> Dict[str, Any]:
+    def _clean_row(self, row):
         cleaned = {}
 
-        for k, v in row.items():   # RowMapping supports .items()
-            if isinstance(v, Decimal):
+        for k, v in row.items():
+            # 🔴 ONLY convert numeric fields
+            if isinstance(v, Decimal) and k not in ["associatedWithProCode", "code"]:
                 cleaned[k] = float(v)
             else:
-                cleaned[k] = v
+                cleaned[k] = str(v) if k in ["associatedWithProCode", "code"] and v is not None else v
 
         return cleaned
 
@@ -47,6 +48,7 @@ class CodeRetriever:
                         minQty,
                         maxQty,
                         minSize,
+                        maxSize,
                         chargePerUnit,
                         embedding <-> CAST(:embedding AS vector) AS distance,
                         'cpt' AS type
@@ -205,7 +207,7 @@ class CodeRetriever:
             high_risk = [
                 "head", "neck", "temple", "face", "jaw",
                 "scalp", "ear", "eyelid", "nose", "lip",
-                "hand", "foot", "genital"
+                "hand", "foot", "genitalia"
             ]
 
             is_high_risk = any(k in location for k in high_risk)
@@ -388,11 +390,13 @@ class CodeRetriever:
             location = (location or "").lower()
             ctype = (ctype or "").lower()
 
-            logger.info(f"🔍 Closure filter | type={ctype}, size={size}, location={location}")
+            logger.info(
+                f"🔍 Closure filter | type={ctype}, size={size}, location_group={location}"
+            )
 
-            # -------------------------
-            # 🔴 LOAD ALL POSSIBLE CLOSURE CODES
-            # -------------------------
+            # =========================================================
+            # 🔴 LOAD ALL CLOSURE CODES (120xx + 131xx)
+            # =========================================================
             query = """
             SELECT 
                 proCode AS code,
@@ -416,15 +420,16 @@ class CodeRetriever:
 
             filtered = []
 
-            # -------------------------
-            # 🔴 TYPE FILTER (CODE-BASED ONLY)
-            # -------------------------
+            # =========================================================
+            # 🔴 FILTER PIPELINE: TYPE → LOCATION → SIZE
+            # =========================================================
             for r in rows:
                 try:
                     code = str(r.get("code") or "")
+                    desc = (r.get("description") or "").lower()
 
                     # -------------------------
-                    # TYPE FILTER
+                    # 🔴 TYPE FILTER
                     # -------------------------
                     if ctype == "complex":
                         if not code.startswith("131"):
@@ -439,7 +444,34 @@ class CodeRetriever:
                         continue
 
                     # -------------------------
-                    # SIZE FILTER (CRITICAL)
+                    # 🔴 LOCATION FILTER (CRITICAL FIX)
+                    # -------------------------
+                    if location:
+
+                        # Extremities → scalp, arm, leg
+                        if location == "extremities":
+                            if not any(k in desc for k in ["scalp", "arm", "leg"]):
+                                continue
+
+                        # Critical → eyelids, nose, lips, ears
+                        elif location == "critical":
+                            if not any(k in desc for k in ["eyelid", "nose", "lip", "ear"]):
+                                continue
+
+                        # High-risk → face, hands, feet, genitalia
+                        elif location == "high_risk":
+                            if not any(k in desc for k in [
+                                "face", "hand", "foot", "genital", "neck", "chin", "cheek", "forehead"
+                            ]):
+                                continue
+
+                        # Trunk → chest, back, abdomen
+                        elif location == "trunk":
+                            if not any(k in desc for k in ["trunk", "back", "chest", "abdomen"]):
+                                continue
+
+                    # -------------------------
+                    # 🔴 SIZE FILTER (STRICT)
                     # -------------------------
                     min_size = float(r.get("minSize") or 0)
                     max_size = float(r.get("maxSize") or 999)
@@ -453,11 +485,37 @@ class CodeRetriever:
 
             logger.info(f"🎯 Closure filtered (strict): {len(filtered)}")
 
-            # -------------------------
-            # 🔴 FALLBACK (size only)
-            # -------------------------
+            # =========================================================
+            # 🔴 FALLBACK 1: TYPE + SIZE ONLY
+            # =========================================================
             if not filtered:
-                logger.warning("⚠️ No strict closure match → fallback to size-only")
+                logger.warning("⚠️ No strict match → fallback (type + size)")
+
+                for r in rows:
+                    try:
+                        code = str(r.get("code") or "")
+
+                        if ctype == "complex" and not code.startswith("131"):
+                            continue
+                        if ctype == "intermediate" and not code.startswith("120"):
+                            continue
+
+                        min_size = float(r.get("minSize") or 0)
+                        max_size = float(r.get("maxSize") or 999)
+
+                        if size and (min_size <= size <= max_size):
+                            filtered.append(r)
+
+                    except:
+                        continue
+
+                logger.info(f"🔁 Fallback (type+size) candidates: {len(filtered)}")
+
+            # =========================================================
+            # 🔴 FALLBACK 2: SIZE ONLY
+            # =========================================================
+            if not filtered:
+                logger.warning("⚠️ No match → fallback (size only)")
 
                 for r in rows:
                     try:
@@ -470,13 +528,22 @@ class CodeRetriever:
                     except:
                         continue
 
-                logger.info(f"🔁 Fallback closure candidates: {len(filtered)}")
+                logger.info(f"🔁 Fallback (size only): {len(filtered)}")
 
-            # -------------------------
+            # =========================================================
             # 🔴 FINAL SAFETY
-            # -------------------------
+            # =========================================================
             if not filtered:
-                logger.warning("⚠️ Closure filter empty → returning all closure codes")
+                logger.error("❌ Closure filter empty → returning ALL closure codes")
                 return rows
+
+            # =========================================================
+            # 🔴 DEBUG OUTPUT (VERY IMPORTANT)
+            # =========================================================
+            for r in filtered:
+                logger.info(
+                    f"✅ Candidate → code={r['code']} | desc={r['description']} | "
+                    f"size_range=({r.get('minSize')},{r.get('maxSize')}) | parent={r.get('associatedWithProCode')}"
+                )
 
             return filtered

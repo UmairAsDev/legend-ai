@@ -183,25 +183,45 @@ For EACH site:
    ❌ No quantity = 0  
 
 --------------------------------------------------
-🔴 CLOSURE LOGIC
+🔴 CLOSURE LOGIC (STRICT – NON-NEGOTIABLE)
 
-1. Identify closure type:
-   - Complex → 131xx
-   - Intermediate / layered → 120xx
-   - Simple → IGNORE
+You are given PRE-COMPUTED closure data in parsed_data:
 
-2. SIZE:
-   → Use FINAL CLOSURE SIZE or CLOSURE SIZE (cm)
+- closure_sections → individual closures
+- closure_aggregated → already grouped and summed
 
-3. CODE SELECTION:
-   → Match size range + anatomical location
+YOU MUST ONLY USE closure_aggregated
+DO NOT recompute size — always trust closure_aggregated.total_size
 
-4. RULES:
-   - Complex / Intermediate → ALWAYS separate CPT
-   - Simple closure → DO NOT code
+DO NOT:
+❌ use individual closure_sections
+❌ assign CPT per site
 
-5. GROUPING:
-   - Use (CPT + Dx + Location)
+FOR EACH closure_aggregated group:
+
+1. Read:
+   - total_size
+   - type (complex / intermediate)
+
+2. Select:
+   - ONE primary CPT code based on total_size
+
+3. Add-on logic:
+   - If total_size exceeds primary maxSize:
+       → assign add-on codes
+       → quantity = calculated units
+
+4. OUTPUT RULES:
+   - EXACTLY ONE primary code per group
+   - add-on codes ONLY if needed
+   - NEVER repeat primary code
+
+VALIDATION (MANDATORY):
+
+❌ If same primary appears multiple times → WRONG  
+❌ If closures are not combined → WRONG  
+❌ If add-on missing when size exceeds → WRONG  
+
 --------------------------------------------------
 🔴 E/M CODING
 

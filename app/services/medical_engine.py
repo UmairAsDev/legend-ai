@@ -3,7 +3,7 @@
 from datetime import datetime
 from decimal import Decimal
 from typing import Dict, Any
-import re
+import math, re
 
 from loguru import logger
 
@@ -80,6 +80,199 @@ def enforce_excision_quantity(parsed, llm_output):
         logger.warning(f"⚠️ Enforcement failed: {e}")
         return llm_output
     
+
+# =========================================================
+# 🔴 CLOSURE AGGREGATION
+# =========================================================
+def aggregate_closures(parsed):
+    logger.info("🔧 Aggregating closures...")
+
+    grouped = {}
+
+    for sec in parsed.get("closure_sections", []):
+        key = sec.get("group_key") or f"{sec['type']}_unknown"
+
+        grouped.setdefault(key, {
+            "type": sec["type"],
+            "group_key": key,
+            "total_size": 0.0,
+            "locations": []
+        })
+
+        grouped[key]["total_size"] += float(sec.get("size") or 0)
+        grouped[key]["locations"].append(sec.get("location"))
+
+    parsed["closure_aggregated"] = list(grouped.values())
+
+    # 🔴 CRITICAL DEBUG LOG
+    logger.info("🧾 ===== CLOSURE DEBUG =====")
+
+    for sec in parsed.get("closure_sections", []):
+        logger.info(
+            f"RAW → size={sec['size']} | loc={sec['location']} | type={sec['type']}"
+        )
+
+    for g in parsed["closure_aggregated"]:
+        logger.info(
+            f"AGG → group={g['group_key']} | total={g['total_size']} | locs={g['locations']}"
+        )
+
+    logger.info("🧾 ==========================")
+
+    return parsed
+
+
+# =========================================================
+# 🔴 GENERIC ADD-ON ENGINE
+# =========================================================
+def build_closure_hierarchy(candidates):
+    hierarchy = {}
+
+    for c in candidates:
+        parent = str(c.get("associatedWithProCode")).strip() if c.get("associatedWithProCode") else None
+        if parent:
+            hierarchy.setdefault(parent, []).append(c)
+
+    return hierarchy
+
+
+def select_primary_code(candidates, total_size):
+    
+    candidates = sorted(
+    candidates,
+    key=lambda x: float(x.get("minSize") or 0)
+    )
+
+    for c in candidates:
+        if c.get("associatedWithProCode"):
+            continue
+
+        min_s = float(c.get("minSize") or 0)
+        max_s = float(c.get("maxSize") or 999)
+
+        if min_s <= total_size <= max_s:
+            return c
+
+    return None
+
+
+def calculate_addon_units(addon_code, total_size, base_max):
+    extra = total_size - base_max
+    if extra <= 0:
+        return 0
+
+    desc = (addon_code.get("description") or "").lower()
+    match = re.search(r"each additional (\d+\.?\d*)", desc)
+
+    step = float(match.group(1)) if match else 5
+
+    return math.ceil(extra / step)
+
+
+def enforce_closure_addon(parsed, candidates, llm_output):
+    try:
+        logger.info(f"📊 Parsed aggregated closures: {parsed.get('closure_aggregated')}")
+        logger.info("🔧 Enforcing closure add-ons (GENERIC)...")
+
+        closure_groups = parsed.get("closure_aggregated", [])
+        if not closure_groups:
+            return llm_output
+
+        closure_candidates = [
+            c for c in candidates
+            if str(c.get("code", "")).startswith(("120", "131"))
+        ]
+
+        hierarchy = build_closure_hierarchy(closure_candidates)
+
+        final_codes = []
+
+        for group in closure_groups:
+            total_size = group["total_size"]
+            ctype = group["type"]
+
+            logger.info(f"📏 Closure group → size={total_size}, type={ctype}")
+
+            location_group = group.get("group_key", "").split("_")[-1]
+            type_candidates = [
+                c for c in closure_candidates
+                if (
+                    (ctype == "complex" and str(c["code"]).startswith("131")) or
+                    (ctype == "intermediate" and str(c["code"]).startswith("120"))
+                )
+            ]
+
+            # 🔴 FILTER BY LOCATION FAMILY (CRITICAL)
+            filtered_candidates = []
+
+            for c in type_candidates:
+                desc = (c.get("description") or "").lower()
+
+                if location_group == "extremities":
+                    if not any(k in desc for k in ["scalp", "arm", "leg"]):
+                        continue
+
+                elif location_group == "critical":
+                    if not any(k in desc for k in ["nose", "lip", "ear", "eyelid"]):
+                        continue
+
+                elif location_group == "high_risk":
+                    if not any(k in desc for k in ["face", "hand", "foot", "neck", "chin", "cheek"]):
+                        continue
+
+                elif location_group == "trunk":
+                    if not any(k in desc for k in ["trunk", "back", "chest", "abdomen"]):
+                        continue
+
+                filtered_candidates.append(c)
+
+            type_candidates = filtered_candidates
+
+            primary = select_primary_code(type_candidates, total_size)
+
+            if not primary:
+                logger.warning("⚠️ No primary closure match")
+                continue
+
+            primary_code = str(primary["code"])
+            base_max = float(primary.get("maxSize") or 0)
+
+            final_codes.append({
+                "code": primary_code,
+                "description": primary["description"],
+                "modifier": None,
+                "linked_dx": [],
+                "quantity": "1"
+            })
+
+            for addon in hierarchy.get(primary_code, []):
+                units = calculate_addon_units(addon, total_size, base_max)
+
+                if units > 0:
+                    final_codes.append({
+                        "code": addon["code"],
+                        "description": addon["description"],
+                        "modifier": None,
+                        "linked_dx": [],
+                        "quantity": str(units)
+                    })
+
+        # 🔴 REMOVE WRONG LLM CLOSURES
+        llm_output["codes"]["cpt_codes"] = [
+            c for c in llm_output["codes"]["cpt_codes"]
+            if not str(c["code"]).startswith(("120", "131"))
+        ]
+
+        llm_output["codes"]["cpt_codes"].extend(final_codes)
+
+        logger.info(f"✅ Final closure codes: {final_codes}")
+
+        return llm_output
+
+    except Exception as e:
+        logger.exception(f"❌ Closure enforcement failed: {e}")
+        return llm_output
+    
 # =========================
 # 🔹 NODE CLASS (LangGraph)
 # =========================
@@ -150,6 +343,7 @@ class CodingNodes:
     async def parse(self, state):
         try:
             parsed = self.parser.parse(state["cleaned_note"])
+            parsed = aggregate_closures(parsed)
             logger.info(f"🧾 biopsyNotes AFTER CLEAN: {state['cleaned_note'].get('biopsyNotes')}")
             return {"parsed": parsed}
         except Exception as e:
@@ -246,20 +440,29 @@ class CodingNodes:
             # 🔴 CLOSURE
             # -------------------------
             if parsed.get("has_closure"):
-                logger.info("🔴 CLOSURE DETECTED")
 
-                for sec in parsed.get("closure_sections", []):
-                    size = sec.get("size")
-                    location = sec.get("location")
-                    ctype = sec.get("type")
+                logger.info("🔴 CLOSURE DETECTED (AGGREGATED MODE)")
 
-                    logger.info(f"📌 Closure → type={ctype}, size={size}, location={location}")
+                for group in parsed.get("closure_aggregated", []):
+                    size = group.get("total_size")
+                    ctype = group.get("type")
+                    group_key = group.get("group_key")
+
+                    logger.info(
+                        f"📊 Closure Aggregated → group={group_key}, "
+                        f"type={ctype}, total_size={size}"
+                    )
 
                     if size:
-                        res = await self.retriever.closure_filter(size, location, ctype)
+                        location_group = group.get("group_key", "").split("_")[-1]
+                        res = await self.retriever.closure_filter(size, location_group, ctype)
+
                         for r in res:
                             r["source"] = "closure"
-                        logger.info(f"   ↳ Closure candidates: {len(res)}")
+                            r["closure_group"] = group_key  # 🔥 important for debugging
+
+                        logger.info(f"   ↳ Retrieved {len(res)} closure candidates")
+
                         all_candidates.extend(res)
                     else:
                         logger.warning("⚠️ Closure missing size → skipped")
@@ -350,6 +553,11 @@ class CodingNodes:
 
             # 🔴 HARD FIX (GUARANTEES CORRECT OUTPUT)
             result = enforce_excision_quantity(state["parsed"], result)
+            result = enforce_closure_addon(
+                state["parsed"],
+                state["candidates"],   # 🔥 REQUIRED (comes from retrieve step)
+                result
+            )
 
             return {"llm_output": result}
 

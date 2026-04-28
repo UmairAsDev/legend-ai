@@ -243,85 +243,180 @@ class ClinicalParser:
         logger.info("🔢 No stage explicitly found → default = 1")
         return 1
     
+    # =========================================================
+    # 🔴CLOSURE EXTRACTION 
+    # =========================================================
 
-    # =========================================================
-    # 🔹 CLOSURE EXTRACTION
-    # =========================================================
+    def _map_location_group(self, location: str) -> str:
+        loc = (location or "").lower()
+
+        if any(k in loc for k in ["scalp", "arm", "leg"]):
+            return "extremities"
+
+        if any(k in loc for k in ["face", "nose", "lip", "ear", "hand", "foot", "eyelid"]):
+            return "high_risk"
+
+        return "trunk"
+
+
+    def _split_clinical_blocks(self, text: str):
+        return re.split(
+            r"(?=Location:\s|[A-Z]\.\s|Mohs Micrographic Procedure)",
+            text,
+            flags=re.IGNORECASE
+        )
+
+
+    def _extract_location(self, block: str) -> str:
+        m = re.search(r"Location:\s*([^\n\r]+)", block, re.IGNORECASE)
+        return m.group(1).strip() if m else ""
+
+
+    def _detect_closure_type(self, block: str):
+        b = block.lower()
+
+        if "complex" in b:
+            return "complex"
+
+        if "intermediate" in b or "layered" in b:
+            return "intermediate"
+
+        return None
+
+
+    def _extract_closure_size(self, block: str):
+        patterns = [
+            r"final closure size.*?([\d\.]+)",
+            r"closure size.*?([\d\.]+)",
+            r"closure length.*?([\d\.]+)",
+            r"length of closure.*?([\d\.]+)",
+            r"measuring\s*([\d\.]+)\s*cm",
+        ]
+
+        for p in patterns:
+            m = re.search(p, block, re.IGNORECASE)
+            if m:
+                return float(m.group(1))
+
+        return None
+
+
     def extract_closure_sections(self, text: str) -> List[Dict]:
         if not text:
             return []
 
-        logger.info("🔍 Extracting closure sections...")
+        logger.info("🔍 CLOSURE: event-based extraction (FINAL FIX)")
 
         sections = []
 
-        # 🔴 FIXED: broaden detection (not only "Repair:")
-        pattern = r"((?:Repair:.*?|The wound was closed.*?|Closure.*?)(?:complex|intermediate|layered).*?)(?=(?:\n[A-Z]\.|$))"
+        size_patterns = [
+            r"final closure size.*?(?:was|is|:)?\s*([\d\.]+)",
+            r"closure size.*?(?:was|is|:)?\s*([\d\.]+)",
+            r"closure length.*?(?:was|is|:)?\s*([\d\.]+)",
+            r"length of closure.*?(?:was|is|:)?\s*([\d\.]+)",
+        ]
 
-        matches = re.finditer(pattern, text, re.IGNORECASE | re.DOTALL)
+        # 🔴 FIX: COLLECT ALL MATCHES (NO BREAK)
+        matches = []
+        for p in size_patterns:
+            found = list(re.finditer(p, text, re.IGNORECASE))
+            matches.extend(found)
 
-        for i, match in enumerate(matches):
-            block = match.group(1)
+        logger.info(f"📏 Total closure size matches: {len(matches)}")
 
-            logger.info(f"🔍 Processing closure block {i+1}")
+        for i, m in enumerate(matches):
 
-            block_lower = block.lower()
+            try:
+                size = float(m.group(1))
+            except:
+                continue
+
+            start = max(0, m.start() - 300)
+            end = min(len(text), m.end() + 200)
+
+            snippet = text[start:end]
+            snippet_lower = snippet.lower()
 
             # -------------------------
-            # TYPE
+            # TYPE (GLOBAL CONTEXT)
             # -------------------------
-            if "complex" in block_lower:
+            full_back = text[max(0, m.start() - 2000):m.start()].lower()
+
+            if "complex" in full_back:
                 ctype = "complex"
-            elif "intermediate" in block_lower or "layered" in block_lower:
+            elif "intermediate" in full_back or "layered" in full_back:
+                ctype = "intermediate"
+            else:
+                logger.warning(f"⚠️ Closure {i+1}: type fallback → intermediate")
                 ctype = "intermediate"
 
-            elif "deficit size" in block_lower:
-                logger.info("⚠️ Skipping deficit size (not closure)")
-                continue
-            else:
-                logger.info("⚠️ Simple closure detected → skipping")
-                continue  # ignore simple closures
-
             # -------------------------
-            # 🔴 SIZE EXTRACTION (FIXED for "was")
+            # LOCATION (ROBUST)
             # -------------------------
-            size = None
+            back = text[max(0, m.start() - 1500):m.start()]
 
-            patterns = [
-                r"final closure size.*?(?:was|:)?\s*([\d\.]+)",
-                r"closure size.*?(?:was|:)?\s*([\d\.]+)",
-                r"closure length.*?(?:was|:)?\s*([\d\.]+)",
-                r"length of closure.*?(?:was|:)?\s*([\d\.]+)",
-                r"final closure length.*?(?:was|:)?\s*([\d\.]+)",
-                r"final size.*?(?:was|:)?\s*([\d\.]+)",
-                r"measuring\s*([\d\.]+)\s*cm",
-            ]
+            loc_matches = list(re.finditer(r"Location:\s*([^\n\r]+)", back, re.IGNORECASE))
+            location_raw = loc_matches[-1].group(1).strip() if loc_matches else ""
 
-            for p in patterns:
-                match = re.search(p, block, re.IGNORECASE)
-                if match:
-                    size = float(match.group(1))
-                    logger.info(f"📏 Closure size detected via pattern '{p}': {size}")
+            loc_lower = (location_raw or "").lower()
+
+            LOCATION_MAP = {
+                "extremities": ["scalp", "arm", "leg"],
+                "high_risk": ["hand", "foot", "genital", "axilla", "neck", "chin", "cheek", "forehead"],
+                "critical": ["nose", "lip", "ear", "eyelid"],
+                "trunk": ["back", "chest", "abdomen", "trunk"]
+            }
+
+            location_group = "unknown"
+
+            for group, keywords in LOCATION_MAP.items():
+                if any(k in loc_lower for k in keywords):
+                    location_group = group
                     break
 
-            if not size:
-                logger.warning("⚠️ Closure size not found")
+            # fallback
+            if location_group == "unknown":
+                snippet_loc = re.search(
+                    r"(scalp|arm|leg|hand|foot|nose|lip|ear|eyelid|neck|chin|cheek|forehead|back|chest|abdomen)",
+                    snippet_lower
+                )
+                if snippet_loc:
+                    loc_lower = snippet_loc.group(1)
+                    for group, keywords in LOCATION_MAP.items():
+                        if loc_lower in keywords:
+                            location_group = group
+                            break
 
-            # -------------------------
-            # LOCATION (fallback)
-            # -------------------------
-            loc_match = re.search(r"Location:\s*(.*)", text)
-            location = loc_match.group(1).strip() if loc_match else ""
+            if location_group == "unknown":
+                logger.warning(f"⚠️ Closure {i+1}: location unresolved → trunk")
+                location_group = "trunk"
+
+            location = location_raw or loc_lower
+
+            logger.info(
+                f"✅ Closure {i+1} → size={size}, type={ctype}, group={location_group}"
+            )
 
             sections.append({
                 "type": ctype,
                 "size": size,
                 "location": location,
-                "text": block.strip()
+                "location_group": location_group,   # ✅ USE THIS
+                "group_key": f"{ctype}_{location_group}",
+                "text": snippet.strip()
             })
 
-        logger.info(f"📊 Total closure sections: {len(sections)}")
-        return sections
+        # 🔴 DEDUP
+        unique = {}
+        for s in sections:
+            key = (s["size"], s["location"], s["type"])
+            unique[key] = s
+
+        final = list(unique.values())
+
+        logger.info(f"📊 FINAL CLOSURES: {final}")
+
+        return final
 
     # =========================================================
     # 🔹 KEYWORD DETECTION
@@ -338,76 +433,34 @@ class ClinicalParser:
         biopsy_text = note.get("biopsyNotes") or ""
         mohs_text = note.get("mohsNotes") or ""
         procedure_text = note.get("procedure") or ""
-        assessment_text = note.get("assesment") or ""
 
-        combined_text = f"{biopsy_text} {assessment_text} {procedure_text}".lower()
-
-        biopsy_data = []
-        excision_data = []
-        mohs_data = []
         closure_data = []
 
-        combined = f"{biopsy_text} {mohs_text} {procedure_text}"
-        closure_data = self.extract_closure_sections(combined)
-        has_procedure = bool(procedure_text.strip())
+        closure_data += self.extract_closure_sections(biopsy_text)
+        closure_data += self.extract_closure_sections(mohs_text)
+        closure_data += self.extract_closure_sections(procedure_text)
 
-        # -------------------------
-        # 🔴 BIOPSY
-        # -------------------------
-        if self.detect_keyword(biopsy_text, BIOPSY_KEYWORDS):
-            logger.info("🧠 Biopsy detected")
-            biopsy_data = self.extract_biopsy_sections(biopsy_text)
+        biopsy_data = self.extract_biopsy_sections(biopsy_text) \
+            if self.detect_keyword(biopsy_text, BIOPSY_KEYWORDS) else []
 
-            if not biopsy_data:
-                logger.warning("⚠️ Biopsy fallback mode")
-                biopsy_data = [{
-                    "label": "single",
-                    "text": combined_text,
-                    "quantity": 1
-                }]
+        excision_data = self.extract_excision_sections(biopsy_text) \
+            if self.detect_keyword(biopsy_text, EXCISION_KEYWORDS) else []
 
-        # -------------------------
-        # 🔴 EXCISION
-        # -------------------------
-        if self.detect_keyword(biopsy_text, EXCISION_KEYWORDS):
-            logger.info("🧠 Excision detected")
-            excision_data = self.extract_excision_sections(biopsy_text)
-
-        # -------------------------
-        # 🔴 MOHS (STRUCTURED FIRST)
-        # -------------------------
-        if self.detect_keyword(mohs_text, MOHS_KEYWORDS):
-            logger.info("🧠 Mohs detected (from mohsNotes)")
-            mohs_data = self.extract_mohs_sections(mohs_text)
-
-        elif any(k in combined_text for k in MOHS_KEYWORDS):
-            logger.warning("⚠️ Mohs detected from fallback context")
-            mohs_data = self.extract_mohs_sections(combined_text)
-
-        # -------------------------
-        # 🔹 FINAL DEBUG
-        # -------------------------
-        logger.info(
-            f"📊 FINAL PARSER OUTPUT → "
-            f"biopsy={len(biopsy_data)}, "
-            f"excision={len(excision_data)}, "
-            f"mohs={len(mohs_data)}, "
-            f"procedure={has_procedure}"
-        )
+        mohs_data = self.extract_mohs_sections(mohs_text) \
+            if self.detect_keyword(mohs_text, MOHS_KEYWORDS) else []
 
         return {
-            "has_biopsy": len(biopsy_data) > 0,
-            "biopsy_count": len(biopsy_data),
+            "has_biopsy": bool(biopsy_data),
             "biopsy_sections": biopsy_data,
 
-            "has_excision": len(excision_data) > 0,
+            "has_excision": bool(excision_data),
             "excision_sections": excision_data,
 
-            "has_mohs": len(mohs_data) > 0,
+            "has_mohs": bool(mohs_data),
             "mohs_sections": mohs_data,
 
-            "has_closure": len(closure_data) > 0,
+            "has_closure": bool(closure_data),
             "closure_sections": closure_data,
 
-            "has_procedure": has_procedure
+            "has_procedure": bool(procedure_text.strip())
         }
