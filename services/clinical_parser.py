@@ -255,8 +255,8 @@ class ClinicalParser:
 
         sections = []
 
-        # 🔴 Detect closure blocks
-        pattern = r"(Repair:\s*.*?Closure.*?)(?=(?:\n[A-Z]\.|$))"
+        # 🔴 FIXED: broaden detection (not only "Repair:")
+        pattern = r"((?:Repair:.*?|The wound was closed.*?|Closure.*?)(?:complex|intermediate|layered).*?)(?=(?:\n[A-Z]\.|$))"
 
         matches = re.finditer(pattern, text, re.IGNORECASE | re.DOTALL)
 
@@ -265,15 +265,17 @@ class ClinicalParser:
 
             logger.info(f"🔍 Processing closure block {i+1}")
 
+            block_lower = block.lower()
+
             # -------------------------
             # TYPE
             # -------------------------
-            if "complex" in block.lower():
+            if "complex" in block_lower:
                 ctype = "complex"
-            elif "intermediate" in block.lower() or "layered" in block.lower():
+            elif "intermediate" in block_lower or "layered" in block_lower:
                 ctype = "intermediate"
 
-            elif "deficit size" in block.lower():
+            elif "deficit size" in block_lower:
                 logger.info("⚠️ Skipping deficit size (not closure)")
                 continue
             else:
@@ -281,17 +283,17 @@ class ClinicalParser:
                 continue  # ignore simple closures
 
             # -------------------------
-            # 🔴 SIZE EXTRACTION (ROBUST)
+            # 🔴 SIZE EXTRACTION (FIXED for "was")
             # -------------------------
             size = None
 
             patterns = [
-                r"final closure size.*?:?\s*([\d\.]+)",
-                r"closure size.*?:?\s*([\d\.]+)",
-                r"closure length.*?:?\s*([\d\.]+)",
-                r"length of closure.*?:?\s*([\d\.]+)",
-                r"final closure length.*?:?\s*([\d\.]+)",
-                r"final size.*?:?\s*([\d\.]+)",
+                r"final closure size.*?(?:was|:)?\s*([\d\.]+)",
+                r"closure size.*?(?:was|:)?\s*([\d\.]+)",
+                r"closure length.*?(?:was|:)?\s*([\d\.]+)",
+                r"length of closure.*?(?:was|:)?\s*([\d\.]+)",
+                r"final closure length.*?(?:was|:)?\s*([\d\.]+)",
+                r"final size.*?(?:was|:)?\s*([\d\.]+)",
                 r"measuring\s*([\d\.]+)\s*cm",
             ]
 
