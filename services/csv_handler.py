@@ -12,7 +12,19 @@ class CSVHandler:
     def _safe_str(self, value):
         if pd.isna(value):
             return None
-        return str(value).strip()
+
+        # 🔴 FIX: remove .0 from floats like 13121.0
+        if isinstance(value, float):
+            if value.is_integer():
+                return str(int(value))
+
+        val = str(value).strip()
+
+        # 🔴 normalize garbage values
+        if val in ["", "0", "None", "null", "nan"]:
+            return None
+
+        return val
 
     def _safe_int(self, value):
         try:

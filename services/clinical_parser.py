@@ -331,8 +331,8 @@ class ClinicalParser:
             except:
                 continue
 
-            start = max(0, m.start() - 300)
-            end = min(len(text), m.end() + 200)
+            start = max(0, m.start() - 5000)
+            end = min(len(text), m.end() + 3000)
 
             snippet = text[start:end]
             snippet_lower = snippet.lower()
@@ -340,7 +340,7 @@ class ClinicalParser:
             # -------------------------
             # TYPE (GLOBAL CONTEXT)
             # -------------------------
-            full_back = text[max(0, m.start() - 2000):m.start()].lower()
+            full_back = text[max(0, m.start() - 10000):m.start()].lower()
 
             if "complex" in full_back:
                 ctype = "complex"
@@ -353,7 +353,7 @@ class ClinicalParser:
             # -------------------------
             # LOCATION (ROBUST)
             # -------------------------
-            back = text[max(0, m.start() - 1500):m.start()]
+            back = text[max(0, m.start() - 5000):m.start()]
 
             loc_matches = list(re.finditer(r"Location:\s*([^\n\r]+)", back, re.IGNORECASE))
             location_raw = loc_matches[-1].group(1).strip() if loc_matches else ""

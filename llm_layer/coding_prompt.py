@@ -183,44 +183,59 @@ For EACH site:
    ❌ No quantity = 0  
 
 --------------------------------------------------
-🔴 CLOSURE LOGIC (STRICT – NON-NEGOTIABLE)
+🔴 CLOSURE LOGIC (STRICT)
 
-You are given PRE-COMPUTED closure data in parsed_data:
+Use ONLY:
+- closure_aggregated
 
-- closure_sections → individual closures
-- closure_aggregated → already grouped and summed
-
-YOU MUST ONLY USE closure_aggregated
-DO NOT recompute size — always trust closure_aggregated.total_size
+IGNORE:
+- closure_sections
 
 DO NOT:
-❌ use individual closure_sections
-❌ assign CPT per site
+❌ recompute size  
+❌ assign per site  
+❌ duplicate codes  
 
-FOR EACH closure_aggregated group:
+--------------------------------------------------
 
-1. Read:
-   - total_size
+FOR EACH closure_aggregated:
+
+1. Use:
+   - total_size (already summed)
    - type (complex / intermediate)
 
-2. Select:
-   - ONE primary CPT code based on total_size
+2. Assign:
+   ✔ ONE primary code (base code only)
+   - must match type:
+     complex → 131xx  
+     intermediate → 120xx  
 
-3. Add-on logic:
-   - If total_size exceeds primary maxSize:
-       → assign add-on codes
-       → quantity = calculated units
+3. Add-on:
+   If total_size > primary.maxSize:
+   ✔ assign add-on (associatedWithProCode = primary)
+   ✔ quantity = ceil((total_size - maxSize) / step)
 
-4. OUTPUT RULES:
-   - EXACTLY ONE primary code per group
-   - add-on codes ONLY if needed
-   - NEVER repeat primary code
+--------------------------------------------------
+RULES:
 
-VALIDATION (MANDATORY):
+✔ EXACTLY one primary per group  
+✔ add-ons only if needed  
 
-❌ If same primary appears multiple times → WRONG  
-❌ If closures are not combined → WRONG  
-❌ If add-on missing when size exceeds → WRONG  
+❌ NEVER:
+- repeat primary  
+- assign multiple base codes  
+- skip add-on when required  
+- assign add-on without primary  
+
+--------------------------------------------------
+EXAMPLE:
+
+total_size = 10.2 (complex extremities)
+
+✔ 13121 + 13122 x1  
+❌ 13121 + 13121  
+❌ 13122 only  
+❌ 13120 + 13122    
 
 --------------------------------------------------
 🔴 E/M CODING

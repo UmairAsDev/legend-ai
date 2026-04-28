@@ -129,31 +129,58 @@ def build_closure_hierarchy(candidates):
     hierarchy = {}
 
     for c in candidates:
-        parent = str(c.get("associatedWithProCode")).strip() if c.get("associatedWithProCode") else None
+        parent = c.get("associatedWithProCode")
+
         if parent:
+            parent = str(parent).strip()
+
+            if parent.endswith(".0"):
+                parent = parent[:-2]
+
             hierarchy.setdefault(parent, []).append(c)
+
+    logger.info(f"🧬 Hierarchy built: {hierarchy}")
 
     return hierarchy
 
 
 def select_primary_code(candidates, total_size):
-    
-    candidates = sorted(
-    candidates,
-    key=lambda x: float(x.get("minSize") or 0)
+
+    base_codes = [
+        c for c in candidates
+        if not c.get("associatedWithProCode")
+    ]
+
+    base_codes = [
+        c for c in base_codes
+        if str(c.get("associatedWithProCode") or "").strip() in ["", "None"]
+    ]
+
+    base_codes = sorted(
+        base_codes,
+        key=lambda x: float(x.get("maxSize") or 0)
     )
 
-    for c in candidates:
-        if c.get("associatedWithProCode"):
-            continue
+    logger.info(
+        f"🧪 Base candidates: "
+        f"{[(c['code'], c.get('minSize'), c.get('maxSize')) for c in base_codes]}"
+    )
 
-        min_s = float(c.get("minSize") or 0)
-        max_s = float(c.get("maxSize") or 999)
+    selected = None
 
-        if min_s <= total_size <= max_s:
-            return c
+    # 🔴 pick smallest base that can HOLD total
+    for c in base_codes:
+        max_s = float(c.get("maxSize") or 0)
 
-    return None
+        if total_size <= max_s:
+            selected = c
+            break
+
+    # 🔴 if exceeds all → pick largest base (NOT addon)
+    if not selected and base_codes:
+        selected = base_codes[-1]
+
+    return selected
 
 
 def calculate_addon_units(addon_code, total_size, base_max):
@@ -171,17 +198,31 @@ def calculate_addon_units(addon_code, total_size, base_max):
 
 def enforce_closure_addon(parsed, candidates, llm_output):
     try:
-        logger.info(f"📊 Parsed aggregated closures: {parsed.get('closure_aggregated')}")
-        logger.info("🔧 Enforcing closure add-ons (GENERIC)...")
+        logger.info("🔧 Enforcing closure add-ons (SAFE MODE)...")
 
         closure_groups = parsed.get("closure_aggregated", [])
         if not closure_groups:
+            return llm_output
+
+        # 🔴 IF LLM already assigned closures → DO NOT override
+        llm_closures = [
+            c for c in llm_output["codes"]["cpt_codes"]
+            if str(c["code"]).startswith(("120", "131"))
+        ]
+
+        if llm_closures:
+            logger.info("🧠 LLM already assigned closure codes → skipping enforcement")
             return llm_output
 
         closure_candidates = [
             c for c in candidates
             if str(c.get("code", "")).startswith(("120", "131"))
         ]
+
+        logger.info(
+            f"🧪 FINAL candidates → "
+            f"{[(c['code'], c.get('associatedWithProCode')) for c in closure_candidates]}"
+        )
 
         hierarchy = build_closure_hierarchy(closure_candidates)
 
@@ -194,6 +235,8 @@ def enforce_closure_addon(parsed, candidates, llm_output):
             logger.info(f"📏 Closure group → size={total_size}, type={ctype}")
 
             location_group = group.get("group_key", "").split("_")[-1]
+
+            # 🔴 TYPE FILTER
             type_candidates = [
                 c for c in closure_candidates
                 if (
@@ -202,8 +245,8 @@ def enforce_closure_addon(parsed, candidates, llm_output):
                 )
             ]
 
-            # 🔴 FILTER BY LOCATION FAMILY (CRITICAL)
-            filtered_candidates = []
+            # 🔴 LOCATION FILTER
+            filtered = []
 
             for c in type_candidates:
                 desc = (c.get("description") or "").lower()
@@ -224,11 +267,11 @@ def enforce_closure_addon(parsed, candidates, llm_output):
                     if not any(k in desc for k in ["trunk", "back", "chest", "abdomen"]):
                         continue
 
-                filtered_candidates.append(c)
+                filtered.append(c)
 
-            type_candidates = filtered_candidates
+            logger.info(f"🎯 Filtered candidates: {[c['code'] for c in filtered]}")
 
-            primary = select_primary_code(type_candidates, total_size)
+            primary = select_primary_code(filtered, total_size)
 
             if not primary:
                 logger.warning("⚠️ No primary closure match")
@@ -236,6 +279,11 @@ def enforce_closure_addon(parsed, candidates, llm_output):
 
             primary_code = str(primary["code"])
             base_max = float(primary.get("maxSize") or 0)
+
+            logger.info(
+                f"🧠 PRIMARY SELECTION → total={total_size}, "
+                f"selected={primary_code}, base_max={base_max}"
+            )
 
             final_codes.append({
                 "code": primary_code,
@@ -245,10 +293,15 @@ def enforce_closure_addon(parsed, candidates, llm_output):
                 "quantity": "1"
             })
 
+            # 🔴 ADD-ONS
             for addon in hierarchy.get(primary_code, []):
                 units = calculate_addon_units(addon, total_size, base_max)
 
                 if units > 0:
+                    logger.info(
+                        f"➕ ADDON → {addon['code']} units={units}"
+                    )
+
                     final_codes.append({
                         "code": addon["code"],
                         "description": addon["description"],
@@ -256,12 +309,6 @@ def enforce_closure_addon(parsed, candidates, llm_output):
                         "linked_dx": [],
                         "quantity": str(units)
                     })
-
-        # 🔴 REMOVE WRONG LLM CLOSURES
-        llm_output["codes"]["cpt_codes"] = [
-            c for c in llm_output["codes"]["cpt_codes"]
-            if not str(c["code"]).startswith(("120", "131"))
-        ]
 
         llm_output["codes"]["cpt_codes"].extend(final_codes)
 

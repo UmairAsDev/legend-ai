@@ -23,11 +23,39 @@ class CodeRetriever:
         cleaned = {}
 
         for k, v in row.items():
-            # 🔴 ONLY convert numeric fields
-            if isinstance(v, Decimal) and k not in ["associatedWithProCode", "code"]:
+
+            # -------------------------
+            # 🔴 NORMALIZE associatedWithProCode (CRITICAL FIX)
+            # -------------------------
+            if k == "associatedWithProCode":
+                if v is None:
+                    cleaned[k] = None
+                else:
+                    val = str(v).strip()
+
+                    # 🔴 remove .0 again (safety layer)
+                    if val.endswith(".0"):
+                        val = val[:-2]
+
+                    if val in ["", "0", "None", "null"]:
+                        cleaned[k] = None
+                    else:
+                        cleaned[k] = val
+
+            # -------------------------
+            # 🔴 NORMALIZE code
+            # -------------------------
+            elif k == "code":
+                cleaned[k] = str(v).strip() if v is not None else None
+
+            # -------------------------
+            # 🔴 NUMERIC FIX
+            # -------------------------
+            elif isinstance(v, Decimal):
                 cleaned[k] = float(v)
+
             else:
-                cleaned[k] = str(v) if k in ["associatedWithProCode", "code"] and v is not None else v
+                cleaned[k] = v
 
         return cleaned
 
@@ -207,7 +235,7 @@ class CodeRetriever:
             high_risk = [
                 "head", "neck", "temple", "face", "jaw",
                 "scalp", "ear", "eyelid", "nose", "lip",
-                "hand", "foot", "genitalia"
+                "hand", "foot", "genitalia", "auricle"
             ]
 
             is_high_risk = any(k in location for k in high_risk)
@@ -461,7 +489,7 @@ class CodeRetriever:
                         # High-risk → face, hands, feet, genitalia
                         elif location == "high_risk":
                             if not any(k in desc for k in [
-                                "face", "hand", "foot", "genital", "neck", "chin", "cheek", "forehead"
+                                "face", "hand", "foot", "genitalia", "neck", "chin", "cheek", "forehead"
                             ]):
                                 continue
 
