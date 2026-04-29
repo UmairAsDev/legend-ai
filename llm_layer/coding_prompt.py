@@ -155,7 +155,7 @@ For EACH site:
 --------------------------------------------------
 🔴 EXCISION LOGIC
 
-1. Identify each excision section
+1. Identify each excision section and see whether the excision belongs to benign or malignant lesions, do not mix excision section with mohs
 
 2. SIZE PRIORITY:
    → Excision Size → Wound Size → Final Closure Size  
