@@ -1,0 +1,617 @@
+proCodeId,proId,proCode,codeDesc,associatedWithProCode,minQty,maxQty,minSize,maxSize,chargePerUnit,billWithIntEM,billWithFUEM,leftRightSepration,billAlone,printByRows,splitInMultipleVisits,effectiveSince,effectiveTill,deleted,created_by,update_by,created_date,update_date,created_ip,update_ip,addOn,proName
+1,1,15788,"Chemical peel, facial; epidermal",,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel Epidermal
+2,2,96900,Actinotherapy (ultraviolet light),,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Actinotherapy UVB
+3,3,0045T,Dermoscopy,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Dermoscopy
+4,4,96904,"Whole body integumentary photography, for monitoring of high risk patients with dysplastic nevus syndrome or a history of dysplastic nevi, or patients with a personal or familial history of melanoma",,1,1,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Total Body Images
+9,9,99024,"Postoperative follow-up visit, normally included in the surgical package, to indicate that an evaluation and management service was performed during a postoperative period for a reason(s) related to the original procedure",,1,10,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Suture Removal
+10,10,29580,Strapping; Unna boot,,1,2,0,0,0,1,1,1,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Unna Boot
+11,13,10040,Marsupialization/Opening or removal of multiple milia/Comedones/Cysts/Pustules,,1,25,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Acne Surgery
+12,14,10060,"Incision and drainage of abscess (eg, carbuncle, suppurative hidradenitis, cutaneous or subcutaneous abscess, cyst, furuncle, or paronychia); simple or single",,1,10,0,0,0,0,0,1,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Incision & Drainage
+13,14,10061,"Incision and drainage of abscess (eg, carbuncle, suppurative hidradenitis, cutaneous or subcutaneous abscess, cyst, furuncle, or paronychia); complicated or multiple",,1,25,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Incision & Drainage
+14,16,11730,"Avulsion of nail plate, partial or complete, simple; single",,1,1,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Avulsion of the Nail Plate
+18,28,11040,"Debridement; skin, partial thickness",,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,9/30/2015,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
+19,28,11041,"Debridement; skin, full thickness",,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
+20,28,11042,"Debridement; skin, and subcutaneous tissue",,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
+21,30,96912,Photochemotherapy; psoralens and ultraviolet A (PUVA),,1,1,0,0,0,1,1,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Photochemotherapy UVA
+22,31,96913,Photochemotherapy (Goeckerman and/or PUVA) for severe photoresponsive dermatoses requiring at least four to eight hours of care under direct supervision of the physician (includes application of medication and dressings),,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Photochemotherapy (Physician Supervision)
+24,33,15781,"Dermabrasion; regional, other than face",,1,10,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Dermabrasion Partial
+25,34,15789,"Chemical peel, nonfacial; epidermal",,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel Dermal
+29,28,11720,Debridement of nail(s) by any method(s); one to five,,1,5,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
+30,28,11721,Debridement of nail(s) by any method(s); six or more,,6,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
+35,37,69100,Biopsy external ear or Tragus,,1,10,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+36,37,67810,Biopsy of eyelid,,1,10,0,0,0,1,1,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+37,37,40490,"Biopsy of lip; removal of tissue from external or mucosal lip for diagnostic evaluation (e.g., suspicious lesion, carcinoma)",,1,10,0,0,0,0,0,0,1,0,1,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+38,37,54100,Biopsy of penis,,1,10,0,0,0,1,1,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+39,37,56605,Biopsy of vulva or perineum (separate procedure); one lesion,,1,10,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+40,37,11755,"Biopsy of nail unit (eg, plate, bed, matrix, hyponychium, proximal and lateral nail folds) (separate procedure)",,1,10,0,0,1,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+45,40,96405,"Chemotherapy administration, intralesional; up to and including 7 lesions",,1,7,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction with Intralesional Chemo
+46,229,96902,"Microscopic examination of hairs plucked or clipped by the examiner (excluding hair collected by the patient) to determine telogen and anagen counts, or structural hair shaft abnormality",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Microscopic Hair Examination
+47,39,17260,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), trunk, arms or legs; lesion diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:21,0,54.177.219.180,0,Destruction Malignant Lesion
+48,39,17261,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), trunk, arms or legs; lesion diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:21,0,54.177.219.180,0,Destruction Malignant Lesion
+50,39,17263,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), trunk, arms or legs; lesion diameter 2.1 to 3.0 cm",,1,10,2.1,3,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,7/23/2024 3:06,0,54.177.219.180,0,Destruction Malignant Lesion
+51,39,17264,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), trunk, arms or legs; lesion diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:22,0,54.177.219.180,0,Destruction Malignant Lesion
+53,39,17266,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), trunk, arms or legs; lesion diameter over 4.0 cm",,1,10,4.1,100,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:21,0,54.177.219.180,0,Destruction Malignant Lesion
+54,39,17270,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), scalp, neck, hands, feet, genitalia; lesion diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:22,0,54.177.219.180,0,Destruction Malignant Lesion
+56,39,17271,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), scalp, neck, hands, feet, genitalia; lesion diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:22,0,54.177.219.180,0,Destruction Malignant Lesion
+57,39,17272,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), scalp, neck, hands, feet, genitalia; lesion diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:22,0,54.177.219.180,0,Destruction Malignant Lesion
+59,39,17273,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), scalp, neck, hands, feet, genitalia; lesion diameter 2.1 to 3.0 cm",,1,10,2.1,3,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:22,0,54.177.219.180,0,Destruction Malignant Lesion
+60,39,17274,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), scalp, neck, hands, feet, genitalia; lesion diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:22,0,54.177.219.180,0,Destruction Malignant Lesion
+61,39,17276,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), scalp, neck, hands, feet, genitalia; lesion diameter over 4.0 cm",,1,10,4.1,100,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,7/23/2024 6:23,0,54.177.219.180,0,Destruction Malignant Lesion
+62,39,17280,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+65,39,17281,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 0.6 to 1.0 cm",,1,10,0.5,1,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+68,39,17282,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+71,39,17283,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 2.1 to 3.0 cm",,1,10,2.1,3,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+74,39,17284,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+77,39,17286,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), face, ears, eyelids, nose, lips, mucous membrane; lesion diameter over 4.0 cm",,1,10,4.1,100,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+80,39,17262,"Destruction, malignant lesion (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), trunk, arms or legs; lesion diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,6/5/2024 23:14,0,54.177.219.180,0,Destruction Malignant Lesion
+82,52,11401,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), trunk, arms or legs; excised diameter 0.6 to 1.0 cm",,1,20,0.6,1,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,7/31/2024 6:39,0,54.177.219.180,0,Excision Benign Lesion & Margins
+83,52,11402,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), trunk, arms or legs; excised diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,7/31/2024 6:39,0,54.177.219.180,0,Excision Benign Lesion & Margins
+84,52,11403,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), trunk, arms or legs; excised diameter 2.1 to 3.0 cm",,1,10,2.1,3,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,7/31/2024 6:39,0,54.177.219.180,0,Excision Benign Lesion & Margins
+85,52,11404,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), trunk, arms or legs; excised diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,7/31/2024 6:39,0,54.177.219.180,0,Excision Benign Lesion & Margins
+86,52,11406,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), trunk, arms or legs; excised diameter over 4.0 cm",,1,10,4.1,100,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+87,52,11420,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), scalp, neck, hands, feet, genitalia; excised diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,7/31/2024 6:39,0,54.177.219.180,0,Excision Benign Lesion & Margins
+88,52,11421,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), scalp, neck, hands, feet, genitalia; excised diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+89,52,11422,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), scalp, neck, hands, feet, genitalia; excised diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+90,52,11423,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), scalp, neck, hands, feet, genitalia; excised diameter 2.1 to 3.0 cm",,1,10,2.1,3,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,7/31/2024 6:38,0,54.177.219.180,0,Excision Benign Lesion & Margins
+91,52,11424,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), scalp, neck, hands, feet, genitalia; excised diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+92,52,11426,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), scalp, neck, hands, feet, genitalia; excised diameter over 4.0 cm",,1,10,4.1,100,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+93,52,11440,"Excision, other benign lesion including margins (unless listed elsewhere), face, ears, eyelids, nose, lips, mucous membrane; excised diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+94,52,11441,"Excision, other benign lesion including margins (unless listed elsewhere), face, ears, eyelids, nose, lips, mucous membrane; excised diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+95,52,11442,"Excision, other benign lesion including margins (unless listed elsewhere), face, ears, eyelids, nose, lips, mucous membrane; excised diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+96,52,11443,"Excision, other benign lesion including margins (unless listed elsewhere), face, ears, eyelids, nose, lips, mucous membrane; excised diameter 2.1 to 3.0 cm",,1,10,2.1,3,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+97,52,11444,"Excision, other benign lesion including margins (unless listed elsewhere), face, ears, eyelids, nose, lips, mucous membrane; excised diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+98,52,11446,"Excision, other benign lesion including margins, except skin tag (unless listed elsewhere), face, ears, eyelids, nose, lips, mucous membrane; excised diameter over 4.0 cm",,1,10,4.1,100,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+99,53,11600,"Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+100,53,11601,"Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,8/28/2024 8:42,0,54.177.219.180,0,Excision Malignant Lesion & Margins
+101,53,11602,"Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,8/28/2024 8:41,0,54.177.219.180,0,Excision Malignant Lesion & Margins
+102,53,11603,"Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter 2.1 to 3.0 cm",,1,10,2.1,3,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,8/28/2024 21:03,0,54.177.219.180,0,Excision Malignant Lesion & Margins
+103,53,11604,"Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,1,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,8/28/2024 8:42,0,54.177.219.180,0,Excision Malignant Lesion & Margins
+104,53,11606,"Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter over 4.0 cm",,1,10,4.1,100,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+105,53,11620,"Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+106,53,11621,"Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+107,53,11622,"Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+108,53,11623,"Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised diameter 2.1 to 3.0 cm",,1,10,2.1,3,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+109,53,11624,"Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised diameter 3.1 to 4.0 cm",,1,10,3.1,4,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+110,53,11626,"Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised diameter over 4.0 cm",,1,10,4.1,100,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+111,53,11640,"Excision, malignant lesion including margins, face, ears, eyelids, nose, lips; excised diameter 0.5 cm or less",,1,10,0,0.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+112,53,11641,"Excision, malignant lesion including margins, face, ears, eyelids, nose, lips; excised diameter 0.6 to 1.0 cm",,1,10,0.6,1,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+113,53,11642,"Excision, malignant lesion including margins, face, ears, eyelids, nose, lips; excised diameter 1.1 to 2.0 cm",,1,10,1.1,2,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+114,53,11643,"Excision, malignant lesion including margins, face, ears, eyelids, nose, lips; excised diameter 2.1 to 3.0 cm",,1,10,2.1,3,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+115,53,11644,"Excision, malignant lesion including margins, face, ears, eyelids, nose, lips; excised diameter 3.1 to 4.0 cm",,1,10,3.1,4,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+116,53,11646,"Excision, malignant lesion including margins, face, ears, eyelids, nose, lips; excised diameter over 4.0 cm",,1,10,4.1,100,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Malignant Lesion & Margins
+117,0,,,,0,0,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,
+118,0,,,,0,0,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,
+181,52,11400,"Excision, benign lesion including margins, except skin tag (unless listed elsewhere), trunk, arms or legs; excised diameter 0.5 cm or less",,1,20,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+182,54,17311,"Mohs micrographic surgery;  First stage for tumors on high risk areas; like head, neck, temple, auricle, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet or genitalia",,1,1,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,MOHS Micrographic Surgery
+183,54,17312,"Mohs micrographic surgery; Each additional stage after the first stage for high risk areas; like head, neck, temple, auricle, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet or genitalia",17311,2,30,0,0,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,MOHS Micrographic Surgery
+184,54,17313,"Mohs micrographic surgery; first stage for tumors on arms, legs, chest, back, abdomen, shoulders or thighs",,1,1,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,MOHS Micrographic Surgery
+186,54,17314,"Mohs micrographic surgery; each additional stage after the first stage for arms, legs, chest, back, abdomen, shoulders or thighs",17313,2,30,0,0,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,MOHS Micrographic Surgery
+187,55,17315,"Mohs micrographic surgery; each additional tissue bloack beyond 5 blocks per stage, regardless of anatomical site. Only use when pathology sections/blocks exceed 5 in a single stage. Rare usage; requires explicit documentation of number of blocks.",,6,50,0,0,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,MOHS Additional Tissue Blocks
+200,63,11300,"Shaving of epidermal or dermal lesion, single lesion, trunk, arms or legs; lesion diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+201,63,11301,"Shaving of epidermal or dermal lesion, single lesion, trunk, arms or legs; lesion diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+202,63,11302,"Shaving of epidermal or dermal lesion, single lesion, trunk, arms or legs; lesion diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+203,63,11303,"Shaving of epidermal or dermal lesion, single lesion, trunk, arms or legs; lesion diameter over 2.0 cm",,1,10,2,99,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+204,63,11313,"Shaving of epidermal or dermal lesion, single lesion, face, ears, eyelids, nose, lips, mucous membrane; lesion diameter over 2.0 cm",,1,10,2.1,99,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+205,63,11312,"Shaving of epidermal or dermal lesion, single lesion, face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+206,63,11311,"Shaving of epidermal or dermal lesion, single lesion, face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+207,63,11310,"Shaving of epidermal or dermal lesion, single lesion, face, ears, eyelids, nose, lips, mucous membrane; lesion diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+208,63,11308,"Shaving of epidermal or dermal lesion, single lesion, scalp, neck, hands, feet, genitalia; lesion diameter over 2.0 cm",,1,10,2.1,99,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+209,63,11307,"Shaving of epidermal or dermal lesion, single lesion, scalp, neck, hands, feet, genitalia; lesion diameter 1.1 to 2.0 cm",,1,10,1.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+210,63,11306,"Shaving of epidermal or dermal lesion, single lesion, scalp, neck, hands, feet, genitalia; lesion diameter 0.6 to 1.0 cm",,1,10,0.6,1,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+211,63,11305,"Shaving of epidermal or dermal lesion, single lesion, scalp, neck, hands, feet, genitalia; lesion diameter 0.5 cm or less",,1,10,0,0.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Shave Removal
+212,37,11100,"Biopsy of skin, subcutaneous tissue and/or mucous membrane (including simple closure), unless otherwise listed; single lesion",,1,1,0,0,0,1,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+213,37,11101,"Biopsy of skin, subcutaneous tissue and/or mucous membrane (including simple closure), unless otherwise listed; each separate/additional lesion (List separately in addition to code for primary procedure)",11100,2,10,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+214,60,13100,"Repair, complex, trunk; 1.1 cm to 2.5 cm",,1,10,1.1,2.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+215,60,13101,"Repair, complex, trunk; 2.6 cm to 7.5 cm",,1,10,2.6,7.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+216,60,13102,"Repair, complex, trunk; each additional 5 cm or less (List separately in addition to code for primary procedure)",13101,1,10,7.6,12.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,8/19/2024 22:44,0,54.177.219.180,1,Complex Closure
+217,60,13120,"Repair, complex, scalp, arms, and/or legs; 1.1 cm to 2.5 cm",,1,10,1.1,2.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+218,60,13121,"Repair, complex, scalp, arms, and/or legs; 2.6 cm to 7.5 cm",,1,10,2.6,7.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+219,60,13122,"Repair, complex, scalp, arms, and/or legs; each additional 5 cm or less (List separately in addition to code for primary procedure)",13121,1,10,7.6,12.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,8/19/2024 22:45,0,54.177.219.180,1,Complex Closure
+220,60,13131,"Repair, complex, forehead, cheeks, chin, mouth, neck, axillae, genitalia, hands and/or feet; 1.1 cm to 2.5 cm",,1,10,1.1,2.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+221,60,13132,"Repair, complex, forehead, cheeks, chin, mouth, neck, axillae, genitalia, hands and/or feet; 2.6 cm to 7.5 cm",,1,10,2.6,7.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+222,60,13133,"Repair, complex, forehead, cheeks, chin, mouth, neck, axillae, genitalia, hands and/or feet; each additional 5 cm or less (List separately in addition to code for primary procedure)",13132,1,10,7.6,12.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,8/19/2024 22:45,0,54.177.219.180,1,Complex Closure
+223,60,13150,"Repair, complex, eyelids, nose, ears and/or lips; 1.0 cm or less",,1,10,0,1,0,0,0,0,1,0,0,1/1/2013,12/31/2020,1,0,32001,0000-00-00 00:00:00,8/19/2024 22:41,0,54.177.219.180,0,Complex Closure
+224,57,14000,"Adjacent tissue transfer or rearrangement, trunk; defect 10 sq cm or less",,1,5,0,10,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+225,57,14001,"Adjacent tissue transfer or rearrangement, trunk; defect 10.1 sq cm to 30.0 sq cm",,1,5,10.1,30,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+226,57,14020,"Adjacent tissue transfer or rearrangement, scalp, arms and/or legs; defect 10 sq cm or less",,1,5,0,10,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+227,57,14021,"Adjacent tissue transfer or rearrangement, scalp, arms and/or legs; defect 10.1 sq cm to 30.0 sq cm",,1,5,10.1,30,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+228,57,14040,"Adjacent tissue transfer or rearrangement, forehead, cheeks, chin, mouth, neck, axillae, genitalia, hands and/or feet; defect 10 sq cm or less",,1,5,0,10,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+229,57,14041,"Adjacent tissue transfer or rearrangement, forehead, cheeks, chin, mouth, neck, axillae, genitalia, hands and/or feet; defect 10.1 sq cm to 30.0 sq cm",,1,5,10.1,30,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+230,57,14060,"Adjacent tissue transfer or rearrangement, eyelids, nose, ears and/or lips; defect 10 sq cm or less",,1,5,0,10,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+231,57,14061,"Adjacent tissue transfer or rearrangement, eyelids, nose, ears and/or lips; defect 10.1 sq cm to 30.0 sq cm",,1,5,10.1,30,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+232,57,14300,"Adjacent tissue transfer or rearrangement, more than 30 sq cm, unusual or complicated, any area",,1,5,30.1,200,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Adjacent Tissue Transfer
+233,219,40500,"Vermilionectomy (lip shave), with mucosal advancement",,1,10,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Vermillion with Lip Advance Repair
+234,218,15740,Flap; island pedicle,,1,6,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Graft Island Pedicle
+235,58,15240,"Full thickness graft, free, including direct closure of donor site, forehead, cheeks, chin, mouth, neck, axillae, genitalia, hands, and/or feet; 20 sq cm or less",,1,5,0.1,20,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Graft Full Thickness
+236,58,15260,"Full thickness graft, free, including direct closure of donor site, nose, ears, eyelids, and/or lips; 20 sq cm or less",,1,5,0.1,20,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Graft Full Thickness
+237,220,15050,"Pinch graft, single or multiple, to cover small ulcer, tip of digit, or other minimal open area (except on face), up to defect size 2 cm diameter",,1,5,0.1,2,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Pinch Graft
+240,222,CM001,Microdermabrassion,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Micro Dermabrasion
+243,26,CL001,Laser Treatment Hair Reduction,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+244,27,CI001,IPL Haair Reduction,,1,100,0,500,1,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+245,223,96910,Photochemotherapy; tar and ultraviolet B (Goeckerman treatment) or petrolatum and ultraviolet B,,1,1,0,0,0,1,1,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Photochemotherapy UVB
+246,224,10140,"Incision and drainage of hematoma, seroma or fluid collection",,1,10,0,0,0,0,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Post-OP Hematoma I&D
+251,227,88300,path,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+252,227,88302,path,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+253,227,88304,path,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+254,227,88305,Pathology,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+255,227,88309,path,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+256,227,88312,Pathology Special Staining,,1,100,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+257,227,88313,Pathology Special Staining,,1,100,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+258,227,88342,Pathology Special Staining,,1,1,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+259,227,88346,path,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+260,227,88347,path,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+261,60,13152,"Repair, complex, eyelids, nose, ears and/or lips; 2.6 cm to 7.5 cm",,1,10,2.6,7.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+262,60,13151,"Repair, complex, eyelids, nose, ears and/or lips; 1.1 cm to 2.5 cm",,1,10,1.1,2.5,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Complex Closure
+263,60,13153,"Repair, complex, eyelids, nose, ears and/or lips; each additional 5 cm or less (List separately in addition to code for primary procedure)",13152,1,10,7.6,12.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,8/19/2024 22:44,0,54.177.219.180,1,Complex Closure
+280,246,12031,"Layer closure of wounds of scalp, axillae, trunk and/or extremities (excluding hands and feet); 2.5 cm or less",,1,20,0,2.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+281,246,12032,"Layer closure of wounds of scalp, axillae, trunk and/or extremities (excluding hands and feet); 2.6 cm to 7.5 cm",,1,20,2.6,7.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+282,246,12034,"Layer closure of wounds of scalp, axillae, trunk and/or extremities (excluding hands and feet); 7.6 cm to 12.5 cm",,1,20,7.6,12.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+283,246,12035,"Layer closure of wounds of scalp, axillae, trunk and/or extremities (excluding hands and feet); 12.6 cm to 20.0 cm",,1,20,12.6,20,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+284,246,12041,"Layer closure of wounds of neck, hands, feet and/or external genitalia; 2.5 cm or less",,1,20,0,2.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+285,246,12042,"Layer closure of wounds of neck, hands, feet and/or external genitalia; 2.6 cm to 7.5 cm",,1,20,2.6,7.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+286,246,12044,"Layer closure of wounds of neck, hands, feet and/or external genitalia; 7.6 cm to 12.5 cm",,1,20,7.6,12.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+287,246,12045,"Layer closure of wounds of neck, hands, feet and/or external genitalia; 12.6 cm to 20.0 cm",,1,20,12.6,20,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+288,246,12051,"Layer closure of wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 2.5 cm or less",,1,20,0.1,2.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+289,246,12052,"Layer closure of wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 2.6 cm to 5.0 cm",,1,20,2.6,5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+290,246,12053,"Layer closure of wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 5.1 cm to 7.5 cm",,1,20,5.1,7.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+291,246,12054,"Layer closure of wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 7.6 cm to 12.5 cm",,1,20,7.6,12.5,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+292,246,12055,"Layer closure of wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 12.6 cm to 20.0 cm",,1,20,12.6,20,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Layered Closure
+293,247,17340,"Cryotherapy (CO2 slush, liquid N2) for acne",,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Acne Cryotherapy
+294,248,17360,"Chemical exfoliation for acne (eg, acne paste, acid)",,1,100,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,7/15/2025 22:21,0,54.153.66.213,0,Acne Chemical Exfoliation
+295,249,96920,Laser treatment for inflammatory skin disease (psoriasis); total area less than 250 sq cm,,1,50,0,249,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Xtrac Laser Treatment
+296,249,96921,Laser treatment for inflammatory skin disease (psoriasis); 250 sq cm to 500 sq cm,,1,50,250,500,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Xtrac Laser Treatment
+297,249,96922,Laser treatment for inflammatory skin disease (psoriasis); over 500 sq cm,,1,50,500,999.9,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Xtrac Laser Treatment
+299,227,88307,path,,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+300,16,11732,"Avulsion of nail plate, partial or complete, simple; each additional nail plate (List separately in addition to code for primary procedure)",11730,2,20,0,0,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Avulsion of the Nail Plate
+301,250,11750,"Excision of nail and nail matrix, partial or complete, (eg, ingrown or deformed nail) for permanent removal;",,1,10,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Nail/Matrix
+302,250,11752,"Excision of nail and nail matrix, partial or complete, (eg, ingrown or deformed nail) for permanent removal; with amputation of tuft of distal phalanx",,1,10,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Nail/Matrix
+303,48,17106,"Destruction of cutaneous vascular proliferative lesions (eg, laser technique); less than 10 sq cm",,1,100,0,9.9,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Vascular Proliferative Lesion
+304,48,17107,"Destruction of cutaneous vascular proliferative lesions (eg, laser technique); 10.0 to 50.0 sq cm",,1,100,10,50,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Vascular Proliferative Lesion
+305,48,17108,"Destruction of cutaneous vascular proliferative lesions (eg, laser technique); over 50.0 sq cm",,1,100,50.1,500,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Vascular Proliferative Lesion
+306,252,17250,"Chemical cauterization of granulation tissue (proud flesh, sinus or fistula)",,1,100,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Cauterization Granulation Tissue
+312,52,54060,"Destruction of lesion(s), penis (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; surgical excision",,1,10,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+319,258,A9270,Non Covered Service,,1,100,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Non Covered Services
+320,259,99070,"Supplies and materials (except spectacles), provided by the physician over and above those usually included with the office visit or other services rendered (list drugs, trays, supplies, or materials provided)",,1,1,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Supplies provied without vist or services
+323,58,15220,"Full thickness graft, free, including direct closure of donor site, scalp, arms, and/or legs; 20 sq cm or less",,1,5,1,20,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Graft Full Thickness
+324,58,15200,"Full thickness graft, free, including direct closure of donor site, trunk; 20 sq cm or less",,1,5,1,20,1,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Graft Full Thickness
+325,260,J0702,Betamethasone 3mg,,1,10,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Betamethasone
+329,275,J3301,Triamcinolone 10mg Acetonide,,1,10,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Triamcinolone
+330,274,J9260,Methotrexate Sodium 50mg,,1,20,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Methotrexate Sodium 50mg
+332,271,11950,"Subcutaneous injection of filling material (eg, collagen); 1 cc or less",,1,20,0,1,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injection Subcutaneous/Intramuscular
+333,270,36470,Injection of sclerosing solution; single vein,,1,1,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injection Sclerosing Vein Therapy
+334,270,36471,"Injection of sclerosing solution; multiple veins, same leg",,2,100,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injection Sclerosing Vein Therapy
+339,264,J1100,Dexamethasone 4mg/ml,,1,10,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Dexamethasone 4mg/ml
+340,263,J0585,Botulinum Toxin Type A,,1,100,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Botulinum Toxin Type A
+341,262,J9040,Bleomycin Sulfate 15U,,1,100,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Bleomycin Sulfate 15U
+344,34,15793,"Chemical peel, nonfacial; dermal",,1,1,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel Dermal
+345,1,15792,"Chemical peel, nonfacial; epidermal",,1,1,0,0,0,0,0,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel Epidermal
+348,281,13160,Dehiscence/Extensive.Complicated,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Secondary Closure
+349,282,12020,Postop wound dehiscence closure simple,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Postop wound dehiscence repair
+350,282,12021,Postop wound dehiscence packing,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Postop wound dehiscence repair
+351,217,12001,"Simple repair of superficial wounds of scalp, neck, axillae, external genitalia, trunk and/or extremities (including hands and feet); 2.5 cm or less",,1,10,0.1,2.5,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+352,217,12002,"Simple repair of superficial wounds of scalp, neck, axillae, external genitalia, trunk and/or extremities (including hands and feet); 2.6 cm to 7.5 cm",,1,10,2.6,7.5,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+353,217,12004,"Simple repair of superficial wounds of scalp, neck, axillae, external genitalia, trunk and/or extremities (including hands and feet); 7.6 cm to 12.5 cm",,1,10,7.6,12.5,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+354,217,12005,"Simple repair of superficial wounds of scalp, neck, axillae, external genitalia, trunk and/or extremities (including hands and feet); 12.6 cm to 20.0 cm",,1,10,12.6,20,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+355,217,12006,"Simple repair of superficial wounds of scalp, neck, axillae, external genitalia, trunk and/or extremities (including hands and feet); 20.1 cm to 30.0 cm",,1,10,20.1,30,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+356,217,12007,"Simple repair of superficial wounds of scalp, neck, axillae, external genitalia, trunk and/or extremities (including hands and feet); over 30.0 cm",,1,10,30.1,50,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+357,217,12011,"Simple repair of superficial wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 2.5 cm or less",,1,10,0.1,2.5,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+358,217,12013,"Simple repair of superficial wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 2.6 cm to 5.0 cm",,1,10,2.6,5,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+359,217,12014,"Simple repair of superficial wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 5.1 cm to 7.5 cm",,1,10,5.1,7.5,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+360,217,12015,"Simple repair of superficial wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 7.6 cm to 12.5 cm",,1,10,7.6,12.5,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+361,217,12016,"Simple repair of superficial wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 12.6 cm to 20.0 cm",,1,10,12.6,20,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+362,217,12017,"Simple repair of superficial wounds of face, ears, eyelids, nose, lips and/or mucous membranes; 20.1 cm to 30.0 cm",,1,10,20.1,30,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+363,217,12018,"Simple repair of superficial wounds of face, ears, eyelids, nose, lips and/or mucous membranes; over 30.0 cm",,1,10,30.1,50,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Simple Closure
+365,272,11900,"Injection, intralesional; up to and including seven lesions",,1,7,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intra-lesional Injection
+366,272,11901,"injection, intralesional; more than seven lesions",,8,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intra-lesional Injection
+367,270,36468,"Single or multiple injections of sclerosing solutions, spider veins (telangiectasia); limb or trunk",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injection Sclerosing Vein Therapy
+368,270,36469,"Single or multiple injections of sclerosing solutions, spider veins (telangiectasia); face",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injection Sclerosing Vein Therapy
+369,38,46900,"Destruction of lesion(s), anus (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; chemical",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+370,38,46910,"Destruction of lesion(s), anus (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; electrodesiccation",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+371,38,46916,"Destruction of lesion(s), anus (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; cryosurgery",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+372,38,46917,"Destruction of lesion(s), anus (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; laser surgery",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+373,38,46922,"Destruction of lesion(s), anus (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; surgical excision",,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+374,38,46924,"Destruction of lesion(s), anus (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), extensive (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery)",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+375,38,54050,"Destruction of lesion(s), penis (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; chemical",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+376,38,54055,"Destruction of lesion(s), penis (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; electrodesiccation",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+377,38,54056,"Destruction of lesion(s), penis (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; cryosurgery",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+378,38,54057,"Destruction of lesion(s), penis (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; laser surgery",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+379,38,54060,"Destruction of lesion(s), penis (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), simple; surgical excision",,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+380,38,54065,"Destruction of lesion(s), penis (eg, condyloma, papilloma, molluscum contagiosum, herpetic vesicle), extensive (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery)",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+381,38,56501,"Destruction of lesion(s), vulva; simple (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery)",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+382,38,56515,"Destruction of lesion(s), vulva; extensive (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery)",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+383,38,57065,"Destruction of vaginal lesion(s); extensive (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery)",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+384,38,11200,"Removal of skin tags, multiple fibrocutaneous tags, any area; up to and including 15 lesions",,1,15,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+385,38,11201,"Removal of skin tags, multiple fibrocutaneous tags, any area; each additional ten lesions (List separately in addition to code for primary procedure)",11200,16,200,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+386,40,96406,"Chemotherapy administration, intralesional; more than 7 lesions",,8,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction with Intralesional Chemo
+387,38,17110,"Destruction (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), of benign lesions other than skin tags or cutaneous vascular lesions; up to 14 lesions",,1,14,0,0,0,0,0,0,0,0,1,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,1/26/2026 21:03,0,54.153.66.213,0,Destruction Benign
+388,38,17111,"Destruction (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), of benign lesions other than skin tags or cutaneous vascular lesions; 15 or more lesions",,15,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+389,260,J0700,Betamethasone 6mg,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Betamethasone
+390,260,J0704,Betamethasone 4mg,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Betamethasone
+391,275,J3302,Triamcinolone 5mg Diacetate,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Triamcinolone
+392,275,J3303,Triamcinolone 5mg Hexacetonide,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Triamcinolone
+393,271,96372,"Therapeutic, prophylactic or diagnostic injection (specify substance or drug); subcutaneous or intramuscular",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injection Subcutaneous/Intramuscular
+394,283,CNC01,Non-Covered Services,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Non-Covered Services
+395,284,A4550,Surgical Tray,,1,5,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Surgical Trays
+396,33,15782,"Dermabrasion; regional, other than face",,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Dermabrasion Partial
+397,285,Q3014,Telemedicine Patient Site,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Telemedicine
+398,287,11950,"Subcutaneous injection of filling material (eg, collagen); 1 cc or less",,1,20,0.1,1,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler Material
+399,287,11951,"Subcutaneous injection of filling material (eg, collagen); 1.1 to 5.0 cc",,1,20,1.1,5,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler Material
+400,287,11952,"Subcutaneous injection of filling material (eg, collagen); 5.1 to 10.0 cc",,1,20,5.1,10,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler Material
+401,287,11954,"Subcutaneous injection of filling material (eg, collagen); over 10.0 cc",,1,20,10,100,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler Material
+402,289,17000,"Destruction (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement),  premalignant lesions (eg, actinic keratoses)  first lesion",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Premalignant Lesion
+403,289,17003,"Destruction (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement),premalignant lesions (eg, actinic keratoses)  each (List separately in addition to code for first lesion)",17000,2,14,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,32001,0000-00-00 00:00:00,3/4/2026 5:38,0,54.153.66.213,0,Destruction Premalignant Lesion
+404,289,17004,"Destruction (eg, laser surgery, electrosurgery, cryosurgery, chemosurgery, surgical curettement), premalignant lesions (eg, actinic keratoses), 15 or more lesions",,15,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Premalignant Lesion
+405,26,CL002,Laser Treatment Tattoo Removal,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+407,26,CL003,Laser Treatment Vein Treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+408,26,CL004,Laser Treatment Skin Rejuvenation,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+409,26,CL005,Laser Spider Veins Treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+410,26,CL006,Laser Skin Resurfacing,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+411,26,96920,Laser Treatment Rosacea,,1,100,0,250,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+412,26,CL008,Laser Treatment Melasma,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+413,26,CL009,Laser Treatment Acne,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+414,26,CL010,Laser Treatment Age Spots,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+415,26,CL011,Laser Treatment Birthmark,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+416,26,CL012,Laser Treatment Stretch Marks,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+417,291,CB001,Botox Cosmetic Injection for wrinkles,,1,1000,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Neuromodulator
+418,291,CB002,Botox Cosmetic Injection for Hyperhidrosis,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Neuromodulator
+419,292,96910,Photochemotherapy; tar and ultraviolet B (Goeckerman treatment) or petrolatum and ultraviolet B,,1,10,0,0,0,0,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Narrow Band UVB Phototherapy
+420,23,CP001,Alpha hydroxy acid peel (AHA),,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+421,23,CP002,Beta hydroxy acid peel (BHA),,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+422,23,CP003,Glycolic acid peel,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+423,23,CP004,Jessners solution peel,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+424,23,CP005,Phenol peel,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+425,23,CP006,Retinoic Acid Peel,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+426,23,CP007,Salicylic acid,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+427,23,CP008,Trichloroacetic acid peel (TCA),,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+428,26,CL013,Photofacial laser treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+429,27,CI002,IPL Tattoo Removal,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+430,27,CI003,IPL Treatment Vein Treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+431,27,CI004,IPL Skin Rejuvenation,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+432,27,CI005,IPL Spinder Veins Treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+433,27,CI007,IPL Rosacea Treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+434,27,CI008,IPL Melasma Treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+435,27,CI009,IPL Acne Treatment,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+436,27,CI010,IPL,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+437,27,CI011,IPL Treatment Birthmark,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+438,27,CI013,IPL Photofacial,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+439,294,CF001,"Autologen 	 AUTOLOGOUS IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+440,294,CF002,"Dermis Fat Graft 	 AUTOLOGOUS IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+441,294,CF003,"Dermis Graft 	 AUTOLOGOUS IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+442,294,CF004,"Fat Grafting 	 AUTOLOGOUS IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+443,294,CF005,"Fat Transfer 	 AUTOLOGOUS IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+444,294,CF006,"CosmoPlast 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+445,294,CF007,Fat Transplanting      AUTOLOGOUS IMPLANT,,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+446,294,CF008,"Isolagen	 AUTOLOGOUS IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+447,294,CF009,Scar Tissure Graft  AUTOLOGOUS IMPLANT,,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+448,294,CF010,"Tendon Graft 	 AUTOLOGOUS IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+449,294,CF011,"Hyacell 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+450,294,CF012,"Hyal 2000 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+451,294,CF013,"Hydrafill 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+452,294,CF014,"Hydrafill SoftLine 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+453,294,CF015,"Hylaform 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+454,294,CF016,"Hylaform Plus 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+455,294,CF017,"Hylan Dex 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+456,294,CF018,"Hylan SeS 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+457,294,CF019,"Hyruan 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+458,294,CF020,"Juvederm 24 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+459,294,CF021,"Juvederm 30 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+460,294,CF022,"Juvedrm 18 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+461,294,CF023,"Koken Atelocollagen 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+462,294,CF024,"MacDermol R 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+463,294,CF025,"MacDermol S 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+464,294,CF026,"Matridex 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+465,294,CF027,"Matridur 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+467,294,CF029,"Perlane 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+468,294,CF030,"Poly-lactic Acid 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+469,294,CF031,"Radiesse 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+470,294,CF032,"Resoplast 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+471,294,CF033,"Restylane 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+472,294,CF034,"Restylane Fine Line 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+473,294,CF035,"Rhegecoll 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+474,294,CF036,"Rofilan Hylan Gel 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+475,294,CF037,"Sculptra 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+476,294,CF038,"Zyderm 1 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+477,294,CF039,"Zyderm 2 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+478,294,CF040,"Zyplast 	 TEMPORARY FILLER",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Implant (Autologous)
+479,295,CF041,"AlloDerm 	 HUMAN CADAVER-DERIVED IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Human Cadaver-Derived Implant
+480,295,CF042,"Apligraf 	 HUMAN CADAVER-DERIVED IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Human Cadaver-Derived Implant
+481,295,CF043,"Cymetra 	 HUMAN CADAVER-DERIVED IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Human Cadaver-Derived Implant
+482,295,CF044,"Dermaplant 	 HUMAN CADAVER-DERIVED IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Human Cadaver-Derived Implant
+483,295,CF045,"Fascian 	 HUMAN CADAVER-DERIVED IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Human Cadaver-Derived Implant
+484,295,CF046,"Surgisis 	 HUMAN CADAVER-DERIVED IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Human Cadaver-Derived Implant
+485,295,CF047,"Surgisis ES 	 HUMAN CADAVER-DERIVED IMPLANT",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Human Cadaver-Derived Implant
+486,296,CF048,"DermaCellagen 	 SEMI-PERMANENT BIO-CATALYST",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Semi-Permanet Bio-Catalyst Filler
+487,296,CF049,"Isolagen 	 SEMI-PERMANENT BIO-CATALYST",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Semi-Permanet Bio-Catalyst Filler
+488,296,CF050,"Kopolymer 4E 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Semi-Permanet Bio-Catalyst Filler
+489,296,CF051,"New-Fill 	 SEMI-PERMANENT BIO-CATALYST",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Semi-Permanet Bio-Catalyst Filler
+490,296,CF052,"Reviderm Intra 	 SEMI-PERMANENT BIO-CATALYST",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Semi-Permanet Bio-Catalyst Filler
+491,296,CF053,"Sculptra 	 SEMI-PERMANENT BIO-CATALYST",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Semi-Permanet Bio-Catalyst Filler
+492,293,CF054,"ADATO SIL-ol 5000 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+493,293,CF055,"Amazingel 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+494,293,CF056,"Aquamid 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+495,293,CF057,"Argiform 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+496,293,CF058,"Artecoll 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+497,293,CF059,"Artefill 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+498,293,CF060,"Arteplast 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+499,293,CF061,"Bio-Alcamid 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+500,293,CF062,"Bioformacryl 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+501,293,CF063,"Bioplastique 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+502,293,CF064,"Biopolimero 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+503,293,CF065,"Biopolymere 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+504,293,CF066,"DermaDeep 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+505,293,CF067,"Dermagen 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+506,293,CF068,"DermaLive 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+507,293,CF069,"Evolution 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+508,293,CF070,"Formacryl 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+509,293,CF071,"Kopolymer 4E 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+510,293,CF072,"Metacrill 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+511,293,CF073,"Metrex 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+512,293,CF074,"Outline 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+513,293,CF075,"Procell 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+514,293,CF076,"Profill 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+515,293,CF077,"Radiessen FN 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+516,293,CF078,"Rhegocoll 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+517,293,CF079,"Silicex 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+518,293,CF080,"SILIKON 1000 	 INJECTABLE MICRO-IMPLANT",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injectable Micro-Implant
+519,288,CF081,"AcHyal 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+520,288,CF082,"CosmetalLife 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+521,288,CF083,"CosmoDerm 1 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+522,288,CF084,"CosmoDerm 2 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+523,288,CF085,"CosmoPlast 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+524,288,CF086,"CosmoPlast 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+525,288,CF087,"DermiCol 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+526,288,CF088,"Evolence 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+527,288,CF089,"Fibrel Procine Collagen 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+528,288,CF089,"Fibroquel 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+529,288,CF090,"Hyacell 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+530,288,CF091,"Hyal 2000 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+531,288,CF092,"Hydrafill 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+532,288,CF093,"Hydrafill SoftLine 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+533,288,CF094,"Hylaform 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+534,288,CF095,"Hylaform Plus 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+535,288,CF096,"Hylan Dex 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+536,288,CF097,"Hylan SeS 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+537,288,CF098,"Hyruan 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+538,288,CF099,"Juvederm 24 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+539,288,CF100,"Juvederm 30 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+540,288,CF101,"Juvedrm 18 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+541,288,CF102,"Koken Atelocollagen 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+542,288,CF103,"MacDermol R 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+543,288,CF104,"MacDermol S 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+544,288,CF105,"Matridex 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+545,288,CF106,"Matridur 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+546,288,CF107,"MatriGel 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+547,288,CF108,"Perlane 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+548,288,CF109,"Poly-lactic Acid 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+549,288,CF110,"Radiesse 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+550,288,CF111,"Resoplast 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+551,288,CF112,"Restylane 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+552,288,CF113,"Restylane Fine Line 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+553,288,CF114,"Rhegecoll 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+554,288,CF115,"Rofilan Hylan Gel 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+555,288,CF116,"Sculptra 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+556,288,CF117,"Zyderm 1 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+557,288,CF118,"Zyderm 2 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+558,288,CF119,"Zyplast 	 TEMPORARY FILLER",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+559,14,26011,"Drainage of finger abscess; complicated (eg, felon)",,1,5,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Incision & Drainage
+560,39,96567,"Photodynamic therapy by external application of light to destroy premalignant and/or malignant lesions of the skin and adjacent mucosa (eg, lip) by activation of photosensitive drug(s), each phototherapy exposure session",,1,50,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+561,297,55120,Removal of foreign body in scrotum,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Foreign Body Removal
+562,298,15828,"Rhytidectomy; cheek, chin, and neck",,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Rhytidectomy
+563,299,36415,Collection of venous blood by venipuncture,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Collection Blood
+564,300,93971,Duplex scan of extremity veins including responses to compression and other maneuvers; unilateral or limited study,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Duplex Scan
+565,297,27372,"Removal of foreign body, deep, thigh region or knee area",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Foreign Body Removal
+566,52,21930,"Excision, tumor, soft tissue of back or flank, subcutaneous; less than 3 cm",,1,1,0,2.9,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+568,301,67800,Excision of chalazion; single,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Non Skin
+569,301,67801,"Excision of chalazion; multiple, same lid",67800,2,2,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Non Skin
+570,301,25075,"Excision, tumor, soft tissue of forearm and/or wrist area; subcutaneous",,1,20,0,2.9,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Non Skin
+571,301,23075,"Excision, soft tissue tumor, shoulder area; subcutaneous",,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Non Skin
+572,301,24075,"Excision, tumor, soft tissue of upper arm or elbow area; subcutaneous",,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Non Skin
+574,301,40510,Excision of lip; transverse wedge excision with primary closure,,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Non Skin
+575,301,40810,"Excision of lesion of mucosa and submucosa, vestibule of mouth; without repair",,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Non Skin
+576,14,26010,Drainage of finger abscess; simple,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Incision & Drainage
+577,14,67830,Correction of trichiasis; incision of lid margin,,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,8/24/2022,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Incision & Drainage
+578,33,15783,"Dermabrasion; superficial, any site, (eg, tattoo removal)",,1,10,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Dermabrasion Partial
+579,38,67850,Destruction of lesion of lid margin (up to 1 cm),,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+580,38,40820,"Destruction of lesion or scar of vestibule of mouth by physical methods (eg, laser, thermal, cryo, chemical)",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+581,302,CCINT,Initial Esthetics Consultation,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Aesthetics Consultation
+582,302,CCFU,Follow up Esthetics Consultation,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Aesthetics Consultation
+583,302,TEST,Demo Treatment No Charge,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Aesthetics Consultation
+584,304,CL020,Liposcution,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Liposuction
+585,305,CL030,Neck Lift,,1,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Lift Surgery
+586,305,CL031,Mini Lift,,1,5,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Lift Surgery
+587,306,CB030,Lower Blepharoplasty,,1,2,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Blepharoplasty
+588,307,15823,"Blepharoplasty, upper eyelid; with excessive skin weighting down lid",,1,2,0,0,1,0,0,1,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,bLEPAROPLASTY uPPER
+589,306,CB031,"Blepharoplasty, upper eyelid",,1,2,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Blepharoplasty
+590,288,CF120,Juvederm Ultra,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+591,297,24200,"Removal of foreign body, upper arm or elbow area; subcutaneous",,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Foreign Body Removal
+592,297,20525,Removal of foreign body in muscle or tendon sheath; deep or complicated,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Foreign Body Removal
+593,297,20520,Removal of foreign body in muscle or tendon sheath; simple,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Foreign Body Removal
+594,0,96467,"Photodynamic therapy by external application of light to destroy premalignant and/or malignant lesions of the skin and adjacent mucosa (eg, lip) by activation of photosensitive drug(s), each phototherapy exposure session",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,
+595,62,X9991,Repair Secondary Intention,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,
+597,308,J7308,"Aminolevulinic acid HCL topical administration, 20%, SINGLE UNIT DOSAGE FORM",,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Levulan Application
+598,309,96567,PHOTODYNAMIC THERAPY BY EXTERNAL APPLICATION OF LIGHT TO DESTROY PREMALIGNANT AND/OR MALIGNANT LESION OF THE SKIN BY ACTIVATION OF PHOTOSENSITIVE DRUG,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Photodynamic Therapy
+599,310,cb003,Blue Light Application For Acne,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Blue Light Application
+600,216,X9992,Electrodessication,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Electrodessication
+601,303,x9993,Curratage and Electrodessication,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Electrodessication
+602,286,X9984,pathergy test,,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Pathergy Test
+605,313,X9997,Patch or application test(s) F/U (65 number of tests),,65,65,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch Test 65 - Final
+606,314,95044,Non-Covered Service - Patch test 65,,65,65,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch Test 65 - Application
+613,321,87205,Smear Gram/Giemsa Stain,,1,100,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,32037,0000-00-00 00:00:00,10/16/2024 9:09,0,54.177.219.180,0,Gram Stain
+614,322,87207,Inclusion Bodies/Parasites Smear,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Inclusion Bodies/Parasites Smear
+615,323,87207,Tzanck Smear,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Tzanck Smear
+616,324,87101,Fungal Culture,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Fungal Culture
+617,325,87210,KOH Wet Mount,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,KOH Wet Mount
+618,326,87177,Smear Ova & Parasite,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Smear Ova & Parasite
+619,327,88305,Pathology Skin Tissue Level IV,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Pathology Skin Tissue Level IV
+620,328,88307,Pathology Skin Tissue Leve V,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Pathology Skin Tissue Leve V
+621,329,88309,Pathology Tissue Level VI,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Pathology Tissue Level VI
+622,330,88312,PAS Stain,,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,PAS Stain
+623,331,99304,Pathology (Cyst/Tag/Deb./Lipoma) Level 3,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Pathology (Cyst/Tag/Deb./Lipoma) Level 3
+624,332,99000,Specimen Handling Transfer,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Specimen Handling Transfer
+625,333,87220,KOH Fungi Ova Mites,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,KOH Fungi Ova Mites
+626,334,88300,Gross Exam only Level 1,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Gross Exam only Level 1
+627,335,88302,Gross + Micro Exam Level 2,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Gross + Micro Exam Level 2
+628,336,88329,Pathology Consultation During Surgry,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Pathology Consultation During Surgry
+629,337,88346,Immunofluorescent Study,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Immunofluorescent Study
+630,338,88331,Frozen Section 1st. Block,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Frozen Section 1st. Block
+631,339,88332,Frozen Section Each Additional Block,,2,25,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Frozen Section Each Additional Block
+632,340,36416,Collection Capillary Blood,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Collection Capillary Blood
+633,341,36415,Collection Venous Blood,,1,1,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Collection Venous Blood
+634,342,96902,Microscopic examination of hairs,,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Microscopic examination of hairs
+635,343,87168,Macroscopic examination; arthropod,,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Macroscopic examination; arthropod
+636,344,87169,Macroscopic examination; parasite,,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Macroscopic examination; parasite
+637,345,87070,Speciman for Bactrial Culture & Sensitivity,,1,10,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Specimen for Bactrial Culture & Sensitivity
+638,23,CP009,Lactic Acid Peel,,1,100,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel
+639,347,G8553,At least one prescription created during encounter was generated and transmitted electronically,,0,0,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,G-Code
+640,348,88305,Confocal,,1,20,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Confocal
+641,349,11200,Removal skin tags mlt fibrq tags any are up to & incl 15,,1,15,0,0,0,1,1,0,0,0,0,12/12/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Tag Destruction 
+642,349,11201,"Removal of skin tags, multiple fibrocutaneous tags, any area; each additional 10 lesions, or part thereof (List separately in addition to code for primary procedure)",11200,16,100,0,0,0,1,1,0,0,0,0,12/12/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Tag Destruction 
+643,288,CF121,Filler,,1,20,0,0,0,0,0,0,0,0,0,1/21/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+644,350,N0001,Microneedling,,1,20,0,0,1,1,0,0,0,0,0,1/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Microneedling
+645,351,N0002,Dermaplanning,,1,20,0,0,1,1,1,0,0,0,0,1/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Dermaplanning
+646,288,CF122,Juvederm Ultra Plus,,1,10,0,0,1,1,1,0,0,0,0,1/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+647,288,CF123,Voluma,,1,20,0,0,1,1,1,0,0,0,0,1/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+648,288,CF124,Belatero,,1,20,0,0,1,1,1,0,0,0,0,1/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+649,352,F0001,Facial,,1,10,0,0,0,1,1,0,0,0,0,1/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Facial
+650,26,96921,Laser Treatment,,0,0,250,500,0,1,1,0,0,0,0,1/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+651,26,96922,Laser Treatment,,0,0,501,999.9,0,1,1,0,0,0,0,1/1/2014,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+652,27,96920,Intense Pulsed Light,,1,100,0,250,1,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+653,27,96921,Intense Pulsed Light,,1,100,251,500,1,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+654,27,96922,Intense Pulsed Light,,1,100,0,0,1,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Intense Pulsed Light
+655,353,27047,"Excision, tumor, soft tissue of pelvis and hip area, subcutaneous; less than 3 cm",,1,100,0,2.9,1,1,1,0,0,0,0,1/1/2010,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+656,353,27043,"Excision, tumor, soft tissue of pelvis and hip area, subcutaneous; 3 cm or greater",,1,100,3,100,1,1,1,0,0,0,0,1/1/2010,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+657,354,64650,Chemical denervation of eccrine glands,,1,100,0,0,1,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical denervation of eccrine glands
+658,353,21555,"Excision, tumor, soft tissue of neck or thorax, subcutaneous; less than 3 cm",,1,10,0,2.9,1,1,1,0,0,0,0,1/1/2010,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+659,227,88311,Pathology Special Staining,,1,100,0,0,1,1,1,0,0,0,0,5/6/2015,5/6/2015,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+660,38,57061,Destruction Benign,,1,10,0,0,1,0,0,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Benign
+661,353,21011,"Excision, tumor, soft tissue of face or scalp, subcutaneous; less than 2 cm",,1,20,0,1.9,1,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+662,353,21012,"Excision, tumor, soft tissue of face or scalp, subcutaneous; 2 cm or greater",,1,20,2,100,1,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+664,353,28043,"Excision, tumor, soft tissue of foot and toes subcutaneous; less than 1.5 cm",,1,120,0,1.4,1,1,1,0,0,0,0,1/1/2010,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+665,353,28041,"Excision, tumor, soft tissue of foot or toe, subcutaneous; 1.5 cm or greater",,1,20,1.5,200,1,1,1,0,0,0,0,1/1/2010,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+666,353,26115,"Excision, tumor, soft tissue of hand or finger, subfascial",,1,20,0,1.4,1,1,1,0,0,0,0,1/1/2010,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+667,353,26113,"Excision, tumor, soft tissue of hand or finger, subcutaneous; 1.5 cm or greater",,1,20,1.5,200,1,1,1,0,0,0,0,1/1/2010,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+669,353,23075,Soft Tissue Excision,,1,20,3,10,0,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+670,353,24075,Soft Tissue Excision,,1,20,0,2.9,0,1,1,0,0,0,0,1/1/2010,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+671,353,25065,"Excision, tumor, soft tissue of forearm or wrist area, subfascial",,1,20,1.5,200,0,1,1,0,0,0,0,1/1/2010,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+672,353,27327,"Excision, tumor, soft tissue of thigh or knee area, subcutaneous; less than 3 cm",,1,20,0,2.9,0,1,1,0,0,0,0,1/1/2010,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+673,353,27618,"Excision, tumor, soft tissue of leg or ankle area, subcutaneous; less than 3 cm",,1,20,0,2.9,0,1,1,0,0,0,0,1/1/2010,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+674,28,11000,Debridement,,1,10,0,0,0,0,0,0,0,0,0,9/30/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
+675,263,64653,Botulinum Toxin Type A,,1,100,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,32002,0000-00-00 00:00:00,6/26/2024 9:28,0,54.177.219.180,0,Botulinum Toxin Type A
+676,263,64650,Botulinum Toxin Type A,,1,100,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Botulinum Toxin Type A
+677,355,95044,Non-Covered Service - Patch test 80,,80,80,0,0,1,0,0,0,0,0,0,11/1/2015,12/31/2099,0,0,32002,0000-00-00 00:00:00,1/25/2024 11:18,0,54.177.219.180,0,Patch Test 80 - Application
+678,356,X9997,Patch or application test(s) F/U (80 number of tests),,80,80,0,0,1,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch Test 80- Final Reading
+679,357,96932,Reflectance Confocal Microscopy (Imaging),,1,1,0,0,1,1,1,0,0,0,0,1/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Reflectance Confocal Microscopy (Imaging)
+680,357,96935,Reflectance Confocal Microscopy (Imaging),96932,2,20,0,0,1,1,1,0,0,0,0,1/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Reflectance Confocal Microscopy (Imaging)
+681,358,96931,Reflectance Confocal Microscopy,,1,1,0,0,1,1,1,0,0,0,0,1/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Reflectance Confocal Microscopy
+682,358,96934,Reflectance Confocal Microscopy,96931,2,20,0,0,1,1,1,0,0,0,0,1/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Reflectance Confocal Microscopy
+683,358,96933,Reflectance Confocal Microscopy,,1,1,0,0,1,1,1,0,0,0,0,1/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Reflectance Confocal Microscopy
+684,358,96936,Reflectance Confocal Microscopy,96933,2,20,0,0,1,1,1,0,0,0,0,1/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Reflectance Confocal Microscopy
+685,359,CF200,Juvederm,,1,100,0,0,0,0,0,0,0,0,0,11/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Juvederm
+686,360,CF201,Belotero,,1,100,0,0,0,0,0,0,0,0,0,11/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Belotero
+687,361,CF202,Radiesse,,1,100,0,0,0,0,0,0,0,0,0,11/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiesse
+688,362,CF210,Kybella,,1,100,0,0,0,0,0,0,0,0,0,1/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Kybella
+689,14,67700,Incision & Drainage,,1,20,0,0,0,0,0,0,0,0,0,6/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Incision & Drainage
+690,26,CL032,Laser Treatment,,1,100,0,0,0,0,0,0,0,0,0,10/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Laser Treatment
+691,52,21931,"Excision, tumor, soft tissue of back or flank, subcutaneous; 3 cm or greater",,1,1,3,50,0,0,0,0,0,0,0,10/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Excision Benign Lesion & Margins
+692,363,10140,"Incision and drainage of hematoma, seroma or fluid",,1,10,0,0,1,0,0,0,0,0,0,10/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,"Incision and drainage of hematoma, seroma or fluid"
+693,364,10180,"Incision & drainage, complex, postoperative wound",,1,10,0,0,1,0,0,0,0,0,0,10/1/2015,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,"Incision & drainage, complex, postoperative wound"
+694,365,CP010,PRP c Needling,,1,1,0,0,1,1,1,0,0,0,0,10/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,PRP c Needling
+695,366,CP011,PRP wo microneedling,,1,1,0,0,1,1,1,0,0,0,0,10/1/2016,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,PRP wo microneedling
+696,288,CF125,Vollure,,1,100,0,0,1,0,0,0,0,0,0,10/31/2017,0000-00-00,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+697,288,CF126,Filler,,1,100,0,0,0,0,0,0,0,0,0,11/27/2017,0000-00-00,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Filler
+698,367,C0041,Thread  Lift,,1,200,0,0,0,1,1,0,0,0,0,1/1/2018,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Thread  Lift
+699,37,11102,"Tangential biopsy of skin (e.g., shave, scoop, saucerize); single lesion, superficial sampling of epidermis/dermis",,1,1,0,0,0,0,0,0,0,0,0,1/1/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+700,37,11103,Each additional tangential biopsy lesion; add-on code used with primary code 11102,11102,2,20,0,0,1,0,0,0,0,0,0,1/2/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+701,37,11104,"Punch biopsy of skin; single lesion, full-thickness cylindrical sample using punch tool (epidermis, dermis or subcutaneous tissue)",,1,1,0,0,0,0,0,0,0,0,0,1/1/2019,12/31/2019,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+702,37,11105,Each additional punch biopsy lesion; add-on code used with primary code 11104,11104,2,20,0,0,0,0,0,0,0,0,0,1/1/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+703,37,11106,"Incisional biopsy of skin (e.g., wedge); single lesion, deeper sample taken with scalpel, may extend into subcutaneous tissue",,1,1,0,0,0,0,0,0,0,0,0,1/1/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+704,37,11107,Each additional incisional biopsy lesion; add-on code used with primary code 11106,11106,2,20,0,0,0,0,0,0,0,0,0,1/1/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+705,249,96999,Xtrac Laser Treatment,,1,50,999.9,999.9,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Xtrac Laser Treatment
+706,368,X9997,Patch Test 65 - Initial Reading,,0,0,0,0,0,0,0,0,0,0,0,10/25/2019,0000-00-00,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch Test 65 - Initial Reading
+707,369,X9997,Patch Test 80 - Inital Reading,,1,1,0,0,0,0,0,0,0,0,0,11/8/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch Test 80 - Inital Reading
+708,275,J3301,Triamcinolone 40mg Acetonide,,4,20,0,0,1,1,1,0,0,0,0,2/12/2020,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Triamcinolone
+709,353,23071,Soft Tissue Excision,,1,10,3,100,1,0,0,0,0,0,0,1/1/2018,12/31/2030,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+710,271,96401,Injection and Intravenous Infusion Chemotherapy and Other Highly Complex Drug or Highly Complex Biologic Agent Administration,,1,100,0,0,1,0,0,0,0,0,0,10/1/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Injection Subcutaneous/Intramuscular
+711,37,40808,Biopsy of vestibule of mouth; removal of tissue from oral vestibule (area between lips/cheeks and teeth/gums) for diagnostic evaluation,,1,10,0,0,1,0,0,0,0,0,0,10/1/2019,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+712,292,96920,Treatment for inflammatory skin disease (psoriasis); total area less than 250 sq cm,,1,50,0,0,0,0,0,0,1,0,0,12/1/2019,1/1/2030,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Narrow Band UVB Phototherapy
+713,370,96401,Injection and Intravenous Infusion Chemotherapy and Other Highly Complex Drug or Highly Complex Biologic Agent Administration,,1,100,0,0,1,0,0,0,0,0,0,10/19/2020,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,IM -Biologics
+714,371,95044,Patch Test 90 - Application,,0,90,0,0,1,0,0,0,0,0,0,2/22/2021,2/22/2025,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch Test 90 - Application
+715,372,95044,Patch test 87 - Application,,87,87,0,0,1,0,0,0,0,0,0,4/14/2021,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch test 87 - Application
+716,373,X9997,Patch test 87 - Day 1,,0,0,0,0,0,0,0,0,0,0,0,4/14/2021,0000-00-00,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch test 87 - Day 1
+717,374,X9997,Patch test 87 - Final,,87,87,0,0,1,0,0,0,0,0,0,4/14/2021,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Patch test 87 - Final
+718,375,17999,Unlisted Procedure,,1,100,0,0,1,0,0,0,0,0,0,10/1/2020,12/31/2030,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Unlisted Procedure
+719,37,41100,"Biopsy of anterior two-thirds of tongue; removal of tissue sample from oral tongue for diagnostic purposes (e.g., suspicious lesion, malignancy)",,1,20,0,0,0,0,0,0,0,0,0,10/1/2020,12/31/2030,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+720,376,77427,OTV w U/S,,1,1,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,OTV w U/S
+721,378,77427,Radiation Management Weekly,,1,1,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2052,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Management Weekly
+722,379,G6001,Ultrasound Evaluation - Ultrasound Guidance,,1,100,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Ultrasound Evaluation - Ultrasound Guidance 
+723,380,77401,SRT Delivery,,1,1,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,SRT Delivery
+724,381,77336,Radiation Physics Consult Weekly,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Physics Consult Weekly
+725,382,77300,Radiation Therapy Dose Plan-Field Calculation,,1,1,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Therapy Dose Plan-Field Calculation
+726,382,77334,Radiation Therapy Dose Plan-Field Calculation,,1,1,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Therapy Dose Plan-Field Calculation
+727,383,77334,Radiation Treatment Aid(s),,1,100,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Treatment Aid(s)
+728,384,77261,Therapeutic Radiology Treatment Planning,,1,1,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Therapeutic Radiology Treatment Planning
+729,384,77262,Therapeutic Radiology Treatment Planning,,1,1,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Therapeutic Radiology Treatment Planning
+730,384,77263,Therapeutic Radiology Treatment Planning,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Therapeutic Radiology Treatment Planning
+731,385,77280,Image Guided Field Placement,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Therapy Field
+732,385,77285,Set Radiation Therapy Field,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Therapy Field
+733,385,77290,Set Radiation Therapy Field,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Therapy Field
+734,386,77331,Special Radiation Therapy Aid,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Special Radiation Therapy Aid
+735,388,88341,Special Stain,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,12/31/2031,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Special Stain
+736,227,88341,Pathology Special Staining,,2,100,0,0,1,0,0,0,0,0,0,4/1/2021,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+737,389,17380,Electrolysis EPILATION,,0,100,0,0,0,0,0,0,0,0,0,1/1/2022,4/30/2023,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Electrolysis EPILATION
+738,390,Glow,Diamond Glow,,1,100,0,0,1,1,1,0,0,0,0,5/1/2022,12/31/2030,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Diamond Glow
+739,386,77332,Special Radiation Therapy Aid,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,6/30/2023,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Special Radiation Therapy Aid
+740,379,77387,Ultrasound Evaluation - Ultrasound Guidance,,0,0,0,0,0,0,0,0,0,0,0,1/1/2022,6/30/2023,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Ultrasound Evaluation - Ultrasound Guidance 
+741,14,123123,Incision & Drainage,,1,100,0,0,1,0,0,0,0,0,0,1/1/2022,9/30/2030,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Incision & Drainage
+742,353,21552,Soft Tissue Excision,,1,10,3,10,0,1,1,0,0,0,0,1/1/2022,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+743,383,77333,Radiation Treatment Aid(s),,1,10,0,0,0,0,0,0,0,0,0,1/1/2019,12/31/2031,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Radiation Treatment Aid(s)
+744,391,J3245,Ilumya,,1,500,0,0,1,0,0,0,0,0,0,2/1/2023,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Ilumya
+746,353,21933,"Soft Tissue Excision of back or flank, subfascia, greater than 5cm",,0,0,5,0,0,0,0,0,0,0,0,12/1/2022,12/31/2050,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+747,392,Q4217,Allograft,,0,0,0,0,1,0,0,0,0,0,0,5/2/2023,5/2/2023,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Allograft
+748,37,55666,this is testing,,1,10,540,550,0,0,0,0,0,0,0,5/1/2023,5/31/2023,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy
+749,39,4455,Destruction Malignant Lesion,,1,2,200,550,0,0,0,0,0,0,0,5/18/2023,5/18/2023,1,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Destruction Malignant Lesion
+750,353,25071,"Excision of Soft Tissue for forearm and/or wrist, subcutaneous - Greater than 3.0cm",,0,0,3,10,0,0,0,0,0,0,0,6/1/2023,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+751,227,88431,Pathology Special Staining,,1,100,0,0,1,0,0,0,0,0,0,1/1/2020,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,path
+752,393,88342,Pathology Special Staining,,1,1,0,0,1,1,1,0,0,0,0,1/1/2013,6/13/2023,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Immuno Stains
+753,393,88341,Pathology Special Staining,,2,100,0,0,1,1,1,0,0,0,0,1/1/2013,6/13/2023,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Immuno Stains
+754,394,88312,Pathology Special Staining,,1,100,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Fungal Stain
+755,395,88313,Pathology Special Staining,,1,100,0,0,1,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Giemsa Stain
+756,397,CNC01,Ear Lobe Repair,,0,0,0,0,0,0,0,0,0,0,0,1/1/2023,12/31/2040,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Ear Lobe Repair
+757,398,CB003,Lip Flip,,0,0,0,0,0,0,0,0,0,0,0,11/8/2023,11/8/2023,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Lip Flip
+758,353,28039,"Excision, tumor, soft tissue of foot and toes subcutaneous; greater than 1.5cm",,0,0,1.5,10,0,0,0,0,0,0,0,11/1/2023,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+759,353,26111,"Excision, tumor, soft tissue of hand or finger, subcutaneous; less than 1.5 cm",,1,20,0,1.4,1,0,0,0,0,0,0,11/1/2023,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+760,353,27337,"Excision, tumor, soft tissue of thigh and knee subcutaneous; greater than 3 cm",,1,20,3,10,0,0,0,0,0,0,0,11/1/2023,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+761,353,27632,"Excision, tumor, soft tissue of lower leg and ankle, subcutaneous;  3 cm and greater",,1,20,3,10,0,0,0,0,0,0,0,11/1/2023,12/31/2099,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Soft Tissue Excision
+763,399,GLO2F,Glo2Facial,,1,10,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,0,32001,0000-00-00 00:00:00,1/29/2024 18:13,0,54.177.219.180,0,Glo2Facial
+764,400,J7354,YCanth,,0,0,0,0,0,0,0,0,0,0,0,5/1/2024,12/31/2099,0,32002,0,5/28/2024 10:00,0000-00-00 00:00:00,54.177.219.180,0,0,YCanth
+765,401,SCULPT,Sculptra,,1,100,0,0,0,0,0,0,0,0,0,6/1/2024,12/31/2099,0,32037,32002,6/17/2024 9:57,7/1/2024 8:06,54.177.219.180,54.177.219.180,0,Sculptra
+766,52,11450,HS - Axillary w/Simple or Intermediate Closure,,1,10,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32037,32037,8/28/2024 9:55,10/16/2024 9:41,54.177.219.180,54.177.219.180,0,Excision Benign Lesion & Margins
+767,52,11451,HS -Axillary - w/Complex Closure,,1,10,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32037,32037,8/28/2024 9:57,10/16/2024 9:41,54.177.219.180,54.177.219.180,0,Excision Benign Lesion & Margins
+768,52,11462,HS - Inguinal w/Simple or Intermediate Closure,,1,10,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32037,32037,8/28/2024 9:58,10/16/2024 9:42,54.177.219.180,54.177.219.180,0,Excision Benign Lesion & Margins
+769,52,11463,HS - Inguinal w/Complex Closure,,1,10,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32037,32037,8/28/2024 9:59,10/16/2024 9:42,54.177.219.180,54.177.219.180,0,Excision Benign Lesion & Margins
+770,52,11470,"HS - Perianal, Perineal, Umbilical w/Simple or Intermediate Closure",,1,10,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32037,32037,8/28/2024 10:00,10/16/2024 9:43,54.177.219.180,54.177.219.180,0,Excision Benign Lesion & Margins
+771,52,11471,"HS - Perianal, Perineal, Umbilical w/Complex Closure",,1,10,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32037,32037,8/28/2024 10:01,10/16/2024 9:43,54.177.219.180,54.177.219.180,0,Excision Benign Lesion & Margins
+772,26,17999,Laser Treatment,,0,0,0,0,0,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32078,0,9/4/2024 5:56,0000-00-00 00:00:00,54.177.219.180,0,0,Laser Treatment
+773,402,88313,Fontana Masson Stain,,1,100,0,0,1,0,0,0,0,0,0,1/1/2024,12/31/2099,0,32037,0,10/16/2024 9:12,0000-00-00 00:00:00,54.177.219.180,0,0,Fontana-Masson Stain
+774,405,12345,Test Procedure,,0,100,0,100,0,0,0,0,1,0,0,5/16/2025,5/16/2025,0,32001,32001,5/16/2025 2:45,5/16/2025 2:49,54.153.66.213,54.153.66.213,0,Test Procedure
+775,406,1234,Test,,1,10,0,0,0,1,1,0,0,0,0,6/17/2025,6/17/2025,0,32001,32001,6/16/2025 20:24,6/16/2025 17:50,54.153.66.213,103.207.87.251,0,Skin Testing
+776,406,5678,Skin Testing,,0,0,0,0,0,0,0,0,0,0,0,6/17/2025,6/17/2025,0,32001,0,6/16/2025 20:25,0000-00-00 00:00:00,54.153.66.213,0,0,Skin Testing
+777,406,9123,Skin Testing,,0,0,0,0,0,0,0,0,0,0,0,6/17/2025,6/17/2025,0,32001,0,6/16/2025 20:25,0000-00-00 00:00:00,54.153.66.213,0,0,Skin Testing
+778,407,95024,Food Allergens,,0,64,0,500,1,0,0,0,0,0,0,6/17/2025,6/17/2050,0,32001,32001,6/16/2025 19:54,7/10/2025 5:28,103.207.87.251,54.153.66.213,0,Food Allergens
+779,408,95004,Food Allergens (Initial Reading),,0,1,0,500,0,0,0,0,0,0,0,6/18/2025,6/18/2050,0,32001,32001,6/17/2025 15:21,6/17/2025 15:22,103.207.87.251,103.207.87.251,0,Food Allergens (Initial Reading)
+780,409,,Patch Testing,,0,100,0,0,1,0,0,0,0,0,0,7/10/2025,7/10/2025,1,32001,32001,7/9/2025 20:16,7/10/2025 3:02,103.207.87.251,54.153.66.213,0,Patch Testing 
+781,409,95044,Patch Testing,,0,100,0,0,1,0,0,0,0,0,0,7/10/2025,7/11/2050,0,32001,32001,7/10/2025 3:02,7/10/2025 19:41,54.153.66.213,103.207.87.251,0,Patch Testing 
+782,410,Q4265,Neotism TL,,0,0,0,0,1,0,0,0,0,0,0,1/1/2025,7/16/2053,0,32001,32001,7/15/2025 22:14,7/15/2025 22:15,54.153.66.213,54.153.66.213,0,Neotism TL
+783,411,Q4265,NEOSTIM,,0,0,0,0,0,0,0,0,0,0,0,7/16/2025,7/16/2025,1,32001,32001,7/16/2025 0:06,7/16/2025 0:35,54.153.66.213,54.153.66.213,0,NEOSTIM
+784,411,Q4265,NEOSTIM,,0,0,0,0,1,0,0,0,0,0,0,7/16/2025,7/16/2025,0,32001,0,7/16/2025 0:37,0000-00-00 00:00:00,54.153.66.213,0,0,NEOSTIM
+785,412,CT200EE,Test Code,,0,0,0,0,1,0,0,0,0,0,0,7/16/2025,7/16/2099,0,32001,32001,7/16/2025 0:44,7/16/2025 0:44,54.153.66.213,54.153.66.213,0,Test Pro
+786,412,CB2000EEE,Test Pro,,1,100,0,0,1,0,0,0,0,0,0,7/17/2025,7/17/2025,0,32001,32001,7/16/2025 21:21,7/16/2025 21:32,54.153.66.213,54.153.66.213,0,Test Pro
+787,412,feger4543,Test Pro,,0,0,0,0,0,0,0,0,0,0,0,7/17/2025,7/17/2025,0,32001,0,7/16/2025 21:22,0000-00-00 00:00:00,54.153.66.213,0,0,Test Pro
+788,413,95115,Immunotherapy Injections,,1,1,0,0,1,0,0,0,1,0,0,7/27/2025,7/27/2070,0,32001,32001,7/26/2025 19:46,12/25/2025 20:30,139.135.63.20,54.153.66.213,0,Immunotherapy Injections
+789,413,95115,Immunotherapy Injections,95117,1,1,0,0,1,0,0,0,0,0,0,7/27/2025,7/27/2070,1,32001,32001,7/26/2025 19:46,7/26/2025 19:46,139.135.63.20,139.135.63.20,0,Immunotherapy Injections
+790,413,95117,Immunotherapy Injections,,1,1,0,0,1,0,0,0,1,0,0,7/27/2025,7/27/2070,0,32001,32001,7/26/2025 19:47,2/18/2026 18:29,139.135.63.20,54.153.66.213,0,Immunotherapy Injections
+791,415,95024,Intradermal,10009,0,100,0,500,1,0,0,0,0,0,0,7/29/2025,7/29/2099,0,32001,32001,7/29/2025 3:00,1/29/2026 21:24,54.153.66.213,54.153.66.213,0,Intradermal
+792,416,95004,Aeroallergens,,0,70,0,500,0,0,0,0,0,0,0,7/28/2025,7/28/2099,0,32001,32001,7/29/2025 3:31,7/29/2025 3:47,54.153.66.213,54.153.66.213,0,Aeroallergens
+793,417,95165,Vial Prep,,0,72,2.4,10,0,0,0,0,0,0,0,9/23/2025,9/23/2025,0,32001,32001,9/22/2025 23:24,9/22/2025 23:25,103.207.87.251,103.207.87.251,0,Vial Prep
+794,418,10009,PRONOX,,0,100,0,100,0,0,0,0,0,0,0,1/30/2026,12/31/2034,0,32001,0,1/29/2026 21:20,0000-00-00 00:00:00,54.153.66.213,0,0,PRONOX
+795,419,56251003,Nebulizer Therapy,,0,100,0,100,0,0,0,0,0,0,0,3/1/2026,8/1/2027,0,32001,32001,3/8/2026 11:46,3/8/2026 11:57,54.153.66.213,54.153.66.213,0,Nebulizer Therapy

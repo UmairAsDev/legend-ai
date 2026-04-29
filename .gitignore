@@ -16,6 +16,6 @@ wheels/
 uv.lock
 
 # Data files
-data/
+
 
 test/
