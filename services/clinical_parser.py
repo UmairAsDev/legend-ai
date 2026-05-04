@@ -7,6 +7,13 @@ SRT_KEYWORDS = ["srt", "igsrt", "superficial radiation", "surface radiation"]
 BIOPSY_KEYWORDS = ["biopsy", "bx"]
 EXCISION_KEYWORDS = ["excision"]
 MOHS_KEYWORDS = ["mohs"]
+DEBRIDEMENT_KEYWORDS = ["debridement", "dbr"]
+WOUND_KEYWORDS = ["ulcer", "wound", "subcutaneous","full thickness", "partial thickness"]
+DERM_KEYWORDS = [
+    "eczema", "eczematous", "dermatitis",
+    "infected skin", "crust", "debris",
+    "xerosis", "flaky", "dry skin"
+]
 
 
 class ClinicalParser:
@@ -530,6 +537,65 @@ class ClinicalParser:
             "images_present": images_present,
             "text": text
         }]
+    
+
+    def extract_debridement_sections(self, text: str) -> List[Dict]:
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        if not any(k in text_lower for k in DEBRIDEMENT_KEYWORDS):
+            return []
+
+        logger.info("🔍 Extracting Debridement sections...")
+
+        # -------------------------
+        # 🔴 DEPTH
+        # -------------------------
+        if "partial thickness" in text_lower or "superficial" in text_lower or "shave" in text_lower:
+            depth = "partial"
+        elif "full thickness" in text_lower:
+            depth = "full"
+        elif "subcutaneous" in text_lower:
+            depth = "subcutaneous"
+        else:
+            depth = "unknown"
+
+        # -------------------------
+        # 🔴 NAIL
+        # -------------------------
+        nail = any(k in text_lower for k in ["nail", "toenail", "fingernail"])
+
+        # -------------------------
+        # 🔴 DERMATOLOGIC (11000)
+        # -------------------------
+        is_dermatologic = any(k in text_lower for k in DERM_KEYWORDS)
+
+        # -------------------------
+        # 🔴 WOUND SIGNALS
+        # -------------------------
+        is_wound = any(k in text_lower for k in WOUND_KEYWORDS)
+
+        # -------------------------
+        # 🔴 QUANTITY
+        # -------------------------
+        qty_match = re.search(r"quantity:\s*(\d+)", text_lower)
+        quantity = int(qty_match.group(1)) if qty_match else 1
+
+        logger.info(
+            f"🧠 Debridement → depth={depth}, nail={nail}, "
+            f"derm={is_dermatologic}, wound={is_wound}, qty={quantity}"
+        )
+
+        return [{
+            "depth": depth,
+            "nail": nail,
+            "dermatologic": is_dermatologic,
+            "is_wound": is_wound,
+            "quantity": quantity,
+            "text": text
+        }]
 
     # =========================================================
     # 🔹 KEYWORD DETECTION
@@ -563,6 +629,7 @@ class ClinicalParser:
             if self.detect_keyword(mohs_text, MOHS_KEYWORDS) else []
         
         srt_data = self.extract_srt_sections(procedure_text, note)
+        debridement_data = self.extract_debridement_sections(procedure_text)
 
         return {
             "has_biopsy": bool(biopsy_data),
@@ -579,6 +646,9 @@ class ClinicalParser:
 
             "has_srt": bool(srt_data),
             "srt_sections": srt_data,
+
+            "has_debridement": bool(debridement_data),
+            "debridement_sections": debridement_data,
 
             "has_procedure": bool(procedure_text.strip())
         }

@@ -627,3 +627,75 @@ class CodeRetriever:
             logger.info(f"✅ Final SRT codes: {[r['code'] for r in selected]}")
 
             return selected
+        
+
+    async def debridement_filter(self, section):
+        async with get_db_session() as db:
+
+            depth = section.get("depth")
+            nail = section.get("nail")
+            dermatologic = section.get("dermatologic")
+            is_wound = section.get("is_wound")
+            quantity = section.get("quantity")
+
+            logger.info(
+                f"🎯 Debridement filter → depth={depth}, nail={nail}, "
+                f"derm={dermatologic}, wound={is_wound}, qty={quantity}"
+            )
+
+            query = """
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE proCode IN ('11040','11041','11042','11720','11721','11000')
+            """
+
+            result = await db.execute(text(query))
+            rows = [self._clean_row(r) for r in result.mappings().all()]
+
+            selected = []
+
+            # -------------------------
+            # 🔴 NAIL
+            # -------------------------
+            if nail:
+                if quantity <= 5:
+                    selected.extend([r for r in rows if r["code"] == "11720"])
+                else:
+                    selected.extend([r for r in rows if r["code"] == "11721"])
+
+                logger.info(f"✅ Nail codes: {[r['code'] for r in selected]}")
+                return selected
+
+            # -------------------------
+            # 🔴 DERMATOLOGIC (11000)
+            # -------------------------
+            if dermatologic and not is_wound:
+                logger.info("✅ Dermatologic debridement → 11000")
+                selected.extend([r for r in rows if r["code"] == "11000"])
+                return selected
+
+            # -------------------------
+            # 🔴 WOUND DEPTH
+            # -------------------------
+            if depth == "partial":
+                selected.extend([r for r in rows if r["code"] == "11040"])
+
+            elif depth == "full":
+                selected.extend([r for r in rows if r["code"] == "11041"])
+
+            elif depth == "subcutaneous":
+                selected.extend([r for r in rows if r["code"] == "11042"])
+
+            else:
+                logger.warning("⚠️ Unknown depth → fallback 11040")
+                selected.extend([r for r in rows if r["code"] == "11040"])
+
+            logger.info(f"✅ Debridement codes: {[r['code'] for r in selected]}")
+
+            return selected
