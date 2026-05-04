@@ -16687,3 +16687,43 @@ Pressure was applied to achieve hemostasis. Aquaphor was applied at the wound si
 2026-05-04 14:18:24.051 | INFO     | app.services.medical_engine:retrieve:249 - ✅ Total combined candidates (deduped): 2
 2026-05-04 14:18:24.051 | INFO     | app.services.medical_engine:llm_call:303 - 🧠 Calling LLM with structured parser
 2026-05-04 14:18:36.666 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-04 19:41:18.386 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 586590
+2026-05-04 19:41:18.445 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 586590
+2026-05-04 19:41:22.050 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 586590
+2026-05-04 19:41:22.641 | INFO     | services.clinical_parser:extract_closure_sections:386 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-04 19:41:22.642 | INFO     | services.clinical_parser:extract_closure_sections:403 - 📏 Total closure size matches: 0
+2026-05-04 19:41:22.643 | INFO     | services.clinical_parser:extract_closure_sections:495 - 📊 FINAL CLOSURES: []
+2026-05-04 19:41:22.643 | INFO     | services.clinical_parser:extract_debridement_sections:551 - 🔍 Extracting Debridement sections...
+2026-05-04 19:41:22.643 | INFO     | services.clinical_parser:extract_debridement_sections:586 - 🧠 Debridement → depth=partial, nail=False, derm=False, wound=True, qty=1
+2026-05-04 19:41:22.643 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-04 19:41:22.644 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-04 19:41:22.644 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-04 19:41:22.644 | INFO     | app.services.medical_engine:parse:91 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-04 19:41:26.204 | INFO     | app.services.medical_engine:retrieve:119 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': True, 'debridement_sections': [{'depth': 'partial', 'nail': False, 'dermatologic': False, 'is_wound': True, 'quantity': 1, 'text': 'Debridement (DBR)\nLocation: left Hand\nQuantity: 1\nMethod: Debridement\nChoice: Partial Thickness'}], 'has_procedure': True, 'closure_aggregated': []}
+2026-05-04 19:41:26.205 | INFO     | app.services.medical_engine:retrieve:241 - 🔴 DEBRIDEMENT DETECTED
+2026-05-04 19:41:26.205 | INFO     | app.services.medical_engine:retrieve:245 - 🧠 Debridement Decision → depth=partial | nail=False | derm=False | wound=True | qty=1
+2026-05-04 19:41:26.206 | INFO     | services.retriever:debridement_filter:641 - 🎯 Debridement filter → depth=partial, nail=False, derm=False, wound=True, qty=1
+2026-05-04 19:41:32.217 | INFO     | services.retriever:debridement_filter:699 - ✅ Debridement codes: ['11040']
+2026-05-04 19:41:32.448 | INFO     | app.services.medical_engine:retrieve:271 - ✅ Total combined candidates (deduped): 1
+2026-05-04 19:41:32.448 | INFO     | app.services.medical_engine:llm_call:325 - 🧠 Calling LLM with structured parser
+2026-05-04 19:41:37.193 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-04 19:42:47.716 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 684362
+2026-05-04 19:42:47.718 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 684362
+2026-05-04 19:42:48.302 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 684362
+2026-05-04 19:42:48.900 | INFO     | services.clinical_parser:extract_closure_sections:386 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-04 19:42:48.901 | INFO     | services.clinical_parser:extract_closure_sections:403 - 📏 Total closure size matches: 0
+2026-05-04 19:42:48.901 | INFO     | services.clinical_parser:extract_closure_sections:495 - 📊 FINAL CLOSURES: []
+2026-05-04 19:42:48.901 | INFO     | services.clinical_parser:extract_debridement_sections:551 - 🔍 Extracting Debridement sections...
+2026-05-04 19:42:48.902 | INFO     | services.clinical_parser:extract_debridement_sections:586 - 🧠 Debridement → depth=full, nail=False, derm=False, wound=True, qty=1
+2026-05-04 19:42:48.902 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-04 19:42:48.902 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-04 19:42:48.902 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-04 19:42:48.902 | INFO     | app.services.medical_engine:parse:91 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-04 19:42:51.018 | INFO     | app.services.medical_engine:retrieve:119 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': True, 'debridement_sections': [{'depth': 'full', 'nail': False, 'dermatologic': False, 'is_wound': True, 'quantity': 1, 'text': 'Debridement (DBR)\nDebridement (DBR)\nLocation: Right Cheek\nQuantity: 1\nMethod: Debridement\nChoice: Full Thickness\n-Discussed debridement procedure with patient for treatment. Potential risk factors associated with procedure include, but is not limited to: temporary pain or discomfort during the process, skin discoloration/pigmentary changes, scarring, and recurrence of lesions, and risk of infection. Patient is aware that more than one treatment may be needed.'}], 'has_procedure': True, 'closure_aggregated': []}
+2026-05-04 19:42:51.018 | INFO     | app.services.medical_engine:retrieve:241 - 🔴 DEBRIDEMENT DETECTED
+2026-05-04 19:42:51.019 | INFO     | app.services.medical_engine:retrieve:245 - 🧠 Debridement Decision → depth=full | nail=False | derm=False | wound=True | qty=1
+2026-05-04 19:42:51.019 | INFO     | services.retriever:debridement_filter:641 - 🎯 Debridement filter → depth=full, nail=False, derm=False, wound=True, qty=1
+2026-05-04 19:42:52.365 | INFO     | services.retriever:debridement_filter:699 - ✅ Debridement codes: ['11041']
+2026-05-04 19:42:52.589 | INFO     | app.services.medical_engine:retrieve:271 - ✅ Total combined candidates (deduped): 1
+2026-05-04 19:42:52.590 | INFO     | app.services.medical_engine:llm_call:325 - 🧠 Calling LLM with structured parser
+2026-05-04 19:42:57.922 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
