@@ -231,28 +231,6 @@ class CodingNodes:
                     for r in res:
                         r["source"] = "srt"
 
-                    all_candidates.extend(res)
-
-
-            # -------------------------
-            # 🔴 DEBRIDEMENT
-            # -------------------------
-            if parsed.get("has_debridement"):
-                logger.info("🔴 DEBRIDEMENT DETECTED")
-
-                for sec in parsed.get("debridement_sections", []):
-
-                    logger.info(
-                        f"🧠 Debridement Decision → depth={sec.get('depth')} | "
-                        f"nail={sec.get('nail')} | derm={sec.get('dermatologic')} | "
-                        f"wound={sec.get('is_wound')} | qty={sec.get('quantity')}"
-                    )
-
-                    res = await self.retriever.debridement_filter(sec)
-
-                    for r in res:
-                        r["source"] = "debridement"
-
                     all_candidates.extend(res)  
 
             # -------------------------
