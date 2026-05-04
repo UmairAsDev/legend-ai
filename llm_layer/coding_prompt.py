@@ -96,6 +96,7 @@ Rules:
 3. MULTIPLE BIOPSIES:
    - Same CPT + same Dx → combine quantity
    - Different Dx OR different location → separate entries
+   - Use add-on code along with primary code for additional biopsies
 
 4. VALIDATION:
    - Total CPT quantity MUST equal total biopsy count
@@ -238,11 +239,43 @@ total_size = 10.2 (complex extremities)
 ❌ 13120 + 13122    
 
 --------------------------------------------------
+🔴 SRT LOGIC (STRICT)
+
+If SRT or IGSRT is mentioned in procedure:
+
+1. ALWAYS assign:
+   → 77436 (planning)
+
+2. DELIVERY:
+   - If energy ≤150 kV → 77437
+   - If energy >150 kV → 77438
+
+3. ULTRASOUND ADD-ON (77439):
+
+   ONLY assign if:
+   ✔ ultrasound mentioned
+   ✔ AND actual ultrasound images are present
+
+   ❌ DO NOT assign if:
+   - only text/documentation exists
+   - no real image evidence
+
+4. RULES:
+   ✔ 77436 must always be present
+   ✔ Only ONE of (77437 or 77438)
+   ✔ 77439 is add-on only
+
+❌ NEVER:
+   - assign both 77437 and 77438
+   - skip 77436
+--------------------------------------------------
 🔴 E/M CODING
 
 - Assign E/M only if supported by office visit level in the note
-- Link all relevant Dx
+--------------------------------------------------
+🔴 ICD10/DX CODING
 
+- Link all relevant Dx code(s) to each cpt code
 --------------------------------------------------
 🔴 CONTEXT
 

@@ -211,6 +211,28 @@ class CodingNodes:
                     else:
                         logger.warning("⚠️ Closure missing size → skipped")
 
+
+            # -------------------------
+            # 🔴 SRT PROCEDURE
+            # -------------------------
+            if parsed.get("has_srt"):
+                logger.info("🔴 SRT DETECTED")
+
+                for sec in parsed.get("srt_sections", []):
+
+                    logger.info(
+                        f"🧠 SRT Decision → kv={sec.get('kv')} | "
+                        f"ultrasound={sec.get('ultrasound')} | "
+                        f"images_present={sec.get('images_present')}"
+                    )
+
+                    res = await self.retriever.srt_filter(sec)
+
+                    for r in res:
+                        r["source"] = "srt"
+
+                    all_candidates.extend(res)  
+
             # -------------------------
             # 🔴 IF ANY PROCEDURAL CODES FOUND → RETURN
             # -------------------------

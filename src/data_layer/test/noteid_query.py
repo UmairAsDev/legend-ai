@@ -30,7 +30,7 @@ async def notes():
                     npn.noteDate
                 FROM newProgressNotes npn
                 WHERE 
-                    npn.procedure LIKE '%closure%' 
+                    npn.procedure LIKE '%srt%' 
                     AND npn.noteDate > '2020-01-01'
                 """
             )
@@ -50,7 +50,7 @@ async def notes():
 
 # ------------------- JSON STORAGE -------------------
 
-def append_to_json(new_data, file_path="closure_id.json"):
+def append_to_json(new_data, file_path="srt_id.json"):
     """
     Append + deduplicate notes into a JSON file
     """

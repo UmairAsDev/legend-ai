@@ -3,6 +3,7 @@ from typing import Dict, Any, List
 from loguru import logger
 
 
+SRT_KEYWORDS = ["srt", "igsrt", "superficial radiation", "surface radiation"]
 BIOPSY_KEYWORDS = ["biopsy", "bx"]
 EXCISION_KEYWORDS = ["excision"]
 MOHS_KEYWORDS = ["mohs"]
@@ -12,6 +13,22 @@ class ClinicalParser:
 
     def _normalize(self, text: str) -> str:
         return text.lower() if text else ""
+    
+
+    # =========================================================
+    # DETECT ULTRASOUND IMAGES
+    # =========================================================
+    def _detect_images(self, note: Dict[str, Any]) -> bool:
+        image_fields = ["images", "attachments", "media", "ultrasoundImages"]
+
+        for field in image_fields:
+            val = note.get(field)
+            if isinstance(val, list) and len(val) > 0:
+                logger.info(f"🖼️ Images detected via field: {field}")
+                return True
+
+        logger.warning("⚠️ No real images found")
+        return False
 
     # =========================================================
     # 🔹 BIOPSY EXTRACTION
@@ -299,6 +316,60 @@ class ClinicalParser:
                 return float(m.group(1))
 
         return None
+    
+
+    def _extract_kv(self, text: str) -> int | None:
+        """
+        Robust kV extraction for SRT/IGSRT notes
+        """
+
+        if not text:
+            return None
+
+        text = text.lower()
+
+        patterns = [
+            # 🔴 MOST RELIABLE (labeled formats)
+            r"energy\s*\(\s*k\s*v\s*\)\s*[:\-]?\s*(\d+)",
+            r"energy\s*k\s*v\s*[:\-]?\s*(\d+)",
+
+            # 🔴 labeled but reversed
+            r"energy\s*[:\-]?\s*(\d+)\s*k\s*v",
+
+            # 🔴 generic inline
+            r"\b(\d{2,3})\s*k\s*v\b",
+            r"\b(\d{2,3})\s*kv\b",
+
+            # 🔴 orthovoltage context
+            r"orthovoltage.*?(\d{2,3})\s*k\s*v",
+        ]
+
+        matches = []
+
+        for pattern in patterns:
+            found = re.findall(pattern, text)
+            for m in found:
+                try:
+                    val = int(m)
+
+                    # 🔴 VALID RANGE FILTER (CRITICAL)
+                    if 10 <= val <= 500:
+                        matches.append(val)
+
+                except:
+                    continue
+
+        if not matches:
+            logger.warning("⚠️ No kV detected")
+            return None
+
+        # 🔴 STRATEGY: choose most frequent OR last occurrence
+        # (radiation plans often repeat final value at end)
+        kv = matches[-1]
+
+        logger.info(f"⚡ kV extracted → candidates={matches} | selected={kv}")
+
+        return kv
 
 
     def extract_closure_sections(self, text: str) -> List[Dict]:
@@ -417,6 +488,48 @@ class ClinicalParser:
         logger.info(f"📊 FINAL CLOSURES: {final}")
 
         return final
+    
+
+    def extract_srt_sections(self, text: str, note: Dict[str, Any]) -> List[Dict]:
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        if not any(k in text_lower for k in SRT_KEYWORDS):
+            return []
+
+        logger.info("🔍 Extracting SRT sections...")
+
+        # 🔴 ENERGY
+        kv = self._extract_kv(text)
+
+        # 🔴 ULTRASOUND
+        ultrasound = "ultrasound" in text_lower
+
+        # 🔴 IMAGE VALIDATION
+        images_present = self._detect_images(note)
+
+        # 🔴 TYPE
+        if kv and kv <= 150:
+            delivery_type = "superficial"
+        elif kv and kv > 150:
+            delivery_type = "orthovoltage"
+        else:
+            delivery_type = "unknown"
+
+        logger.info(
+            f"⚡ SRT → kv={kv}, type={delivery_type}, "
+            f"ultrasound={ultrasound}, images={images_present}"
+        )
+
+        return [{
+            "kv": kv,
+            "type": delivery_type,
+            "ultrasound": ultrasound,
+            "images_present": images_present,
+            "text": text
+        }]
 
     # =========================================================
     # 🔹 KEYWORD DETECTION
@@ -448,6 +561,8 @@ class ClinicalParser:
 
         mohs_data = self.extract_mohs_sections(mohs_text) \
             if self.detect_keyword(mohs_text, MOHS_KEYWORDS) else []
+        
+        srt_data = self.extract_srt_sections(procedure_text, note)
 
         return {
             "has_biopsy": bool(biopsy_data),
@@ -461,6 +576,9 @@ class ClinicalParser:
 
             "has_closure": bool(closure_data),
             "closure_sections": closure_data,
+
+            "has_srt": bool(srt_data),
+            "srt_sections": srt_data,
 
             "has_procedure": bool(procedure_text.strip())
         }

@@ -575,3 +575,55 @@ class CodeRetriever:
                 )
 
             return filtered
+        
+
+    # -------------------------
+    # 🔴 SRT FILTER
+    # -------------------------
+    async def srt_filter(self, srt_section):
+        async with get_db_session() as db:
+
+            kv = srt_section.get("kv")
+            ultrasound = srt_section.get("ultrasound")
+            images_present = srt_section.get("images_present")
+
+            logger.info(
+                f"🎯 SRT filter → kv={kv}, ultrasound={ultrasound}, images={images_present}"
+            )
+
+            query = """
+            SELECT 
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE proCode IN ('77436','77437','77438','77439')
+            """
+
+            result = await db.execute(text(query))
+            rows = [self._clean_row(r) for r in result.mappings().all()]
+
+            selected = []
+
+            # 🔴 ALWAYS ADD 77436
+            selected.extend([r for r in rows if r["code"] == "77436"])
+
+            # 🔴 DELIVERY
+            if kv and kv <= 150:
+                selected.extend([r for r in rows if r["code"] == "77437"])
+            elif kv and kv > 150:
+                selected.extend([r for r in rows if r["code"] == "77438"])
+
+            # 🔴 ADD-ON (STRICT)
+            if ultrasound and images_present:
+                logger.info("✅ 77439 allowed")
+                selected.extend([r for r in rows if r["code"] == "77439"])
+            else:
+                logger.info("🚫 77439 blocked")
+
+            logger.info(f"✅ Final SRT codes: {[r['code'] for r in selected]}")
+
+            return selected
