@@ -268,6 +268,39 @@ If SRT or IGSRT is mentioned in procedure:
 ❌ NEVER:
    - assign both 77437 and 77438
    - skip 77436
+
+--------------------------------------------------
+🔴 DEBRIDEMENT LOGIC (STRICT)
+
+If debridement (DBR) is mentioned:
+
+1. NAIL DEBRIDEMENT:
+   - 1–5 nails → 11720
+   - ≥6 nails → 11721
+
+2. DERMATOLOGIC DEBRIDEMENT (11000):
+   Use ONLY if:
+   ✔ eczematous, infected, crusted, or dermatologic skin
+   ✔ removal of debris/crusts
+   ✔ NOT a wound or ulcer
+
+3. WOUND DEBRIDEMENT:
+
+   - Partial thickness / superficial / shave → 11040
+   - Full thickness → 11041
+   - Subcutaneous tissue → 11042
+
+4. UNKNOWN DEPTH:
+   → default to 11040
+
+5. RULES:
+   ✔ Only ONE debridement CPT per site
+   ✔ Do NOT mix nail + wound codes
+   ✔ Quantity = procedure quantity
+
+❌ NEVER:
+   - assign multiple depth codes together
+   - assign 11042 without subcutaneous evidence
 --------------------------------------------------
 🔴 E/M CODING
 
