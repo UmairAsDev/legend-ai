@@ -123,5 +123,30 @@
     "physicianName": "Babar Rao",
     "referringProvider": "BABAR RAO",
     "billingProvider": "Babar Rao"
+  },  
+  {
+    "noteId": 702587,
+    "provider": 61069,
+    "physician": 61069,
+    "referringPhysician": 0,
+    "noteDate": "2025-12-05 08:40:32",
+    "patientId": 184234,
+    "complaints": "Patient presents for excision of right forearm epidermal cyst",
+    "pastHistory": "<p>Hx of :  <strong style=\"color: rgb(230, 0, 0);\">BCC</strong>, <strong style=\"color: rgb(230, 0, 0);\">Melanoma in Situ&nbsp;</strong></p><p><strong style=\"color: rgb(230, 0, 0);\">( right forearm 2022)</strong></p><p>Family hx Skin Cancer:  No</p><p>Family hx Melanoma: Yes</p><p>Alcohol: Yes</p><p>Smoker: Former smoker</p><p>Past medical Hx significant for: </p><p>High Cholesterol, High Blood Pressure, Thyroid Disease, Asthma</p><p>Foot surgery</p><p>PregnantNo</p><p>NursingNo<br></p><p>Birth ControlNo</p><p>COVID vaccination received:</p><p>Yes</p>",
+    "assesment": "Epidermal Cyst\nDiscussed with patient that Epidermal Cysts are the most common cutaneous cyst and are usually asymptomatic. Reassured patient that these are benign and no further treatment is necessary unless they become symptomatic.\n -Excision done today.\n-Discussed the procedure with the patient and answered all of their questions. The site and any previous pathology associated with site (if applicable) was reviewed and confirmed with the patient. Patient verbalized understanding of the risks of surgery, including infection, bleeding, tenderness at site, and scarring. Other uncommon risks including nerve damage, temporary or permanent nubmness or weakenss of the the surgical area discussed. \nPatient opted to proceed with the excision. Patient instructed to monitor for signs of infection, including swelling, erythema, wound drainage or fever.-Wound care instructions reviewed with patient. Patient will return to office in 10-14 days for suture removal.",
+    "reviewofsystem": "<p><span><b><u>General<br></u></b>No fever, sweat or chills</span></p><p><span><b><u>Skin<br></u></b>See HPI</span><span></span></p>",
+    "currentmedication": "Rosuvastatin - Levothyroxine - Sertraline - Bupropion - Ezetimibe - Losartan - Amlodipine",
+    "procedure": "Clinical Diagnosis:\nSpecimen:\nAfter disinfecting the site with alcohol/chlorhexedine. Local 1% lidocaine with epinephrine anesthetic infiltrate was administered around the site. An incision was made using Number 15 blade. Debridement of wound edges and base was done. Specimen was placed in a labeled bottle.Post procedure bacitracin dressing was applied at the wound site and was bandaged. Wound care instructions were given. Patient tolerated the procedure well. Pressure dressing was applied and wound care instructions were given.",
+    "biopsyNotes": "A. Excision Benign Lesion & Margins\nClinical Diagnosis: L72.0 Cyst Epidermoid\nLocation: Right Forearm\nLesion Size: 2 x 2 cm\nExcision Size, including margins: 2 x 2 cm\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15 to obtain a full thickness specimen. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #WC25-1814. \nRepair: Complex Closure \nThe wound was closed with a complex closure on 12-05-2025. The wound size with margins is 2 - 2 cm. The wound was approximated utilizing 4-O Monocryl and Using 4-O Nylon sutures. The final closure size is 2 cm. \nPressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.",
+    "mohsNotes": null,
+    "allergy": "<p>Penicillin</p>",
+    "examination": "- smooth cystic nodule located on the right forearm",
+    "patientSummary": "NaN years old Female patient,\n KATHLEEN LIPPS was seen on\n 12-05-2025 as a\n followup patient",
+    "diagnoses": "L72.0 Cyst Epidermoid",
+    "PlaceOfService": "Office",
+    "renderingProvider": "Attiya Haroon",
+    "physicianName": "Attiya Haroon",
+    "referringProvider": null,
+    "billingProvider": "Babar Rao"
   }
 ]

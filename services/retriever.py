@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 from sqlalchemy.engine import RowMapping
 from decimal import Decimal
 
+import re
 from database.pgdb.conn import get_db_session
 from sqlalchemy import text
 from loguru import logger
@@ -283,11 +284,19 @@ class CodeRetriever:
             location = (location or "").lower()
 
             # -------------------------
-            # 🔴 AREA CLASSIFICATION
+            # 🔴 TOKENIZE (word-safe)
             # -------------------------
-            if any(k in location for k in ["face", "nose", "lip", "ear", "eyelid"]):
+            tokens = set(re.findall(r"\b[a-z]+\b", location))
+
+            # -------------------------
+            # 🔴 AREA CLASSIFICATION (DETERMINISTIC)
+            # -------------------------
+            FACE = {"face", "nose", "lip", "ear", "eyelid", "mucous membrane"}
+            SPECIAL = {"hand", "foot", "feet", "neck", "scalp", "finger", "toe"}
+
+            if tokens & FACE:
                 area = "face"
-            elif any(k in location for k in ["hand", "foot", "neck", "scalp", "finger", "toe"]):
+            elif tokens & SPECIAL:
                 area = "special"
             else:
                 area = "trunk"
@@ -363,15 +372,15 @@ class CodeRetriever:
                     # 4. LOCATION FILTER (STRICT)
                     # -------------------------
                     if area == "face":
-                        if not any(k in desc for k in ["face", "ear", "eyelid", "nose", "lip"]):
+                        if not any(k in desc for k in ["face", "ear", "eyelid", "nose", "lip", "mucous membrane"]):
                             continue
 
                     elif area == "special":
-                        if not any(k in desc for k in ["scalp", "neck", "hand", "foot", "genital"]):
+                        if not any(k in desc for k in ["scalp", "neck", "hand", "foot", "feet", "genitalia"]):
                             continue
 
                     elif area == "trunk":
-                        if not any(k in desc for k in ["trunk", "arm", "leg", "back", "chest"]):
+                        if not any(k in desc for k in ["trunk", "arm", "forearm", "leg", "foreleg", "forelimb", "back", "chest"]):
                             continue
 
                     filtered.append(r)
