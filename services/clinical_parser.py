@@ -215,7 +215,7 @@ class ClinicalParser:
 
             LOCATION_MAP = {
                 "extremities": ["scalp", "arm", "leg"],
-                "high_risk": ["hand", "foot", "genital", "axilla", "neck", "chin", "cheek", "forehead"],
+                "high_risk": ["hand", "foot", "genital", "axillae", "neck", "chin", "cheek", "forehead"],
                 "critical": ["nose", "lip", "ear", "eyelid"],
                 "trunk": ["back", "chest", "abdomen", "trunk"]
             }
