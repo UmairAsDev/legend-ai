@@ -447,7 +447,7 @@ class CodeRetriever:
                 'cpt' AS type
             FROM cpt_embeddings
             WHERE 
-                proCode LIKE '120%%' OR proCode LIKE '131%%'
+                proCode LIKE '120%%' OR proCode LIKE '131%%' OR proCode LIKE '140%%'
             """
 
             result = await db.execute(text(query))
@@ -470,6 +470,10 @@ class CodeRetriever:
                     # -------------------------
                     if ctype == "complex":
                         if not code.startswith("131"):
+                            continue
+
+                    elif ctype == "adjacent":
+                        if not code.startswith("140"):
                             continue
 
                     elif ctype == "intermediate":

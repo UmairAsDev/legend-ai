@@ -390,6 +390,7 @@ class ClinicalParser:
 
         size_patterns = [
             r"final closure size.*?(?:was|is|:)?\s*([\d\.]+)",
+            r"final closure size.*?([\d\.]+)\s*cm2",
             r"closure size.*?(?:was|is|:)?\s*([\d\.]+)",
             r"closure length.*?(?:was|is|:)?\s*([\d\.]+)",
             r"length of closure.*?(?:was|is|:)?\s*([\d\.]+)",
@@ -423,11 +424,13 @@ class ClinicalParser:
 
             if "complex" in full_back:
                 ctype = "complex"
+            elif "adjacent tissue transfer" in full_back:
+                ctype = "adjacent"
             elif "intermediate" in full_back or "layered" in full_back:
                 ctype = "intermediate"
             else:
-                logger.warning(f"⚠️ Closure {i+1}: type fallback → intermediate")
-                ctype = "intermediate"
+                logger.warning(f"⚠️ Closure {i+1}: type fallback → complex")
+                ctype = "complex"
 
             # -------------------------
             # LOCATION (ROBUST)
