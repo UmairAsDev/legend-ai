@@ -80,7 +80,7 @@ Rules:
 🔴 GENERAL RULES
 
 - NEVER hallucinate codes outside retrieved list
-- CPT code + description MUST EXACTLY match retrieved data
+- Rerieved CPT code description must match retrieved note data
 - NEVER output quantity = 0
 - If quantity = 0 → remove the CPT
 - ALWAYS map EACH site → Dx first → THEN assign CPT
@@ -166,7 +166,7 @@ For EACH site:
    → If X × Y → use MAX(X, Y)
 
 4. CODE:
-   → Match size range + anatomical location
+   → Match size range + anatomical location which is mentioned in description of retrieved codes.
 
 5. MULTIPLE LESIONS:
    - SAME section/location:

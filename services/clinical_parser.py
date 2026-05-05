@@ -36,6 +36,7 @@ class ClinicalParser:
 
         logger.warning("⚠️ No real images found")
         return False
+    
 
     # =========================================================
     # 🔹 BIOPSY EXTRACTION
@@ -389,6 +390,7 @@ class ClinicalParser:
 
         size_patterns = [
             r"final closure size.*?(?:was|is|:)?\s*([\d\.]+)",
+            r"final closure size.*?([\d\.]+)\s*cm2",
             r"closure size.*?(?:was|is|:)?\s*([\d\.]+)",
             r"closure length.*?(?:was|is|:)?\s*([\d\.]+)",
             r"length of closure.*?(?:was|is|:)?\s*([\d\.]+)",
@@ -422,11 +424,13 @@ class ClinicalParser:
 
             if "complex" in full_back:
                 ctype = "complex"
+            elif "adjacent tissue transfer" in full_back:
+                ctype = "adjacent"
             elif "intermediate" in full_back or "layered" in full_back:
                 ctype = "intermediate"
             else:
-                logger.warning(f"⚠️ Closure {i+1}: type fallback → intermediate")
-                ctype = "intermediate"
+                logger.warning(f"⚠️ Closure {i+1}: type fallback → complex")
+                ctype = "complex"
 
             # -------------------------
             # LOCATION (ROBUST)
@@ -548,54 +552,114 @@ class ClinicalParser:
         if not any(k in text_lower for k in DEBRIDEMENT_KEYWORDS):
             return []
 
-        logger.info("🔍 Extracting Debridement sections...")
+        logger.info("🔍 Extracting Debridement sections (STRICT MODE)...")
+
+        sections = []
 
         # -------------------------
-        # 🔴 DEPTH
+        # 🔴 SPLIT INTO BLOCKS (NEW)
         # -------------------------
-        if "partial thickness" in text_lower or "superficial" in text_lower or "shave" in text_lower:
-            depth = "partial"
-        elif "full thickness" in text_lower:
-            depth = "full"
-        elif "subcutaneous" in text_lower:
-            depth = "subcutaneous"
-        else:
-            depth = "unknown"
+        blocks = re.split(r"(?=Debridement\s*\(DBR\))", text, flags=re.IGNORECASE)
 
-        # -------------------------
-        # 🔴 NAIL
-        # -------------------------
-        nail = any(k in text_lower for k in ["nail", "toenail", "fingernail"])
+        for i, block in enumerate(blocks):
+            block = block.strip()
+            block_lower = block.lower()
 
-        # -------------------------
-        # 🔴 DERMATOLOGIC (11000)
-        # -------------------------
-        is_dermatologic = any(k in text_lower for k in DERM_KEYWORDS)
+            if not block or "debridement" not in block_lower:
+                continue
 
-        # -------------------------
-        # 🔴 WOUND SIGNALS
-        # -------------------------
-        is_wound = any(k in text_lower for k in WOUND_KEYWORDS)
+            logger.info(f"🔍 Processing debridement block {i+1}")
 
-        # -------------------------
-        # 🔴 QUANTITY
-        # -------------------------
-        qty_match = re.search(r"quantity:\s*(\d+)", text_lower)
-        quantity = int(qty_match.group(1)) if qty_match else 1
+            # =========================================================
+            # 🔴 STRICT VALIDATION (CRITICAL FIX)
+            # =========================================================
+            has_location = re.search(r"location:\s*.+", block_lower)
+            has_quantity = re.search(r"quantity:\s*\d+", block_lower)
+            has_method = re.search(r"method:\s*.+", block_lower)
+            has_choice = re.search(r"choice:\s*.+", block_lower)
 
-        logger.info(
-            f"🧠 Debridement → depth={depth}, nail={nail}, "
-            f"derm={is_dermatologic}, wound={is_wound}, qty={quantity}"
-        )
+            if not (has_location and has_quantity and has_method and has_choice):
+                logger.warning(
+                    "⛔ Skipping debridement → missing required fields "
+                    "(location/quantity/method/choice)"
+                )
+                continue
 
-        return [{
-            "depth": depth,
-            "nail": nail,
-            "dermatologic": is_dermatologic,
-            "is_wound": is_wound,
-            "quantity": quantity,
-            "text": text
-        }]
+            # =========================================================
+            # 🔴 DEPTH (same logic, but scoped per block)
+            # =========================================================
+            if "partial thickness" in block_lower or "superficial" in block_lower or "shave" in block_lower:
+                depth = "partial"
+            elif "full thickness" in block_lower:
+                depth = "full"
+            elif "subcutaneous" in block_lower:
+                depth = "subcutaneous"
+            else:
+                depth = "unknown"
+
+            # -------------------------
+            # 🔴 NAIL
+            # -------------------------
+            nail = any(k in block_lower for k in ["nail", "toenail", "fingernail"])
+
+            # -------------------------
+            # 🔴 DERMATOLOGIC
+            # -------------------------
+            is_dermatologic = any(k in block_lower for k in DERM_KEYWORDS)
+
+            # -------------------------
+            # 🔴 WOUND
+            # -------------------------
+            is_wound = any(k in block_lower for k in WOUND_KEYWORDS)
+
+            # -------------------------
+            # 🔴 QUANTITY (block-level FIX)
+            # -------------------------
+            qty_match = re.search(r"quantity:\s*(\d+)", block_lower)
+            quantity = int(qty_match.group(1)) if qty_match else 1
+
+            # -------------------------
+            # 🔴 LOCATION (NEW)
+            # -------------------------
+            loc_match = re.search(r"location:\s*([^\n\r]+)", block, re.IGNORECASE)
+            location = loc_match.group(1).strip() if loc_match else ""
+
+            # -------------------------
+            # 🔴 METHOD (NEW)
+            # -------------------------
+            method_match = re.search(r"method:\s*([^\n\r]+)", block, re.IGNORECASE)
+            method = method_match.group(1).strip() if method_match else ""
+
+            # -------------------------
+            # 🔴 CHOICE (NEW)
+            # -------------------------
+            choice_match = re.search(r"choice:\s*([^\n\r]+)", block, re.IGNORECASE)
+            choice = choice_match.group(1).strip() if choice_match else ""
+
+            logger.info(
+                f"🧠 Debridement VALID → depth={depth}, nail={nail}, "
+                f"derm={is_dermatologic}, wound={is_wound}, qty={quantity}, "
+                f"location={location}"
+            )
+
+            # =========================================================
+            # 🔴 FINAL SECTION (ONLY VALID ONES)
+            # =========================================================
+            sections.append({
+                "depth": depth,
+                "nail": nail,
+                "dermatologic": is_dermatologic,
+                "is_wound": is_wound,
+                "quantity": quantity,
+                "location": location,
+                "method": method,
+                "choice": choice,
+                "text": block
+            })
+
+        logger.info(f"📊 Valid debridement sections: {len(sections)}")
+
+        return sections
 
     # =========================================================
     # 🔹 KEYWORD DETECTION
