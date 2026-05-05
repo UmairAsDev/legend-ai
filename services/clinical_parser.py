@@ -2,41 +2,19 @@ import re
 from typing import Dict, Any, List
 from loguru import logger
 
-
-SRT_KEYWORDS = ["srt", "igsrt", "superficial radiation", "surface radiation"]
-BIOPSY_KEYWORDS = ["biopsy", "bx"]
-EXCISION_KEYWORDS = ["excision"]
-MOHS_KEYWORDS = ["mohs"]
-DEBRIDEMENT_KEYWORDS = ["debridement", "dbr"]
-WOUND_KEYWORDS = ["ulcer", "wound", "subcutaneous","full thickness", "partial thickness"]
-DERM_KEYWORDS = [
-    "eczema", "eczematous", "dermatitis",
-    "infected skin", "crust", "debris",
-    "xerosis", "flaky", "dry skin"
-]
-
+from utils.parser_utils import (ParserUtils,
+    SRT_KEYWORDS,
+    BIOPSY_KEYWORDS,
+    EXCISION_KEYWORDS,
+    MOHS_KEYWORDS,
+    DEBRIDEMENT_KEYWORDS,
+    WOUND_KEYWORDS,
+    DERM_KEYWORDS)
 
 class ClinicalParser:
-
-    def _normalize(self, text: str) -> str:
-        return text.lower() if text else ""
-    
-
-    # =========================================================
-    # DETECT ULTRASOUND IMAGES
-    # =========================================================
-    def _detect_images(self, note: Dict[str, Any]) -> bool:
-        image_fields = ["images", "attachments", "media", "ultrasoundImages"]
-
-        for field in image_fields:
-            val = note.get(field)
-            if isinstance(val, list) and len(val) > 0:
-                logger.info(f"🖼️ Images detected via field: {field}")
-                return True
-
-        logger.warning("⚠️ No real images found")
-        return False
-    
+    def __init__(self):
+        # Instantiate the utilities class for use within the parser
+        self.utils = ParserUtils()
 
     # =========================================================
     # 🔹 BIOPSY EXTRACTION
@@ -61,28 +39,6 @@ class ClinicalParser:
         logger.info(f"📊 Total biopsy sections: {len(results)}")
         return results
 
-    # =========================================================
-    # 🔹 LESION COUNT
-    # =========================================================
-    def _extract_lesion_count(self, text: str) -> int:
-        text_lower = text.lower()
-
-        matches = re.findall(r'(\d+)\s*(?:st|nd|rd|th)?\s*lesion', text_lower)
-        if matches:
-            count = max(map(int, matches))
-            logger.info(f"🔢 Detected lesion count (numeric): {count}")
-            return count
-
-        if "second lesion" in text_lower:
-            return 2
-        if "third lesion" in text_lower:
-            return 3
-
-        if "lesions" in text_lower and "lesion" in text_lower:
-            logger.info("🔢 Multiple lesions detected → default 2")
-            return 2
-
-        return 1
 
     # =========================================================
     # 🔹 EXCISION EXTRACTION
@@ -138,7 +94,7 @@ class ClinicalParser:
             if not size:
                 logger.warning("⚠️ No valid excision size → SKIPPED")
 
-            lesion_count = self._extract_lesion_count(section_text)
+            lesion_count = self.utils.extract_lesion_count(section_text)
 
             cleaned_text = re.sub(
                 r"Repair:.*", "",
@@ -157,7 +113,7 @@ class ClinicalParser:
         return results
 
     # =========================================================
-    # 🔹 MOHS EXTRACTION (NEW - CRITICAL FIX)
+    # 🔹 MOHS EXTRACTION 
     # =========================================================
     def extract_mohs_sections(self, text: str) -> List[Dict]:
         if not text:
@@ -178,8 +134,8 @@ class ClinicalParser:
 
             logger.info(f"🔍 Processing Mohs segment {i+1}")
 
-            location = self._extract_mohs_location(part)
-            stages = self._extract_mohs_stages(part)
+            location = self.utils.extract_mohs_location(part)
+            stages = self.utils.extract_mohs_stages(part)
 
             sections.append({
                 "label": f"site_{i+1}",
@@ -193,193 +149,8 @@ class ClinicalParser:
 
 
     # =========================================================
-    # 🔹 MOHS LOCATION EXTRACTION (FIXED + FALLBACK)
+    # 🔹 CLOSURE EXTRACTION 
     # =========================================================
-    def _extract_mohs_location(self, text: str) -> str:
-
-        # -------------------------
-        # 🔴 PRIMARY: Explicit "Location:"
-        # -------------------------
-        match = re.search(r"Location:\s*([^\n\r]+)", text, re.IGNORECASE)
-        if match:
-            location = match.group(1).strip()
-            logger.info(f"📍 Mohs location detected (explicit): {location}")
-            return location
-
-        # -------------------------
-        # 🔴 SECONDARY: complaint-style pattern
-        # e.g. "- Location: Left Temple"
-        # -------------------------
-        match = re.search(r"-\s*Location:\s*([^\n\r]+)", text, re.IGNORECASE)
-        if match:
-            location = match.group(1).strip()
-            logger.info(f"📍 Mohs location detected (bullet): {location}")
-            return location
-
-        # -------------------------
-        # 🔴 FALLBACK: keyword inference
-        # -------------------------
-        logger.warning("⚠️ Primary location not found → fallback detection")
-
-        fallback_match = re.search(
-            r"(temple|face|nose|lip|ear|scalp|neck|hand|foot|genital)",
-            text.lower()
-        )
-
-        if fallback_match:
-            location = fallback_match.group(1)
-            logger.info(f"📍 Mohs location inferred (fallback): {location}")
-            return location
-
-        logger.error("❌ Mohs location could not be determined")
-        return ""
-
-
-    # =========================================================
-    # 🔹 MOHS STAGE EXTRACTION (IMPROVED)
-    # =========================================================
-    def _extract_mohs_stages(self, text: str) -> int:
-
-        # -------------------------
-        # 🔴 Pattern: "1st Stage", "2nd Stage"
-        # -------------------------
-        matches = re.findall(
-            r"(\d+)(?:st|nd|rd|th)?\s*Stage",
-            text,
-            re.IGNORECASE
-        )
-
-        if matches:
-            stages = max(map(int, matches))
-            logger.info(f"🔢 Mohs stages detected (explicit): {stages}")
-            return stages
-
-        # -------------------------
-        # 🔴 Pattern: multiple "Stage:" mentions
-        # -------------------------
-        stage_mentions = len(re.findall(r"Stage:", text, re.IGNORECASE))
-        if stage_mentions > 0:
-            logger.info(f"🔢 Mohs stages inferred (count): {stage_mentions}")
-            return stage_mentions
-
-        # -------------------------
-        # 🔴 DEFAULT
-        # -------------------------
-        logger.info("🔢 No stage explicitly found → default = 1")
-        return 1
-    
-    # =========================================================
-    # 🔴CLOSURE EXTRACTION 
-    # =========================================================
-
-    def _map_location_group(self, location: str) -> str:
-        loc = (location or "").lower()
-
-        if any(k in loc for k in ["scalp", "arm", "leg"]):
-            return "extremities"
-
-        if any(k in loc for k in ["face", "nose", "lip", "ear", "hand", "foot", "eyelid"]):
-            return "high_risk"
-
-        return "trunk"
-
-
-    def _split_clinical_blocks(self, text: str):
-        return re.split(
-            r"(?=Location:\s|[A-Z]\.\s|Mohs Micrographic Procedure)",
-            text,
-            flags=re.IGNORECASE
-        )
-
-
-    def _extract_location(self, block: str) -> str:
-        m = re.search(r"Location:\s*([^\n\r]+)", block, re.IGNORECASE)
-        return m.group(1).strip() if m else ""
-
-
-    def _detect_closure_type(self, block: str):
-        b = block.lower()
-
-        if "complex" in b:
-            return "complex"
-
-        if "intermediate" in b or "layered" in b:
-            return "intermediate"
-
-        return None
-
-
-    def _extract_closure_size(self, block: str):
-        patterns = [
-            r"final closure size.*?([\d\.]+)",
-            r"closure size.*?([\d\.]+)",
-            r"closure length.*?([\d\.]+)",
-            r"length of closure.*?([\d\.]+)",
-            r"measuring\s*([\d\.]+)\s*cm",
-        ]
-
-        for p in patterns:
-            m = re.search(p, block, re.IGNORECASE)
-            if m:
-                return float(m.group(1))
-
-        return None
-    
-
-    def _extract_kv(self, text: str) -> int | None:
-        """
-        Robust kV extraction for SRT/IGSRT notes
-        """
-
-        if not text:
-            return None
-
-        text = text.lower()
-
-        patterns = [
-            # 🔴 MOST RELIABLE (labeled formats)
-            r"energy\s*\(\s*k\s*v\s*\)\s*[:\-]?\s*(\d+)",
-            r"energy\s*k\s*v\s*[:\-]?\s*(\d+)",
-
-            # 🔴 labeled but reversed
-            r"energy\s*[:\-]?\s*(\d+)\s*k\s*v",
-
-            # 🔴 generic inline
-            r"\b(\d{2,3})\s*k\s*v\b",
-            r"\b(\d{2,3})\s*kv\b",
-
-            # 🔴 orthovoltage context
-            r"orthovoltage.*?(\d{2,3})\s*k\s*v",
-        ]
-
-        matches = []
-
-        for pattern in patterns:
-            found = re.findall(pattern, text)
-            for m in found:
-                try:
-                    val = int(m)
-
-                    # 🔴 VALID RANGE FILTER (CRITICAL)
-                    if 10 <= val <= 500:
-                        matches.append(val)
-
-                except:
-                    continue
-
-        if not matches:
-            logger.warning("⚠️ No kV detected")
-            return None
-
-        # 🔴 STRATEGY: choose most frequent OR last occurrence
-        # (radiation plans often repeat final value at end)
-        kv = matches[-1]
-
-        logger.info(f"⚡ kV extracted → candidates={matches} | selected={kv}")
-
-        return kv
-
-
     def extract_closure_sections(self, text: str) -> List[Dict]:
         if not text:
             return []
@@ -483,7 +254,7 @@ class ClinicalParser:
                 "type": ctype,
                 "size": size,
                 "location": location,
-                "location_group": location_group,   # ✅ USE THIS
+                "location_group": location_group, 
                 "group_key": f"{ctype}_{location_group}",
                 "text": snippet.strip()
             })
@@ -501,6 +272,9 @@ class ClinicalParser:
         return final
     
 
+    # =========================================================
+    # 🔹 SRT/IGSTR EXTRACTION 
+    # =========================================================
     def extract_srt_sections(self, text: str, note: Dict[str, Any]) -> List[Dict]:
         if not text:
             return []
@@ -513,13 +287,13 @@ class ClinicalParser:
         logger.info("🔍 Extracting SRT sections...")
 
         # 🔴 ENERGY
-        kv = self._extract_kv(text)
+        kv = self.utils.extract_kv(text)
 
         # 🔴 ULTRASOUND
         ultrasound = "ultrasound" in text_lower
 
         # 🔴 IMAGE VALIDATION
-        images_present = self._detect_images(note)
+        images_present = self.utils.detect_images(note)
 
         # 🔴 TYPE
         if kv and kv <= 150:
@@ -543,6 +317,9 @@ class ClinicalParser:
         }]
     
 
+    # =========================================================
+    # 🔹 DEBRIDEMENT EXTRACTION 
+    # =========================================================
     def extract_debridement_sections(self, text: str) -> List[Dict]:
         if not text:
             return []
@@ -661,12 +438,6 @@ class ClinicalParser:
 
         return sections
 
-    # =========================================================
-    # 🔹 KEYWORD DETECTION
-    # =========================================================
-    def detect_keyword(self, text: str, keywords: List[str]) -> bool:
-        text = self._normalize(text)
-        return any(k in text for k in keywords)
 
     # =========================================================
     # 🔹 MAIN PARSER
@@ -684,13 +455,13 @@ class ClinicalParser:
         closure_data += self.extract_closure_sections(procedure_text)
 
         biopsy_data = self.extract_biopsy_sections(biopsy_text) \
-            if self.detect_keyword(biopsy_text, BIOPSY_KEYWORDS) else []
+            if self.utils.detect_keyword(biopsy_text, BIOPSY_KEYWORDS) else []
 
         excision_data = self.extract_excision_sections(biopsy_text) \
-            if self.detect_keyword(biopsy_text, EXCISION_KEYWORDS) else []
+            if self.utils.detect_keyword(biopsy_text, EXCISION_KEYWORDS) else []
 
         mohs_data = self.extract_mohs_sections(mohs_text) \
-            if self.detect_keyword(mohs_text, MOHS_KEYWORDS) else []
+            if self.utils.detect_keyword(mohs_text, MOHS_KEYWORDS) else []
         
         srt_data = self.extract_srt_sections(procedure_text, note)
         debridement_data = self.extract_debridement_sections(procedure_text)

@@ -502,7 +502,7 @@ class CodeRetriever:
                         # High-risk → face, hands, feet, genitalia
                         elif location == "high_risk":
                             if not any(k in desc for k in [
-                                "face", "hand", "foot", "genitalia", "neck", "chin", "cheek", "forehead"
+                                "axillae", "face", "hand", "foot", "feet", "genitalia", "neck", "chin", "cheek", "forehead", "mouth"
                             ]):
                                 continue
 
