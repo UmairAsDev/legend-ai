@@ -84,7 +84,67 @@ Rules:
 - NEVER output quantity = 0
 - If quantity = 0 → remove the CPT
 - ALWAYS map EACH site → Dx first → THEN assign CPT
+- If lesion size exactly matches the upper boundary of a CPT size range (example: 2.0 in range 1.1–2.0), assign the CPT whose maxSize includes that value and do not move to the next higher range.
 
+--------------------------------------------------
+🔴 DESTRUCTION LOGIC
+There are 3 destruction types:
+
+1. DB = Destruction Benign
+   Required:
+   - Location
+   - Quantity
+   - Method
+   - Choice
+
+2. DPM = Destruction Premalignant
+   Required:
+   - Location
+   - Quantity
+   - Method
+
+   Rules:
+   - Use primary code for base lesion range
+   - If lesion count exceeds base range:
+     assign associated add-on code
+
+3. DM = Destruction Malignant Lesion
+   Required for each DM:
+   - Location
+   - Quantity
+   - Method
+   - Size 
+
+   Rules:
+   - Match CPT using lesion size, the size range is mentioned in retrieved codes
+
+
+RULES FOR DESTRUCTION:
+
+- When assigning cpt code, it should compare all procedure details to every retrieved candidates to find best mathc for each
+- NEVER mix DB, DPM, and DM codes
+- ONLY use retrieved destruction candidates
+- Match CPT description with:
+  - lesion type
+  - quantity
+  - size (DM only, see size range from description for every DM)
+  - anatomical location
+
+- Make sure not to misinterprete the quantity of destructions lesions with the quantity of cpt code, the quantity of cpt code rules is mentioned above.
+
+- SAME CPT + SAME DX + SAME LOCATION
+  → combine quantity
+
+- DIFFERENT location
+  → separate CPT entries for all destruction
+
+VALIDATION:
+
+❌ Do NOT:
+- assign code if required fields missing
+- assign code if the cpt size range don't match the size retrieved from DM lesion size, look for one that falls within that range, alo list separtely for each entry
+- assign add-on without primary
+- hallucinate CPTs outside retrieved list
 --------------------------------------------------
 🔴 BIOPSY LOGIC
 

@@ -115,6 +115,169 @@ class CodeRetriever:
             )
 
             return [self._clean_row(row) for row in result.mappings().all()]
+        
+    # -------------------------
+    # 🔹 DESTRUCTION QURIES
+    # -------------------------
+    async def _destruction_benign_filter(self, quantity: int):
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'destruction benign'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            filtered = []
+
+            for r in rows:
+                min_q = r.get("minQty") or 0
+                max_q = r.get("maxQty") or 999
+
+                if min_q <= quantity <= max_q:
+                    filtered.append(r)
+
+            logger.info(
+                f"✅ Destruction benign candidates: {len(filtered)}"
+            )
+
+            return filtered
+        
+
+    async def _destruction_premalignant_filter(self, quantity: int):
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'destruction premalignant lesion'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            logger.info(f"📦 Raw DPM candidates: {len(rows)}")
+
+            base_codes = []
+            addon_codes = []
+
+            for r in rows:
+
+                parent = r.get("associatedWithProCode")
+
+                if parent:
+                    addon_codes.append(r)
+                else:
+                    base_codes.append(r)
+
+            filtered = []
+
+            # -------------------------
+            # 🔴 PRIMARY
+            # -------------------------
+            for r in base_codes:
+                min_q = r.get("minQty") or 0
+                max_q = r.get("maxQty") or 999
+
+                if min_q <= quantity <= max_q:
+                    filtered.append(r)
+
+            # -------------------------
+            # 🔴 ADD-ON
+            # -------------------------
+            if quantity > 14:
+                filtered.extend(addon_codes)
+
+            logger.info(
+                f"✅ DPM filtered candidates: {len(filtered)}"
+            )
+
+            return filtered
+        
+
+    async def _destruction_malignant_filter(
+        self,
+        quantity: int,
+        size: float | None
+    ):
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'destruction malignant lesion'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            filtered = []
+
+            for r in rows:
+
+                try:
+                    min_s = float(r.get("minSize") or 0)
+                    max_s = float(r.get("maxSize") or 999)
+
+                    if size is not None and min_s <= size <= max_s:
+                        filtered.append(r)
+
+                except Exception:
+                    continue
+
+            logger.info(
+                f"✅ DM filtered candidates: {len(filtered)}"
+            )
+
+            return filtered
 
     # -------------------------
     # 🔹 MODIFIER SEARCH
@@ -641,7 +804,9 @@ class CodeRetriever:
 
             return selected
         
-
+    # -------------------------
+    # 🔴 DEBRIDEMENT FILTER
+    # -------------------------
     async def debridement_filter(self, section):
         async with get_db_session() as db:
 
@@ -712,3 +877,25 @@ class CodeRetriever:
             logger.info(f"✅ Debridement codes: {[r['code'] for r in selected]}")
 
             return selected
+        
+
+    # -------------------------
+    # 🔴 DESTRUCTION FILTER
+    # -------------------------
+    async def destruction_filter(
+        self,
+        destruction_type: str,
+        quantity: int,
+        size: float | None = None
+    ):
+
+        if destruction_type == "db":
+            return await self._destruction_benign_filter(quantity)
+
+        elif destruction_type == "dpm":
+            return await self._destruction_premalignant_filter(quantity)
+
+        elif destruction_type == "dm":
+            return await self._destruction_malignant_filter(quantity, size)
+
+        return []

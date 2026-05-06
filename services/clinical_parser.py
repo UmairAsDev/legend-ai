@@ -2,14 +2,17 @@ import re
 from typing import Dict, Any, List
 from loguru import logger
 
-from utils.parser_utils import (ParserUtils,
-    SRT_KEYWORDS,
-    BIOPSY_KEYWORDS,
-    EXCISION_KEYWORDS,
-    MOHS_KEYWORDS,
+from utils.parser_utils import (
+    ParserUtils,
     DEBRIDEMENT_KEYWORDS,
+    DESTRUCTION_KEYWORDS,
+    EXCISION_KEYWORDS,
+    BIOPSY_KEYWORDS,
     WOUND_KEYWORDS,
-    DERM_KEYWORDS)
+    MOHS_KEYWORDS,
+    DERM_KEYWORDS,
+    SRT_KEYWORDS
+)
 
 class ClinicalParser:
     def __init__(self):
@@ -437,6 +440,165 @@ class ClinicalParser:
         logger.info(f"📊 Valid debridement sections: {len(sections)}")
 
         return sections
+    
+
+    # =========================================================
+    # 🔹 DESTRUCTION EXTRACTION
+    # =========================================================
+    def extract_destruction_sections(self, text: str) -> List[Dict]:
+
+        if not text:
+            return []
+
+        logger.info("🔍 Extracting destruction sections...")
+
+        pattern = (
+            r"(Destruction\s+(?:Benign|Premalignant(?:\s+Lesion)?|Malignant(?:\s+Lesion)?)"
+            r"\s*\((?:DB|DPM|DM)\).*?)"
+            r"(?=(?:Destruction\s+(?:Benign|Premalignant|Malignant)|$))"
+        )
+
+        matches = list(
+            re.finditer(pattern, text, re.IGNORECASE | re.DOTALL)
+        )
+
+        sections = []
+
+        for i, match in enumerate(matches):
+
+            section_text = match.group(1).strip()
+            lower = section_text.lower()
+
+            logger.info(f"🔍 Processing destruction section {i+1}")
+
+            # -------------------------
+            # 🔴 DETERMINE TYPE
+            # -------------------------
+            if "premalignant" in lower:
+                destruction_type = "dpm"
+                required_fields = ["location", "quantity", "method"]
+
+            elif "malignant" in lower:
+                destruction_type = "dm"
+                required_fields = ["location", "quantity", "method", "size"]
+
+            else:
+                destruction_type = "db"
+                required_fields = ["location", "quantity", "method", "choice"]
+
+            # -------------------------
+            # 🔴 EXTRACTIONS
+            # -------------------------
+            location_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                section_text,
+                re.IGNORECASE
+            )
+
+            quantity_match = re.search(
+                r"Quantity:\s*(\d+)",
+                section_text,
+                re.IGNORECASE
+            )
+
+            method_match = re.search(
+                r"Method:\s*([^\n\r]+)",
+                section_text,
+                re.IGNORECASE
+            )
+
+            choice_match = re.search(
+                r"Choice:\s*([^\n\r]+)",
+                section_text,
+                re.IGNORECASE
+            )
+
+            size = None
+            range_size_match = re.search(
+                r"(?:Size|Lesion Size):\s*([\d\.]+)\s*(?:x|×|-)\s*([\d\.]+)",
+                section_text,
+                re.IGNORECASE
+            )
+
+            if range_size_match:
+
+                val1 = float(range_size_match.group(1))
+                val2 = float(range_size_match.group(2))
+
+                size = max(val1, val2)
+
+                logger.info(
+                    f"📏 DM size range detected → "
+                    f"{val1} x {val2} | using MAX={size}"
+                )
+
+            else:
+
+                single_size_match = re.search(
+                    r"(?:Size|Lesion Size):\s*([\d\.]+)",
+                    section_text,
+                    re.IGNORECASE
+                )
+
+                if single_size_match:
+
+                    size = float(single_size_match.group(1))
+
+                    logger.info(
+                        f"📏 DM single size detected → {size}"
+                    )
+
+            data = {
+                "label": f"destruction_{i+1}",
+                "text": section_text,
+                "destruction_type": destruction_type,
+                "location": (
+                    location_match.group(1).strip()
+                    if location_match else None
+                ),
+                "quantity": (
+                    int(quantity_match.group(1))
+                    if quantity_match else None
+                ),
+                "method": (
+                    method_match.group(1).strip()
+                    if method_match else None
+                ),
+                "choice": (
+                    choice_match.group(1).strip()
+                    if choice_match else None
+                ),
+                "size": size,
+            }
+
+            # -------------------------
+            # 🔴 VALIDATION
+            # -------------------------
+            missing = []
+
+            for field in required_fields:
+                if data.get(field) is None:
+                    missing.append(field)
+
+            if missing:
+                logger.warning(
+                    f"⚠️ Destruction section skipped | missing={missing}"
+                )
+                continue
+
+            logger.info(
+                f"✅ Destruction parsed | "
+                f"type={destruction_type} | "
+                f"qty={data['quantity']} | "
+                f"location={data['location']} | "
+                f"size={data.get('size')}"
+            )
+
+            sections.append(data)
+
+        logger.info(f"📊 Total destruction sections: {len(sections)}")
+
+        return sections
 
 
     # =========================================================
@@ -465,6 +627,7 @@ class ClinicalParser:
         
         srt_data = self.extract_srt_sections(procedure_text, note)
         debridement_data = self.extract_debridement_sections(procedure_text)
+        destruction_sections = self.extract_destruction_sections(procedure_text)
 
         return {
             "has_biopsy": bool(biopsy_data),
@@ -484,6 +647,9 @@ class ClinicalParser:
 
             "has_debridement": bool(debridement_data),
             "debridement_sections": debridement_data,
+
+            "has_destruction": len(destruction_sections) > 0,
+            "destruction_sections": destruction_sections,
 
             "has_procedure": bool(procedure_text.strip())
         }

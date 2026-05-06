@@ -1,3 +1,5 @@
+# utils/parser_utils.py
+
 import re
 from typing import Dict, Any, List
 from loguru import logger
@@ -5,16 +7,22 @@ from loguru import logger
 # =========================================================
 # 🔹 KEYWORDS
 # =========================================================
+WOUND_KEYWORDS = ["ulcer", "wound", "subcutaneous", "full thickness", "partial thickness"]
 SRT_KEYWORDS = ["srt", "igsrt", "superficial radiation", "surface radiation"]
+DEBRIDEMENT_KEYWORDS = ["debridement", "dbr"]
 BIOPSY_KEYWORDS = ["biopsy", "bx"]
 EXCISION_KEYWORDS = ["excision"]
 MOHS_KEYWORDS = ["mohs"]
-DEBRIDEMENT_KEYWORDS = ["debridement", "dbr"]
-WOUND_KEYWORDS = ["ulcer", "wound", "subcutaneous", "full thickness", "partial thickness"]
 DERM_KEYWORDS = [
     "eczema", "eczematous", "dermatitis",
     "infected skin", "crust", "debris",
     "xerosis", "flaky", "dry skin"
+]
+DESTRUCTION_KEYWORDS = [
+    "destruction premalignant", "destruction premalignant lesion (dpm)",
+    "destruction malignant", "destruction malignant lesion (dm)",
+    "destruction benign", "destruction benign (db)",
+    "cryosurgery", "electrodesiccation"
 ]
 
 class ParserUtils:

@@ -143,6 +143,42 @@ class CodingNodes:
                     else:
                         logger.warning("⚠️ Excision section missing size → skipped")
 
+
+            # -------------------------
+            # 🔴 DESTRUCTION
+            # -------------------------
+            if parsed.get("has_destruction"):
+
+                logger.info("🔴 DESTRUCTION DETECTED")
+
+                for sec in parsed.get("destruction_sections", []):
+
+                    destruction_type = sec.get("destruction_type")
+                    quantity = sec.get("quantity")
+                    size = sec.get("size")
+
+                    logger.info(
+                        f"📌 Destruction Section → "
+                        f"type={destruction_type} | "
+                        f"qty={quantity} | "
+                        f"size={size}"
+                    )
+
+                    res = await self.retriever.destruction_filter(
+                        destruction_type=destruction_type,
+                        quantity=quantity,
+                        size=size
+                    )
+
+                    logger.info(
+                        f"↳ Retrieved {len(res)} destruction candidates"
+                    )
+
+                    for r in res:
+                        r["source"] = f"destruction_{destruction_type}"
+
+                    all_candidates.extend(res)
+
             # -------------------------
             # 🔴 BIOPSY (ALWAYS ADD IF PRESENT)
             # -------------------------
