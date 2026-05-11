@@ -14,7 +14,7 @@ from services.reranker import Reranker
 from utils.engine_utils import (
     serialize_data, clean_note_data, 
     enforce_closure_addon, enforce_excision_quantity,
-    aggregate_closures
+    aggregate_closures, enforce_destruction_quantity
 )
 
 # =========================
@@ -156,26 +156,44 @@ class CodingNodes:
                     destruction_type = sec.get("destruction_type")
                     quantity = sec.get("quantity")
                     size = sec.get("size")
+                    label = sec.get("label")
+                    location = sec.get("location")
 
                     logger.info(
                         f"📌 Destruction Section → "
+                        f"label={label} | "
                         f"type={destruction_type} | "
                         f"qty={quantity} | "
-                        f"size={size}"
+                        f"size={size} | "
+                        f"location={location}"
                     )
 
                     res = await self.retriever.destruction_filter(
                         destruction_type=destruction_type,
                         quantity=quantity,
-                        size=size
+                        size=size,
+                        location=location
                     )
 
                     logger.info(
                         f"↳ Retrieved {len(res)} destruction candidates"
                     )
 
+                    # -------------------------------------------------
+                    # 🔴 CRITICAL FIX:
+                    # Attach parsed section metadata
+                    # -------------------------------------------------
                     for r in res:
+
                         r["source"] = f"destruction_{destruction_type}"
+
+                        r["destruction_label"] = label
+
+                        r["destruction_location"] = location
+
+                        r["destruction_quantity"] = quantity
+
+                        r["destruction_size"] = size
 
                     all_candidates.extend(res)
 
@@ -375,12 +393,36 @@ class CodingNodes:
                 parser=parser
             )
 
-            # 🔴 HARD FIX (GUARANTEES CORRECT OUTPUT)
-            result = enforce_excision_quantity(state["parsed"], result)
+            # 🔴 HARD FIXES (GUARANTEED OUTPUT NORMALIZATION)
+
+            # -------------------------------------------------
+            # 🔴 EXCISION QUANTITY
+            # -------------------------------------------------
+            result = enforce_excision_quantity(
+                state["parsed"],
+                result
+            )
+
+            # -------------------------------------------------
+            # 🔴 CLOSURE ADD-ON
+            # -------------------------------------------------
             result = enforce_closure_addon(
                 state["parsed"],
-                state["candidates"],   # 🔥 REQUIRED (comes from retrieve step)
+                state["candidates"],
                 result
+            )
+
+            # -------------------------------------------------
+            # 🔴 DESTRUCTION QUANTITY
+            # -------------------------------------------------
+            result = enforce_destruction_quantity(
+                parsed=state["parsed"],
+                retrieved_candidates=state["candidates"],
+                llm_output=result
+            )
+
+            logger.success(
+                "✅ All deterministic enforcement rules applied"
             )
 
             return {"llm_output": result}

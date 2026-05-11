@@ -47,10 +47,10 @@ Your task is to:
 1. Analyze the FULL patient note carefully
 2. Generate structured patient summary
 3. Assign accurate:
-   - CPT codes
+   - Justifiable CPT code
    - E/M code (if applicable)
    - Modifiers
-   - ICD-10 codes
+   - ICD-10 code
 
 --------------------------------------------------
 🔴 CORE GROUPING RULE (HIGHEST PRIORITY)
@@ -124,16 +124,12 @@ RULES FOR DESTRUCTION:
 - When assigning cpt code, it should compare all procedure details to every retrieved candidates to find best mathc for each
 - NEVER mix DB, DPM, and DM codes
 - ONLY use retrieved destruction candidates
+
 - Match CPT description with:
   - lesion type
   - quantity
   - size (DM only, see size range from description for every DM)
   - anatomical location
-
-- Make sure not to misinterprete the quantity of destructions lesions with the quantity of cpt code, the quantity of cpt code rules is mentioned above.
-
-- SAME CPT + SAME DX + SAME LOCATION
-  → combine quantity
 
 - DIFFERENT location
   → separate CPT entries for all destruction

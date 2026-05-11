@@ -231,8 +231,10 @@ class CodeRetriever:
     async def _destruction_malignant_filter(
         self,
         quantity: int,
-        size: float | None
+        size: float | None,
+        location: str | None = None
     ):
+
         async with get_db_session() as db:
 
             query = """
@@ -259,22 +261,123 @@ class CodeRetriever:
                 for r in result.mappings().all()
             ]
 
+            logger.info(
+                f"📦 Raw DM candidates: {len(rows)}"
+            )
+
+            location = (location or "").lower()
+
+            # -------------------------------------------------
+            # 🔴 DETERMINE ANATOMICAL GROUP
+            # -------------------------------------------------
+            face_keywords = [
+                "face", "cheek", "nose", "lip",
+                "eyelid", "ear", "forehead",
+                "temple", "chin", "mucous"
+            ]
+
+            special_keywords = [
+                "scalp", "neck", "hand",
+                "foot", "feet", "genital"
+            ]
+
+            anatomical_group = "trunk"
+
+            if any(k in location for k in face_keywords):
+                anatomical_group = "face"
+
+            elif any(k in location for k in special_keywords):
+                anatomical_group = "special"
+
+            logger.info(
+                f"🧠 DM anatomical group="
+                f"{anatomical_group}"
+            )
+
             filtered = []
 
             for r in rows:
 
+                desc = (
+                    r.get("description", "")
+                    or ""
+                ).lower()
+
+                # -------------------------------------------------
+                # 🔴 ANATOMICAL FILTER
+                # -------------------------------------------------
+                if anatomical_group == "face":
+
+                    if (
+                        "face" not in desc
+                        and "ears" not in desc
+                        and "eyelids" not in desc
+                        and "nose" not in desc
+                        and "lips" not in desc
+                        and "mucous membrane" not in desc
+                    ):
+                        continue
+
+                elif anatomical_group == "special":
+
+                    if (
+                        "scalp" not in desc
+                        and "neck" not in desc
+                        and "hands" not in desc
+                        and "feet" not in desc
+                        and "genitalia" not in desc
+                    ):
+                        continue
+
+                else:
+
+                    if (
+                        "trunk" not in desc
+                        and "arms" not in desc
+                        and "legs" not in desc
+                    ):
+                        continue
+
+                # -------------------------------------------------
+                # 🔴 SIZE FILTER
+                # -------------------------------------------------
                 try:
+
                     min_s = float(r.get("minSize") or 0)
                     max_s = float(r.get("maxSize") or 999)
 
-                    if size is not None and min_s <= size <= max_s:
+                    if size is None:
+                        continue
+
+                    # EXACT RANGE MATCH
+                    if min_s <= size <= max_s:
+
+                        logger.info(
+                            f"✅ DM MATCH | "
+                            f"code={r['code']} | "
+                            f"size={size} | "
+                            f"range={min_s}-{max_s}"
+                        )
+
                         filtered.append(r)
 
-                except Exception:
+                except Exception as e:
+
+                    logger.warning(
+                        f"⚠️ DM filter failed "
+                        f"for code={r.get('code')} | {e}"
+                    )
+
                     continue
 
             logger.info(
-                f"✅ DM filtered candidates: {len(filtered)}"
+                f"🎯 FINAL DM candidates: "
+                f"{len(filtered)}"
+            )
+
+            logger.info(
+                f"📦 DM FINAL CODES: "
+                f"{[r['code'] for r in filtered]}"
             )
 
             return filtered
@@ -886,7 +989,8 @@ class CodeRetriever:
         self,
         destruction_type: str,
         quantity: int,
-        size: float | None = None
+        size: float | None = None,
+        location: str | None = None
     ):
 
         if destruction_type == "db":
@@ -896,6 +1000,6 @@ class CodeRetriever:
             return await self._destruction_premalignant_filter(quantity)
 
         elif destruction_type == "dm":
-            return await self._destruction_malignant_filter(quantity, size)
+            return await self._destruction_malignant_filter(quantity, size, location)
 
         return []

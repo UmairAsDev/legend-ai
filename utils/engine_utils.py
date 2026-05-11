@@ -309,3 +309,149 @@ def enforce_closure_addon(parsed, candidates, llm_output):
     except Exception as e:
         logger.exception(f"❌ Closure enforcement failed: {e}")
         return llm_output
+    
+
+# =========================================================
+# 🔴 ENFORCE DESTRUCTION QUANTITIES
+# =========================================================
+def enforce_destruction_quantity(
+    parsed,
+    retrieved_candidates,
+    llm_output
+):
+
+    try:
+
+        logger.info("🔧 Enforcing destruction quantities...")
+
+        destruction_sections = parsed.get("destruction_sections", [])
+
+        if not destruction_sections:
+            logger.info("ℹ️ No destruction sections found")
+            return llm_output
+
+        cpt_codes = llm_output.get("codes", {}).get("cpt_codes", [])
+
+        if not cpt_codes:
+            logger.warning("⚠️ No CPT codes found in LLM output")
+            return llm_output
+
+        # -------------------------------------------------
+        # 🔴 BUILD CPT LOOKUP
+        # -------------------------------------------------
+        candidate_map = {}
+
+        for c in retrieved_candidates:
+
+            code = str(c.get("code", "")).strip()
+
+            if code:
+                candidate_map[code] = c
+
+        logger.info(
+            f"📦 Candidate lookup built: {len(candidate_map)} CPTs"
+        )
+
+        # -------------------------------------------------
+        # 🔴 PROCESS EACH CPT
+        # -------------------------------------------------
+        for cpt in cpt_codes:
+
+            code = str(cpt.get("code", "")).strip()
+
+            if not code:
+                continue
+
+            candidate = candidate_map.get(code)
+
+            if not candidate:
+                continue
+
+            source = candidate.get("source", "")
+
+            # only destruction
+            if not source.startswith("destruction_"):
+                continue
+
+            logger.info(
+                f"🔍 Processing destruction CPT: {code}"
+            )
+
+            # -------------------------------------------------
+            # 🔴 MATCH SECTION
+            # -------------------------------------------------
+            matched_section = None
+
+            for sec in destruction_sections:
+
+                destruction_type = sec.get("destruction_type")
+
+                expected_source = f"destruction_{destruction_type}"
+
+                if expected_source == source:
+                    matched_section = sec
+                    break
+
+            if not matched_section:
+                logger.warning(
+                    f"⚠️ No destruction section matched for CPT {code}"
+                )
+                continue
+
+            lesion_qty = matched_section.get("quantity") or 1
+
+            associated = candidate.get("associatedWithProCode")
+
+            logger.info(
+                f"📊 CPT={code} | "
+                f"qty_from_parser={lesion_qty} | "
+                f"addon={bool(associated)}"
+            )
+
+            # -------------------------------------------------
+            # 🔴 DPM PRIMARY LOGIC
+            # -------------------------------------------------
+            if associated is None:
+
+                # primary DPM add-on logic
+                if code == "17000":
+
+                    logger.info(
+                        "✅ DPM primary detected → forcing qty=1"
+                    )
+
+                    cpt["quantity"] = "1"
+
+                else:
+
+                    logger.info(
+                        f"✅ Standard destruction CPT → "
+                        f"forcing qty={lesion_qty}"
+                    )
+
+                    cpt["quantity"] = str(lesion_qty)
+
+            # -------------------------------------------------
+            # 🔴 ADD-ON LOGIC
+            # -------------------------------------------------
+            else:
+
+                logger.info(
+                    f"✅ DPM add-on CPT detected → "
+                    f"forcing qty={lesion_qty}"
+                )
+
+                cpt["quantity"] = str(lesion_qty)
+
+        logger.success(
+            "✅ Destruction quantity enforcement completed"
+        )
+
+        return llm_output
+
+    except Exception as e:
+        logger.exception(
+            f"❌ Destruction quantity enforcement failed: {e}"
+        )
+
+        return llm_output
