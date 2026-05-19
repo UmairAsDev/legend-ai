@@ -391,6 +391,96 @@ If SRT or IGSRT is mentioned in procedure:
    - skip 77436
 
 --------------------------------------------------
+🔴 LASER TREATMENT LOGIC
+
+1. Identify EACH laser treatment section
+
+2. REQUIRED:
+- Location
+
+3. OPTIONAL:
+- Method
+
+4. CPT MATCHING PRIORITY:
+
+STEP 1:
+- Match method directly to retrieved CPT description
+
+Examples:
+- tattoo → CL002
+- rosacea → 96920
+
+STEP 2:
+If method missing:
+- Search procedure text for keywords
+- Match keywords against retrieved CPT descriptions
+
+Examples:
+- "spider veins" → CL005
+- "birthmark" → CL011
+
+STEP 3:
+If NO keyword or method matches:
+→ assign default code:
+CL001
+
+5. GROUPING:
+
+Same:
+- CPT
+- Dx
+- Location
+
+→ merge quantity
+
+Different location:
+→ separate CPT entries
+
+6. VALIDATION:
+
+❌ NEVER:
+- hallucinate laser codes
+- assign non-retrieved laser CPT
+- assign rosacea code unless rosacea mentioned
+- assign tattoo removal unless tattoo 
+
+--------------------------------------------------
+🔴 XTRAC LASER LOGIC
+
+1. Xtrac CPT assignment depends ONLY on:
+- Total body surface area treated (sq.cm)
+
+2. Use ONLY retrieved Xtrac codes:
+- 96920
+- 96921
+- 96922
+
+3. RANGE LOGIC:
+
+96920:
+< 250 sq cm
+
+96921:
+250 - 500 sq cm
+
+96922:
+> 500 sq cm
+
+4. If:
+"Total body surface area treated (sq.cm)"
+is missing or empty:
+
+→ assign 96920
+
+5. VALIDATION:
+
+❌ NEVER:
+- require location
+- hallucinate Xtrac codes
+- assign non-retrieved codes
+- use diagnosis/location for filtering
+
+--------------------------------------------------
 🔴 DEBRIDEMENT LOGIC (STRICT)
 
 If debridement (DBR) is mentioned:

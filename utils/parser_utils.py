@@ -46,6 +46,88 @@ SHAVE_TRUNK_KEYWORDS = [
     "trunk", "arm", "arms", "leg", "legs"
 ]
 
+LASER_KEYWORDS = [
+    "laser treatment",
+    "laser therapy",
+    "photofacial",
+    "laser resurfacing",
+    "laser removal"
+]
+
+LASER_METHOD_MAP = {
+    "hair reduction": [
+        "hair reduction",
+        "hair removal",
+        "lhr",
+        "diode"
+    ],
+
+    "tattoo removal": [
+        "tattoo"
+    ],
+
+    "vein treatment": [
+        "vein treatment",
+        "veins"
+    ],
+
+    "spider veins treatment": [
+        "spider veins",
+        "spider vein"
+    ],
+
+    "skin rejuvenation": [
+        "skin rejuvenation",
+        "rejuvenation"
+    ],
+
+    "skin resurfacing": [
+        "fraxel",
+        "fraxel co2",
+        "resurfacing",
+        "co2 laser"
+    ],
+
+    "rosacea": [
+        "rosacea"
+    ],
+
+    "melasma": [
+        "melasma"
+    ],
+
+    "acne": [
+        "acne",
+        "acne scar",
+        "atrophic scar"
+    ],
+
+    "age spots": [
+        "age spots",
+        "lentigo"
+    ],
+
+    "birthmark": [
+        "birthmark"
+    ],
+
+    "stretch marks": [
+        "stretch marks",
+        "striae"
+    ],
+
+    "photofacial": [
+        "photofacial",
+        "ipl"
+    ]
+}
+
+XTRAC_KEYWORDS = [
+    "xtrac",
+    "xtrac laser treatment",
+    "xtrac therapy"
+]
+
 class ParserUtils:
     # =========================================================
     # 🔹 NORMALIZE TEXT
@@ -285,3 +367,22 @@ class ParserUtils:
             return "special"
 
         return "trunk"
+    
+
+    # =========================================================
+    # 🔹 NORMALIZE LASER METHOD
+    # =========================================================
+    def normalize_laser_method(self, text: str) -> str:
+
+        if not text:
+            return ""
+
+        text = text.lower().strip()
+
+        text = re.sub(r"laser", "", text)
+        text = re.sub(r"treatment", "", text)
+        text = re.sub(r"therapy", "", text)
+
+        text = re.sub(r"\s+", " ", text).strip()
+
+        return text

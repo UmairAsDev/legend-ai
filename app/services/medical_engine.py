@@ -237,6 +237,100 @@ class CodingNodes:
 
                     all_candidates.extend(res)
 
+
+            # -------------------------
+            # 🔴 LASER TREATMENT
+            # -------------------------
+            if parsed.get("has_laser_treatment"):
+
+                logger.info("🔴 LASER TREATMENT DETECTED")
+
+                procedure_text = (
+                    cleaned.get("procedure", "")
+                )
+
+                for sec in parsed.get(
+                    "laser_treatment_sections",
+                    []
+                ):
+
+                    logger.info(
+                        f"📌 Laser section → "
+                        f"location={sec.get('location')} | "
+                        f"method={sec.get('method')}"
+                    )
+
+                    res = await self.retriever.laser_treatment_filter(
+                        section=sec,
+                        full_procedure_text=procedure_text
+                    )
+
+                    logger.info(
+                        f"↳ Retrieved {len(res)} laser candidates"
+                    )
+
+                    for r in res:
+
+                        r["source"] = "laser_treatment"
+
+                        r["laser_location"] = (
+                            sec.get("location")
+                        )
+
+                        r["laser_method"] = (
+                            sec.get("method")
+                        )
+
+                        r["laser_quantity"] = (
+                            sec.get("quantity")
+                        )
+
+                    all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 XTRAC LASER
+            # -------------------------
+            if parsed.get("has_xtrac"):
+
+                logger.info("🔴 XTRAC DETECTED")
+
+                for sec in parsed.get(
+                    "xtrac_sections",
+                    []
+                ):
+
+                    logger.info(
+                        f"📌 Xtrac section → "
+                        f"area={sec.get('total_area')}"
+                    )
+
+                    res = await self.retriever.xtrac_filter(
+                        total_area=sec.get("total_area")
+                    )
+
+                    logger.info(
+                        f"↳ Retrieved {len(res)} xtrac candidates"
+                    )
+
+                    for r in res:
+
+                        r["source"] = "xtrac"
+
+                        r["xtrac_area"] = (
+                            sec.get("total_area")
+                        )
+
+                        r["xtrac_location"] = (
+                            sec.get("location")
+                        )
+
+                        r["xtrac_quantity"] = (
+                            sec.get("quantity")
+                        )
+
+                    all_candidates.extend(res)
+
             # -------------------------
             # 🔴 MOHS (FINAL SAFE VERSION)
             # -------------------------
@@ -336,7 +430,8 @@ class CodingNodes:
                     for r in res:
                         r["source"] = "debridement"
 
-                    all_candidates.extend(res)  
+                    all_candidates.extend(res)
+
 
             # -------------------------
             # 🔴 IF ANY PROCEDURAL CODES FOUND → RETURN

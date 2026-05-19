@@ -9,10 +9,12 @@ from utils.parser_utils import (
     EXCISION_KEYWORDS,
     BIOPSY_KEYWORDS,
     SHAVE_KEYWORDS,
+    LASER_KEYWORDS,
+    XTRAC_KEYWORDS,
     WOUND_KEYWORDS,
     MOHS_KEYWORDS,
     DERM_KEYWORDS,
-    SRT_KEYWORDS
+    SRT_KEYWORDS,
 )
 
 class ClinicalParser:
@@ -730,6 +732,195 @@ class ClinicalParser:
         )
 
         return sections
+    
+
+    # =========================================================
+    # 🔹 LASER TREATMENT EXTRACTION
+    # =========================================================
+    def extract_laser_treatment_sections(self, text: str):
+
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        # -------------------------------------------------
+        # 🔴 DETECT LASER PRESENCE
+        # -------------------------------------------------
+        laser_present = (
+            "laser treatment" in text_lower
+            and "xtrac laser treatment" not in text_lower
+        )
+
+        if not laser_present:
+            return []
+
+        logger.info("🔍 Extracting laser treatment sections...")
+
+        sections = []
+
+        try:
+
+            # -------------------------------------------------
+            # 🔴 LOCATION (OPTIONAL)
+            # -------------------------------------------------
+            loc_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            location = (
+                loc_match.group(1).strip()
+                if loc_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 METHOD (OPTIONAL)
+            # -------------------------------------------------
+            method_match = re.search(
+                r"Method:\s*([^\n\r]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            method = (
+                method_match.group(1).strip()
+                if method_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 QUANTITY
+            # -------------------------------------------------
+            qty_match = re.search(
+                r"Quantity:\s*(\d+)",
+                text,
+                re.IGNORECASE
+            )
+
+            quantity = (
+                int(qty_match.group(1))
+                if qty_match else 1
+            )
+
+            logger.info(
+                f"✅ Laser parsed | "
+                f"location={location} | "
+                f"method={method} | "
+                f"qty={quantity}"
+            )
+
+            sections.append({
+                "label": "laser_1",
+                "text": text,
+                "location": location,
+                "method": method,
+                "quantity": quantity
+            })
+
+        except Exception as e:
+
+            logger.warning(
+                f"⚠️ Laser parsing failed: {e}"
+            )
+
+        logger.info(
+            f"📊 Total laser sections: {len(sections)}"
+        )
+
+        return sections
+    
+
+    # =========================================================
+    # 🔹 XTRAC LASER EXTRACTION
+    # =========================================================
+    def extract_xtrac_sections(self, text: str):
+
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        if not any(k in text_lower for k in XTRAC_KEYWORDS):
+            return []
+
+        logger.info("🔍 Extracting Xtrac sections...")
+
+        sections = []
+
+        try:
+
+            # -------------------------------------------------
+            # 🔴 LOCATION (OPTIONAL)
+            # -------------------------------------------------
+            loc_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            location = (
+                loc_match.group(1).strip()
+                if loc_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 QUANTITY
+            # -------------------------------------------------
+            qty_match = re.search(
+                r"Quantity:\s*(\d+)",
+                text,
+                re.IGNORECASE
+            )
+
+            quantity = (
+                int(qty_match.group(1))
+                if qty_match else 1
+            )
+
+            # -------------------------------------------------
+            # 🔴 TOTAL BODY SURFACE AREA
+            # -------------------------------------------------
+            area_match = re.search(
+                r"Total\s*body\s*surface\s*area\s*treated\s*\(sq\.?cm\)\s*:\s*([\d\.]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            total_area = None
+
+            if area_match:
+                try:
+                    total_area = float(area_match.group(1))
+                except:
+                    total_area = None
+
+            logger.info(
+                f"✅ Xtrac parsed | "
+                f"location={location} | "
+                f"qty={quantity} | "
+                f"area={total_area}"
+            )
+
+            sections.append({
+                "label": "xtrac_1",
+                "text": text,
+                "location": location,
+                "quantity": quantity,
+                "total_area": total_area
+            })
+
+        except Exception as e:
+
+            logger.warning(
+                f"⚠️ Xtrac parsing failed: {e}"
+            )
+
+        logger.info(
+            f"📊 Total xtrac sections: {len(sections)}"
+        )
+
+        return sections
 
 
     # =========================================================
@@ -760,6 +951,8 @@ class ClinicalParser:
         debridement_data = self.extract_debridement_sections(procedure_text)
         destruction_sections = self.extract_destruction_sections(procedure_text)
         shave_sections = self.extract_shave_removal_sections(biopsy_text)
+        laser_sections = self.extract_laser_treatment_sections(procedure_text)
+        xtrac_sections = self.extract_xtrac_sections(procedure_text)
 
         return {
             "has_biopsy": bool(biopsy_data),
@@ -785,6 +978,12 @@ class ClinicalParser:
 
             "has_shave_removal": len(shave_sections) > 0,
             "shave_removal_sections": shave_sections,
+
+            "has_laser_treatment": len(laser_sections) > 0,
+            "laser_treatment_sections": laser_sections,
+
+            "has_xtrac": len(xtrac_sections) > 0,
+            "xtrac_sections": xtrac_sections,
 
             "has_procedure": bool(procedure_text.strip())
         }

@@ -1113,3 +1113,251 @@ class CodeRetriever:
             )
 
             return filtered
+        
+
+    # =========================================================
+    # 🔹 LASER TREATMENT FILTER
+    # =========================================================
+    async def laser_treatment_filter(
+        self,
+        section,
+        full_procedure_text: str
+    ):
+
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'laser treatment'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            logger.info(
+                f"📦 Raw laser candidates: {len(rows)}"
+            )
+
+            method = (
+                section.get("method") or ""
+            ).lower()
+
+            procedure_text = (
+                full_procedure_text or ""
+            ).lower()
+
+            # -------------------------------------------------
+            # 🔴 STEP 1
+            # METHOD MATCH
+            # -------------------------------------------------
+            if method:
+
+                normalized_method = re.sub(
+                    r"(laser|treatment|therapy)",
+                    "",
+                    method
+                ).strip()
+
+                logger.info(
+                    f"🔍 Laser method normalized="
+                    f"{normalized_method}"
+                )
+
+                matched = []
+
+                for r in rows:
+
+                    desc = (
+                        r.get("description") or ""
+                    ).lower()
+
+                    desc_clean = re.sub(
+                        r"(laser|treatment)",
+                        "",
+                        desc
+                    ).strip()
+
+                    if normalized_method in desc_clean:
+
+                        logger.info(
+                            f"✅ METHOD MATCH → "
+                            f"{r['code']}"
+                        )
+
+                        matched.append(r)
+
+                if matched:
+                    return matched
+
+            # -------------------------------------------------
+            # 🔴 STEP 2
+            # KEYWORD MATCH FROM PROCEDURE TEXT
+            # -------------------------------------------------
+            matched = []
+
+            for r in rows:
+
+                desc = (
+                    r.get("description") or ""
+                ).lower()
+
+                desc_clean = re.sub(
+                    r"(laser|treatment)",
+                    "",
+                    desc
+                ).strip()
+
+                keywords = [
+                    k.strip()
+                    for k in desc_clean.split()
+                    if len(k.strip()) > 3
+                ]
+
+                if any(k in procedure_text for k in keywords):
+
+                    logger.info(
+                        f"✅ PROCEDURE KEYWORD MATCH → "
+                        f"{r['code']}"
+                    )
+
+                    matched.append(r)
+
+            if matched:
+                return matched
+
+            # -------------------------------------------------
+            # 🔴 STEP 3
+            # DEFAULT CL001
+            # -------------------------------------------------
+            fallback = [
+                r for r in rows
+                if r.get("code") == "CL001"
+            ]
+
+            logger.info(
+                "⚠️ Laser fallback → CL001"
+            )
+
+            return fallback
+        
+
+    # =========================================================
+    # 🔹 XTRAC FILTER
+    # =========================================================
+    async def xtrac_filter(
+        self,
+        total_area: float | None
+    ):
+
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'xtrac laser treatment'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            logger.info(
+                f"📦 Raw Xtrac candidates: {len(rows)}"
+            )
+
+            # -------------------------------------------------
+            # 🔴 FALLBACK
+            # -------------------------------------------------
+            if total_area is None:
+
+                logger.warning(
+                    "⚠️ Missing Xtrac total area "
+                    "→ fallback 96920"
+                )
+
+                fallback = [
+                    r for r in rows
+                    if r.get("code") == "96920"
+                ]
+
+                return fallback
+
+            # -------------------------------------------------
+            # 🔴 RANGE FILTER
+            # -------------------------------------------------
+            filtered = []
+
+            for r in rows:
+
+                try:
+
+                    min_s = float(r.get("minSize") or 0)
+                    max_s = float(r.get("maxSize") or 999999)
+
+                    if min_s <= total_area <= max_s:
+
+                        logger.info(
+                            f"✅ Xtrac match → "
+                            f"{r['code']} | "
+                            f"area={total_area} | "
+                            f"range={min_s}-{max_s}"
+                        )
+
+                        filtered.append(r)
+
+                except Exception as e:
+
+                    logger.warning(
+                        f"⚠️ Xtrac filter failed "
+                        f"for code={r.get('code')} | {e}"
+                    )
+
+            # -------------------------------------------------
+            # 🔴 SAFETY FALLBACK
+            # -------------------------------------------------
+            if not filtered:
+
+                logger.warning(
+                    "⚠️ No Xtrac range match "
+                    "→ fallback 96920"
+                )
+
+                filtered = [
+                    r for r in rows
+                    if r.get("code") == "96920"
+                ]
+
+            logger.info(
+                f"🎯 FINAL Xtrac candidates: "
+                f"{[r['code'] for r in filtered]}"
+            )
+
+            return filtered

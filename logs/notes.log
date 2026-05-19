@@ -21133,3 +21133,389 @@ Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound 
 2026-05-19 14:55:05.334 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
 2026-05-19 14:55:05.334 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
 2026-05-19 14:55:05.335 | SUCCESS  | app.services.medical_engine:llm_call:453 - ✅ All deterministic enforcement rules applied
+2026-05-19 18:14:23.476 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 508628
+2026-05-19 18:14:23.550 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 508628
+2026-05-19 18:14:27.304 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 508628
+2026-05-19 18:14:27.930 | INFO     | services.clinical_parser:extract_closure_sections:163 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 18:14:27.936 | INFO     | services.clinical_parser:extract_closure_sections:181 - 📏 Total closure size matches: 0
+2026-05-19 18:14:27.936 | INFO     | services.clinical_parser:extract_closure_sections:275 - 📊 FINAL CLOSURES: []
+2026-05-19 18:14:27.937 | INFO     | services.clinical_parser:extract_destruction_sections:455 - 🔍 Extracting destruction sections...
+2026-05-19 18:14:27.937 | INFO     | services.clinical_parser:extract_destruction_sections:601 - 📊 Total destruction sections: 0
+2026-05-19 18:14:27.938 | INFO     | services.clinical_parser:extract_laser_treatment_sections:749 - 🔍 Extracting laser treatment sections...
+2026-05-19 18:14:27.938 | WARNING  | services.clinical_parser:extract_laser_treatment_sections:786 - ⚠️ Skipping laser section → missing location
+2026-05-19 18:14:27.939 | INFO     | services.clinical_parser:extract_laser_treatment_sections:839 - 📊 Total laser sections: 0
+2026-05-19 18:14:27.940 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 18:14:27.941 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 18:14:27.942 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 18:14:27.943 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 18:14:27.944 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 18:14:30.649 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 18:14:30.649 | INFO     | app.services.medical_engine:retrieve:402 - 🟡 PROCEDURE DETECTED → semantic search
+2026-05-19 18:14:30.653 | INFO     | services.retriever:search:414 - 🔍 Running multi-table vector search...
+2026-05-19 18:14:38.953 | INFO     | services.retriever:search:427 - ✅ Retrieved 40 candidates
+2026-05-19 18:14:38.953 | INFO     | app.services.medical_engine:retrieve:408 - ⚠️ Procedure-based candidates: 40
+2026-05-19 18:14:38.968 | INFO     | app.services.medical_engine:llm_call:448 - 🧠 Calling LLM with structured parser
+2026-05-19 18:14:43.218 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 18:14:43.220 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 18:14:43.220 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 18:14:43.220 | SUCCESS  | app.services.medical_engine:llm_call:493 - ✅ All deterministic enforcement rules applied
+2026-05-19 18:39:17.626 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 508628
+2026-05-19 18:39:17.706 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 508628
+2026-05-19 18:39:21.608 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 508628
+2026-05-19 18:39:22.224 | INFO     | services.clinical_parser:extract_closure_sections:163 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 18:39:22.240 | INFO     | services.clinical_parser:extract_closure_sections:181 - 📏 Total closure size matches: 0
+2026-05-19 18:39:22.240 | INFO     | services.clinical_parser:extract_closure_sections:275 - 📊 FINAL CLOSURES: []
+2026-05-19 18:39:22.241 | INFO     | services.clinical_parser:extract_destruction_sections:455 - 🔍 Extracting destruction sections...
+2026-05-19 18:39:22.241 | INFO     | services.clinical_parser:extract_destruction_sections:601 - 📊 Total destruction sections: 0
+2026-05-19 18:39:22.242 | INFO     | services.clinical_parser:extract_laser_treatment_sections:754 - 🔍 Extracting laser treatment sections...
+2026-05-19 18:39:22.242 | INFO     | services.clinical_parser:extract_laser_treatment_sections:802 - ✅ Laser parsed | location=Face | method= | qty=1
+2026-05-19 18:39:22.242 | INFO     | services.clinical_parser:extract_laser_treatment_sections:823 - 📊 Total laser sections: 1
+2026-05-19 18:39:22.243 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 18:39:22.243 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 18:39:22.243 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 18:39:22.245 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 18:39:22.245 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 18:39:24.597 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': True, 'laser_treatment_sections': [{'label': 'laser_1', 'text': 'Laser Treatment\nLaser Type: Fraxel CO2\nDose: 15\nConsent obtained, all risks and benefits discussed Options discussed with the patient. Informed patient of the possible risks of treatment which includes but are not limited to erythema, edema, infection, blisters, erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options and risks and benefits, the following management was instituted and the patient agreed to proceed. Written consent signed after explanation. The patient tolerated the procedure well and post-procedure care was given.\nLaser Treatment (Laser)\nLocation: Face\nQuantity: 1', 'location': 'Face', 'method': '', 'quantity': 1}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 18:39:24.599 | INFO     | app.services.medical_engine:retrieve:246 - 🔴 LASER TREATMENT DETECTED
+2026-05-19 18:39:24.599 | INFO     | app.services.medical_engine:retrieve:257 - 📌 Laser section → location=Face | method=
+2026-05-19 18:39:30.377 | INFO     | services.retriever:laser_treatment_filter:1151 - 📦 Raw laser candidates: 13
+2026-05-19 18:39:30.378 | INFO     | services.retriever:laser_treatment_filter:1251 - ⚠️ Laser fallback → CL001
+2026-05-19 18:39:30.599 | INFO     | app.services.medical_engine:retrieve:268 - ↳ Retrieved 1 laser candidates
+2026-05-19 18:39:30.599 | INFO     | app.services.medical_engine:retrieve:405 - ✅ Total combined candidates (deduped): 1
+2026-05-19 18:39:30.603 | INFO     | app.services.medical_engine:llm_call:459 - 🧠 Calling LLM with structured parser
+2026-05-19 18:39:34.073 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 18:39:34.073 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 18:39:34.077 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 18:39:34.077 | SUCCESS  | app.services.medical_engine:llm_call:504 - ✅ All deterministic enforcement rules applied
+2026-05-19 18:42:01.674 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 590256
+2026-05-19 18:42:01.678 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 590256
+2026-05-19 18:42:02.305 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 590256
+2026-05-19 18:42:02.944 | INFO     | services.clinical_parser:extract_closure_sections:163 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 18:42:02.944 | INFO     | services.clinical_parser:extract_closure_sections:181 - 📏 Total closure size matches: 0
+2026-05-19 18:42:02.945 | INFO     | services.clinical_parser:extract_closure_sections:275 - 📊 FINAL CLOSURES: []
+2026-05-19 18:42:02.945 | INFO     | services.clinical_parser:extract_destruction_sections:455 - 🔍 Extracting destruction sections...
+2026-05-19 18:42:02.946 | INFO     | services.clinical_parser:extract_destruction_sections:601 - 📊 Total destruction sections: 0
+2026-05-19 18:42:02.946 | INFO     | services.clinical_parser:extract_laser_treatment_sections:754 - 🔍 Extracting laser treatment sections...
+2026-05-19 18:42:02.946 | INFO     | services.clinical_parser:extract_laser_treatment_sections:802 - ✅ Laser parsed | location=Lip | method=Hair Reduction | qty=1
+2026-05-19 18:42:02.947 | INFO     | services.clinical_parser:extract_laser_treatment_sections:823 - 📊 Total laser sections: 1
+2026-05-19 18:42:02.947 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 18:42:02.947 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 18:42:02.948 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 18:42:02.948 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 18:42:02.948 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 18:42:03.683 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': True, 'laser_treatment_sections': [{'label': 'laser_1', 'text': 'Laser Treatment (Laser)\nLocation: Lip\nQuantity: 1\nMethod: Hair Reduction\nInformed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options and risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation. Photos taken.\n \nLocation/Area treated:\nLaser Type: Diode\nTreatment #: 1\nSkin Type: 3\nEnergy: J/cm^1\nPulse Width: 40 ms\nFrequency: 4 Hz\n# of passes: 2\nCooling: chilled gel only\nPost Procedure: Patient tolerated the procedure well, post laser hair care instructions reviewed with patient.', 'location': 'Lip', 'method': 'Hair Reduction', 'quantity': 1}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 18:42:03.683 | INFO     | app.services.medical_engine:retrieve:246 - 🔴 LASER TREATMENT DETECTED
+2026-05-19 18:42:03.683 | INFO     | app.services.medical_engine:retrieve:257 - 📌 Laser section → location=Lip | method=Hair Reduction
+2026-05-19 18:42:05.020 | INFO     | services.retriever:laser_treatment_filter:1151 - 📦 Raw laser candidates: 13
+2026-05-19 18:42:05.027 | INFO     | services.retriever:laser_treatment_filter:1175 - 🔍 Laser method normalized=hair reduction
+2026-05-19 18:42:05.028 | INFO     | services.retriever:laser_treatment_filter:1196 - ✅ METHOD MATCH → CL001
+2026-05-19 18:42:05.255 | INFO     | app.services.medical_engine:retrieve:268 - ↳ Retrieved 1 laser candidates
+2026-05-19 18:42:05.256 | INFO     | app.services.medical_engine:retrieve:405 - ✅ Total combined candidates (deduped): 1
+2026-05-19 18:42:05.257 | INFO     | app.services.medical_engine:llm_call:459 - 🧠 Calling LLM with structured parser
+2026-05-19 18:42:08.191 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 18:42:08.192 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 18:42:08.192 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 18:42:08.194 | SUCCESS  | app.services.medical_engine:llm_call:504 - ✅ All deterministic enforcement rules applied
+2026-05-19 18:42:56.276 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 665163
+2026-05-19 18:42:56.281 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 665163
+2026-05-19 18:42:56.914 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 665163
+2026-05-19 18:42:57.549 | INFO     | services.clinical_parser:extract_closure_sections:163 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 18:42:57.554 | INFO     | services.clinical_parser:extract_closure_sections:181 - 📏 Total closure size matches: 0
+2026-05-19 18:42:57.554 | INFO     | services.clinical_parser:extract_closure_sections:275 - 📊 FINAL CLOSURES: []
+2026-05-19 18:42:57.555 | INFO     | services.clinical_parser:extract_destruction_sections:455 - 🔍 Extracting destruction sections...
+2026-05-19 18:42:57.555 | INFO     | services.clinical_parser:extract_destruction_sections:601 - 📊 Total destruction sections: 0
+2026-05-19 18:42:57.557 | INFO     | services.clinical_parser:extract_laser_treatment_sections:754 - 🔍 Extracting laser treatment sections...
+2026-05-19 18:42:57.557 | INFO     | services.clinical_parser:extract_laser_treatment_sections:802 - ✅ Laser parsed | location=full Face | method=Hair Reduction | qty=1
+2026-05-19 18:42:57.557 | INFO     | services.clinical_parser:extract_laser_treatment_sections:823 - 📊 Total laser sections: 1
+2026-05-19 18:42:57.557 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 18:42:57.557 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 18:42:57.557 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 18:42:57.563 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 18:42:57.565 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 18:42:58.455 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': True, 'laser_treatment_sections': [{'label': 'laser_1', 'text': 'Location/Area treated: Lower face and neck\nLaser Type: Diode\nTreatment #: 6\nSkin Type: II\nEnergy: 10 j/cm2\nPulse Width: 50 ms\nFrequency: 4 Hz\nCounter: 816\n# of passes: 2\nCooling: chilled gel only\nPost Procedure: Patient tolerated the procedure well, post laser hair care instructions reviewed with patient.\nLaser Treatment (Laser)\nLocation: full Face\nQuantity: 1\nMethod: Hair Reduction', 'location': 'full Face', 'method': 'Hair Reduction', 'quantity': 1}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 18:42:58.455 | INFO     | app.services.medical_engine:retrieve:246 - 🔴 LASER TREATMENT DETECTED
+2026-05-19 18:42:58.455 | INFO     | app.services.medical_engine:retrieve:257 - 📌 Laser section → location=full Face | method=Hair Reduction
+2026-05-19 18:42:59.605 | INFO     | services.retriever:laser_treatment_filter:1151 - 📦 Raw laser candidates: 13
+2026-05-19 18:42:59.624 | INFO     | services.retriever:laser_treatment_filter:1175 - 🔍 Laser method normalized=hair reduction
+2026-05-19 18:42:59.625 | INFO     | services.retriever:laser_treatment_filter:1196 - ✅ METHOD MATCH → CL001
+2026-05-19 18:42:59.848 | INFO     | app.services.medical_engine:retrieve:268 - ↳ Retrieved 1 laser candidates
+2026-05-19 18:42:59.862 | INFO     | app.services.medical_engine:retrieve:405 - ✅ Total combined candidates (deduped): 1
+2026-05-19 18:42:59.865 | INFO     | app.services.medical_engine:llm_call:459 - 🧠 Calling LLM with structured parser
+2026-05-19 18:43:02.787 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 18:43:02.787 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 18:43:02.788 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 18:43:02.788 | SUCCESS  | app.services.medical_engine:llm_call:504 - ✅ All deterministic enforcement rules applied
+2026-05-19 18:44:11.052 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 728003
+2026-05-19 18:44:11.055 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 728003
+2026-05-19 18:44:11.678 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 728003
+2026-05-19 18:44:12.302 | INFO     | services.clinical_parser:extract_closure_sections:163 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 18:44:12.303 | INFO     | services.clinical_parser:extract_closure_sections:181 - 📏 Total closure size matches: 0
+2026-05-19 18:44:12.307 | INFO     | services.clinical_parser:extract_closure_sections:275 - 📊 FINAL CLOSURES: []
+2026-05-19 18:44:12.307 | INFO     | services.clinical_parser:extract_destruction_sections:455 - 🔍 Extracting destruction sections...
+2026-05-19 18:44:12.323 | INFO     | services.clinical_parser:extract_destruction_sections:601 - 📊 Total destruction sections: 0
+2026-05-19 18:44:12.325 | INFO     | services.clinical_parser:extract_laser_treatment_sections:754 - 🔍 Extracting laser treatment sections...
+2026-05-19 18:44:12.326 | INFO     | services.clinical_parser:extract_laser_treatment_sections:802 - ✅ Laser parsed | location=Face | method= | qty=1
+2026-05-19 18:44:12.326 | INFO     | services.clinical_parser:extract_laser_treatment_sections:823 - 📊 Total laser sections: 1
+2026-05-19 18:44:12.326 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 18:44:12.327 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 18:44:12.327 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 18:44:12.327 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 18:44:12.327 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 18:44:13.049 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': True, 'laser_treatment_sections': [{'label': 'laser_1', 'text': 'RF microneedling - Undereyes Only\nundereyes - 1.2 (150), 1.0 (120), 0.8 (100).\xa0 . 3 passes - 50% intensity\nErbium - 8.4mJ x 1 pass followed by i-moion pass #2 600um (melasma settings)\nLaser Type:\nDose:\nConsent obtained, all risks and benefits discussed Options discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options and risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation. Patient tolerated procedure well and post procedure care given.\nLaser Treatment (Laser)\nLocation: Face\nQuantity: 1', 'location': 'Face', 'method': '', 'quantity': 1}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 18:44:13.049 | INFO     | app.services.medical_engine:retrieve:246 - 🔴 LASER TREATMENT DETECTED
+2026-05-19 18:44:13.086 | INFO     | app.services.medical_engine:retrieve:257 - 📌 Laser section → location=Face | method=
+2026-05-19 18:44:14.248 | INFO     | services.retriever:laser_treatment_filter:1151 - 📦 Raw laser candidates: 13
+2026-05-19 18:44:14.248 | INFO     | services.retriever:laser_treatment_filter:1232 - ✅ PROCEDURE KEYWORD MATCH → CL008
+2026-05-19 18:44:14.473 | INFO     | app.services.medical_engine:retrieve:268 - ↳ Retrieved 1 laser candidates
+2026-05-19 18:44:14.473 | INFO     | app.services.medical_engine:retrieve:405 - ✅ Total combined candidates (deduped): 1
+2026-05-19 18:44:14.476 | INFO     | app.services.medical_engine:llm_call:459 - 🧠 Calling LLM with structured parser
+2026-05-19 18:44:17.202 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 18:44:17.202 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 18:44:17.203 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 18:44:17.204 | SUCCESS  | app.services.medical_engine:llm_call:504 - ✅ All deterministic enforcement rules applied
+2026-05-19 19:44:45.084 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 560408
+2026-05-19 19:44:45.132 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 560408
+2026-05-19 19:44:48.830 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 560408
+2026-05-19 19:44:49.434 | INFO     | services.clinical_parser:extract_closure_sections:164 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 19:44:49.435 | INFO     | services.clinical_parser:extract_closure_sections:182 - 📏 Total closure size matches: 0
+2026-05-19 19:44:49.436 | INFO     | services.clinical_parser:extract_closure_sections:276 - 📊 FINAL CLOSURES: []
+2026-05-19 19:44:49.436 | INFO     | services.clinical_parser:extract_destruction_sections:456 - 🔍 Extracting destruction sections...
+2026-05-19 19:44:49.437 | INFO     | services.clinical_parser:extract_destruction_sections:602 - 📊 Total destruction sections: 0
+2026-05-19 19:44:49.437 | INFO     | services.clinical_parser:extract_laser_treatment_sections:755 - 🔍 Extracting laser treatment sections...
+2026-05-19 19:44:49.437 | INFO     | services.clinical_parser:extract_laser_treatment_sections:803 - ✅ Laser parsed | location=Chest | method= | qty=1
+2026-05-19 19:44:49.438 | INFO     | services.clinical_parser:extract_laser_treatment_sections:824 - 📊 Total laser sections: 1
+2026-05-19 19:44:49.438 | INFO     | services.clinical_parser:extract_xtrac_sections:844 - 🔍 Extracting Xtrac sections...
+2026-05-19 19:44:49.439 | INFO     | services.clinical_parser:extract_xtrac_sections:895 - ✅ Xtrac parsed | location=Chest | qty=1 | area=44.0
+2026-05-19 19:44:49.439 | INFO     | services.clinical_parser:extract_xtrac_sections:916 - 📊 Total xtrac sections: 1
+2026-05-19 19:44:49.439 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 19:44:49.439 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 19:44:49.440 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 19:44:49.441 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 19:44:49.441 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 19:44:51.633 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': True, 'laser_treatment_sections': [{'label': 'laser_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'method': '', 'quantity': 1}], 'has_xtrac': True, 'xtrac_sections': [{'label': 'xtrac_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'quantity': 1, 'total_area': 44.0}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 19:44:51.633 | INFO     | app.services.medical_engine:retrieve:246 - 🔴 LASER TREATMENT DETECTED
+2026-05-19 19:44:51.633 | INFO     | app.services.medical_engine:retrieve:257 - 📌 Laser section → location=Chest | method=
+2026-05-19 19:45:01.493 | INFO     | services.retriever:laser_treatment_filter:1151 - 📦 Raw laser candidates: 13
+2026-05-19 19:45:01.493 | INFO     | services.retriever:laser_treatment_filter:1232 - ✅ PROCEDURE KEYWORD MATCH → CL004
+2026-05-19 19:45:01.493 | INFO     | services.retriever:laser_treatment_filter:1232 - ✅ PROCEDURE KEYWORD MATCH → CL006
+2026-05-19 19:45:01.711 | INFO     | app.services.medical_engine:retrieve:268 - ↳ Retrieved 2 laser candidates
+2026-05-19 19:45:01.711 | INFO     | app.services.medical_engine:retrieve:296 - 🔴 XTRAC DETECTED
+2026-05-19 19:45:01.711 | INFO     | app.services.medical_engine:retrieve:303 - 📌 Xtrac section → area=44.0
+2026-05-19 19:45:03.313 | INFO     | services.retriever:xtrac_filter:1292 - 📦 Raw Xtrac candidates: 4
+2026-05-19 19:45:03.313 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96920 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:45:03.313 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96921 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:45:03.314 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96922 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:45:03.314 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96999 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:45:03.314 | INFO     | services.retriever:xtrac_filter:1358 - 🎯 FINAL Xtrac candidates: ['96920', '96921', '96922', '96999']
+2026-05-19 19:45:03.540 | INFO     | app.services.medical_engine:retrieve:312 - ↳ Retrieved 4 xtrac candidates
+2026-05-19 19:45:03.541 | INFO     | app.services.medical_engine:retrieve:449 - ✅ Total combined candidates (deduped): 6
+2026-05-19 19:45:03.542 | INFO     | app.services.medical_engine:llm_call:503 - 🧠 Calling LLM with structured parser
+2026-05-19 19:45:06.402 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 19:45:06.402 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 19:45:06.403 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 19:45:06.403 | SUCCESS  | app.services.medical_engine:llm_call:548 - ✅ All deterministic enforcement rules applied
+2026-05-19 19:48:40.873 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 560408
+2026-05-19 19:48:40.875 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 560408
+2026-05-19 19:48:45.411 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 560408
+2026-05-19 19:48:46.150 | INFO     | services.clinical_parser:extract_closure_sections:164 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 19:48:46.150 | INFO     | services.clinical_parser:extract_closure_sections:182 - 📏 Total closure size matches: 0
+2026-05-19 19:48:46.150 | INFO     | services.clinical_parser:extract_closure_sections:276 - 📊 FINAL CLOSURES: []
+2026-05-19 19:48:46.150 | INFO     | services.clinical_parser:extract_destruction_sections:456 - 🔍 Extracting destruction sections...
+2026-05-19 19:48:46.156 | INFO     | services.clinical_parser:extract_destruction_sections:602 - 📊 Total destruction sections: 0
+2026-05-19 19:48:46.156 | INFO     | services.clinical_parser:extract_laser_treatment_sections:758 - 🔍 Extracting laser treatment sections...
+2026-05-19 19:48:46.157 | INFO     | services.clinical_parser:extract_laser_treatment_sections:806 - ✅ Laser parsed | location=Chest | method= | qty=1
+2026-05-19 19:48:46.157 | INFO     | services.clinical_parser:extract_laser_treatment_sections:827 - 📊 Total laser sections: 1
+2026-05-19 19:48:46.157 | INFO     | services.clinical_parser:extract_xtrac_sections:847 - 🔍 Extracting Xtrac sections...
+2026-05-19 19:48:46.158 | INFO     | services.clinical_parser:extract_xtrac_sections:898 - ✅ Xtrac parsed | location=Chest | qty=1 | area=44.0
+2026-05-19 19:48:46.158 | INFO     | services.clinical_parser:extract_xtrac_sections:919 - 📊 Total xtrac sections: 1
+2026-05-19 19:48:46.159 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 19:48:46.159 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 19:48:46.159 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 19:48:46.160 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 19:48:46.160 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 19:48:46.805 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': True, 'laser_treatment_sections': [{'label': 'laser_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'method': '', 'quantity': 1}], 'has_xtrac': True, 'xtrac_sections': [{'label': 'xtrac_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'quantity': 1, 'total_area': 44.0}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 19:48:46.805 | INFO     | app.services.medical_engine:retrieve:246 - 🔴 LASER TREATMENT DETECTED
+2026-05-19 19:48:46.805 | INFO     | app.services.medical_engine:retrieve:257 - 📌 Laser section → location=Chest | method=
+2026-05-19 19:48:51.352 | INFO     | services.retriever:laser_treatment_filter:1151 - 📦 Raw laser candidates: 13
+2026-05-19 19:48:51.352 | INFO     | services.retriever:laser_treatment_filter:1232 - ✅ PROCEDURE KEYWORD MATCH → CL004
+2026-05-19 19:48:51.352 | INFO     | services.retriever:laser_treatment_filter:1232 - ✅ PROCEDURE KEYWORD MATCH → CL006
+2026-05-19 19:48:51.589 | INFO     | app.services.medical_engine:retrieve:268 - ↳ Retrieved 2 laser candidates
+2026-05-19 19:48:51.589 | INFO     | app.services.medical_engine:retrieve:296 - 🔴 XTRAC DETECTED
+2026-05-19 19:48:51.589 | INFO     | app.services.medical_engine:retrieve:303 - 📌 Xtrac section → area=44.0
+2026-05-19 19:48:53.198 | INFO     | services.retriever:xtrac_filter:1292 - 📦 Raw Xtrac candidates: 4
+2026-05-19 19:48:53.199 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96920 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:48:53.199 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96921 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:48:53.199 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96922 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:48:53.199 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96999 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:48:53.200 | INFO     | services.retriever:xtrac_filter:1358 - 🎯 FINAL Xtrac candidates: ['96920', '96921', '96922', '96999']
+2026-05-19 19:48:53.414 | INFO     | app.services.medical_engine:retrieve:312 - ↳ Retrieved 4 xtrac candidates
+2026-05-19 19:48:53.414 | INFO     | app.services.medical_engine:retrieve:449 - ✅ Total combined candidates (deduped): 6
+2026-05-19 19:48:53.414 | INFO     | app.services.medical_engine:llm_call:503 - 🧠 Calling LLM with structured parser
+2026-05-19 19:48:56.735 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 19:48:56.735 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 19:48:56.735 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 19:48:56.735 | SUCCESS  | app.services.medical_engine:llm_call:548 - ✅ All deterministic enforcement rules applied
+2026-05-19 19:50:41.490 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 560408
+2026-05-19 19:50:41.506 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 560408
+2026-05-19 19:50:45.194 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 560408
+2026-05-19 19:50:45.852 | INFO     | services.clinical_parser:extract_closure_sections:164 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 19:50:45.853 | INFO     | services.clinical_parser:extract_closure_sections:182 - 📏 Total closure size matches: 0
+2026-05-19 19:50:45.854 | INFO     | services.clinical_parser:extract_closure_sections:276 - 📊 FINAL CLOSURES: []
+2026-05-19 19:50:45.854 | INFO     | services.clinical_parser:extract_destruction_sections:456 - 🔍 Extracting destruction sections...
+2026-05-19 19:50:45.855 | INFO     | services.clinical_parser:extract_destruction_sections:602 - 📊 Total destruction sections: 0
+2026-05-19 19:50:45.855 | INFO     | services.clinical_parser:extract_xtrac_sections:847 - 🔍 Extracting Xtrac sections...
+2026-05-19 19:50:45.856 | INFO     | services.clinical_parser:extract_xtrac_sections:898 - ✅ Xtrac parsed | location=Chest | qty=1 | area=44.0
+2026-05-19 19:50:45.857 | INFO     | services.clinical_parser:extract_xtrac_sections:919 - 📊 Total xtrac sections: 1
+2026-05-19 19:50:45.857 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 19:50:45.857 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 19:50:45.857 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 19:50:45.858 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 19:50:45.858 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 19:50:47.199 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_xtrac': True, 'xtrac_sections': [{'label': 'xtrac_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'quantity': 1, 'total_area': 44.0}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 19:50:47.199 | INFO     | app.services.medical_engine:retrieve:296 - 🔴 XTRAC DETECTED
+2026-05-19 19:50:47.200 | INFO     | app.services.medical_engine:retrieve:303 - 📌 Xtrac section → area=44.0
+2026-05-19 19:50:52.133 | INFO     | services.retriever:xtrac_filter:1292 - 📦 Raw Xtrac candidates: 4
+2026-05-19 19:50:52.133 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96920 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:50:52.133 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96921 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:50:52.133 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96922 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:50:52.133 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96999 | area=44.0 | range=0.0-999999.0
+2026-05-19 19:50:52.133 | INFO     | services.retriever:xtrac_filter:1358 - 🎯 FINAL Xtrac candidates: ['96920', '96921', '96922', '96999']
+2026-05-19 19:50:52.368 | INFO     | app.services.medical_engine:retrieve:312 - ↳ Retrieved 4 xtrac candidates
+2026-05-19 19:50:52.368 | INFO     | app.services.medical_engine:retrieve:449 - ✅ Total combined candidates (deduped): 4
+2026-05-19 19:50:52.368 | INFO     | app.services.medical_engine:llm_call:503 - 🧠 Calling LLM with structured parser
+2026-05-19 19:50:56.047 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 19:50:56.047 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 19:50:56.047 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 19:50:56.048 | SUCCESS  | app.services.medical_engine:llm_call:548 - ✅ All deterministic enforcement rules applied
+2026-05-19 19:59:11.825 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 560408
+2026-05-19 19:59:11.845 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 560408
+2026-05-19 19:59:15.401 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 560408
+2026-05-19 19:59:15.993 | INFO     | services.clinical_parser:extract_closure_sections:164 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 19:59:15.993 | INFO     | services.clinical_parser:extract_closure_sections:182 - 📏 Total closure size matches: 0
+2026-05-19 19:59:15.993 | INFO     | services.clinical_parser:extract_closure_sections:276 - 📊 FINAL CLOSURES: []
+2026-05-19 19:59:16.008 | INFO     | services.clinical_parser:extract_destruction_sections:456 - 🔍 Extracting destruction sections...
+2026-05-19 19:59:16.013 | INFO     | services.clinical_parser:extract_destruction_sections:602 - 📊 Total destruction sections: 0
+2026-05-19 19:59:16.014 | INFO     | services.clinical_parser:extract_xtrac_sections:847 - 🔍 Extracting Xtrac sections...
+2026-05-19 19:59:16.016 | INFO     | services.clinical_parser:extract_xtrac_sections:898 - ✅ Xtrac parsed | location=Chest | qty=1 | area=44.0
+2026-05-19 19:59:16.018 | INFO     | services.clinical_parser:extract_xtrac_sections:919 - 📊 Total xtrac sections: 1
+2026-05-19 19:59:16.018 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 19:59:16.019 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 19:59:16.020 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 19:59:16.020 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 19:59:16.021 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 19:59:16.682 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_xtrac': True, 'xtrac_sections': [{'label': 'xtrac_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'quantity': 1, 'total_area': 44.0}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 19:59:16.682 | INFO     | app.services.medical_engine:retrieve:296 - 🔴 XTRAC DETECTED
+2026-05-19 19:59:16.683 | INFO     | app.services.medical_engine:retrieve:303 - 📌 Xtrac section → area=44.0
+2026-05-19 19:59:23.172 | INFO     | services.retriever:xtrac_filter:1292 - 📦 Raw Xtrac candidates: 4
+2026-05-19 19:59:23.172 | INFO     | services.retriever:xtrac_filter:1310 - 🎯 Valid Xtrac codes: ['96920', '96921', '96922']
+2026-05-19 19:59:23.172 | INFO     | services.retriever:xtrac_filter:1342 - 🧪 Xtrac raw range | code=96920 | min=None | max=None
+2026-05-19 19:59:23.172 | WARNING  | services.retriever:xtrac_filter:1353 - ⚠️ Missing minSize for 96920
+2026-05-19 19:59:23.172 | INFO     | services.retriever:xtrac_filter:1342 - 🧪 Xtrac raw range | code=96921 | min=None | max=None
+2026-05-19 19:59:23.172 | WARNING  | services.retriever:xtrac_filter:1353 - ⚠️ Missing minSize for 96921
+2026-05-19 19:59:23.172 | INFO     | services.retriever:xtrac_filter:1342 - 🧪 Xtrac raw range | code=96922 | min=None | max=None
+2026-05-19 19:59:23.187 | WARNING  | services.retriever:xtrac_filter:1353 - ⚠️ Missing minSize for 96922
+2026-05-19 19:59:23.188 | WARNING  | services.retriever:xtrac_filter:1395 - ⚠️ No Xtrac range match → fallback 96920
+2026-05-19 19:59:23.188 | INFO     | services.retriever:xtrac_filter:1405 - 🎯 FINAL Xtrac candidates: ['96920']
+2026-05-19 19:59:23.398 | INFO     | app.services.medical_engine:retrieve:312 - ↳ Retrieved 1 xtrac candidates
+2026-05-19 19:59:23.398 | INFO     | app.services.medical_engine:retrieve:449 - ✅ Total combined candidates (deduped): 1
+2026-05-19 19:59:23.414 | INFO     | app.services.medical_engine:llm_call:503 - 🧠 Calling LLM with structured parser
+2026-05-19 19:59:27.105 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 19:59:27.106 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 19:59:27.107 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 19:59:27.107 | SUCCESS  | app.services.medical_engine:llm_call:548 - ✅ All deterministic enforcement rules applied
+2026-05-19 20:08:47.756 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 560408
+2026-05-19 20:08:47.801 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 560408
+2026-05-19 20:08:51.399 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 560408
+2026-05-19 20:08:51.989 | INFO     | services.clinical_parser:extract_closure_sections:164 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 20:08:52.006 | INFO     | services.clinical_parser:extract_closure_sections:182 - 📏 Total closure size matches: 0
+2026-05-19 20:08:52.007 | INFO     | services.clinical_parser:extract_closure_sections:276 - 📊 FINAL CLOSURES: []
+2026-05-19 20:08:52.007 | INFO     | services.clinical_parser:extract_destruction_sections:456 - 🔍 Extracting destruction sections...
+2026-05-19 20:08:52.009 | INFO     | services.clinical_parser:extract_destruction_sections:602 - 📊 Total destruction sections: 0
+2026-05-19 20:08:52.009 | INFO     | services.clinical_parser:extract_xtrac_sections:847 - 🔍 Extracting Xtrac sections...
+2026-05-19 20:08:52.011 | INFO     | services.clinical_parser:extract_xtrac_sections:898 - ✅ Xtrac parsed | location=Chest | qty=1 | area=44.0
+2026-05-19 20:08:52.016 | INFO     | services.clinical_parser:extract_xtrac_sections:919 - 📊 Total xtrac sections: 1
+2026-05-19 20:08:52.017 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 20:08:52.018 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 20:08:52.018 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 20:08:52.019 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 20:08:52.020 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 20:08:53.119 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_xtrac': True, 'xtrac_sections': [{'label': 'xtrac_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'quantity': 1, 'total_area': 44.0}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 20:08:53.119 | INFO     | app.services.medical_engine:retrieve:296 - 🔴 XTRAC DETECTED
+2026-05-19 20:08:53.120 | INFO     | app.services.medical_engine:retrieve:303 - 📌 Xtrac section → area=44.0
+2026-05-19 20:09:00.718 | INFO     | services.retriever:xtrac_filter:1292 - 📦 Raw Xtrac candidates: 4
+2026-05-19 20:09:00.718 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96920 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:09:00.719 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96921 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:09:00.719 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96922 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:09:00.719 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96999 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:09:00.719 | INFO     | services.retriever:xtrac_filter:1358 - 🎯 FINAL Xtrac candidates: ['96920', '96921', '96922', '96999']
+2026-05-19 20:09:00.945 | INFO     | app.services.medical_engine:retrieve:312 - ↳ Retrieved 4 xtrac candidates
+2026-05-19 20:09:00.945 | INFO     | app.services.medical_engine:retrieve:449 - ✅ Total combined candidates (deduped): 4
+2026-05-19 20:09:00.945 | INFO     | app.services.medical_engine:llm_call:503 - 🧠 Calling LLM with structured parser
+2026-05-19 20:09:03.801 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 20:09:03.801 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 20:09:03.801 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 20:09:03.803 | SUCCESS  | app.services.medical_engine:llm_call:548 - ✅ All deterministic enforcement rules applied
+2026-05-19 20:27:06.313 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 560408
+2026-05-19 20:27:06.371 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 560408
+2026-05-19 20:27:12.992 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 560408
+2026-05-19 20:27:13.602 | INFO     | services.clinical_parser:extract_closure_sections:164 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 20:27:13.618 | INFO     | services.clinical_parser:extract_closure_sections:182 - 📏 Total closure size matches: 0
+2026-05-19 20:27:13.618 | INFO     | services.clinical_parser:extract_closure_sections:276 - 📊 FINAL CLOSURES: []
+2026-05-19 20:27:13.618 | INFO     | services.clinical_parser:extract_destruction_sections:456 - 🔍 Extracting destruction sections...
+2026-05-19 20:27:13.625 | INFO     | services.clinical_parser:extract_destruction_sections:602 - 📊 Total destruction sections: 0
+2026-05-19 20:27:13.627 | INFO     | services.clinical_parser:extract_xtrac_sections:847 - 🔍 Extracting Xtrac sections...
+2026-05-19 20:27:13.633 | INFO     | services.clinical_parser:extract_xtrac_sections:898 - ✅ Xtrac parsed | location=Chest | qty=1 | area=44.0
+2026-05-19 20:27:13.633 | INFO     | services.clinical_parser:extract_xtrac_sections:919 - 📊 Total xtrac sections: 1
+2026-05-19 20:27:13.633 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 20:27:13.634 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 20:27:13.634 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 20:27:13.635 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 20:27:13.635 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 20:27:14.303 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_xtrac': True, 'xtrac_sections': [{'label': 'xtrac_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'quantity': 1, 'total_area': 44.0}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 20:27:14.303 | INFO     | app.services.medical_engine:retrieve:296 - 🔴 XTRAC DETECTED
+2026-05-19 20:27:14.303 | INFO     | app.services.medical_engine:retrieve:303 - 📌 Xtrac section → area=44.0
+2026-05-19 20:27:18.696 | INFO     | services.retriever:xtrac_filter:1292 - 📦 Raw Xtrac candidates: 0
+2026-05-19 20:27:18.696 | WARNING  | services.retriever:xtrac_filter:1348 - ⚠️ No Xtrac range match → fallback 96920
+2026-05-19 20:27:18.696 | INFO     | services.retriever:xtrac_filter:1358 - 🎯 FINAL Xtrac candidates: []
+2026-05-19 20:27:18.934 | INFO     | app.services.medical_engine:retrieve:312 - ↳ Retrieved 0 xtrac candidates
+2026-05-19 20:27:18.934 | INFO     | app.services.medical_engine:retrieve:457 - 🟡 PROCEDURE DETECTED → semantic search
+2026-05-19 20:27:18.934 | INFO     | services.retriever:search:414 - 🔍 Running multi-table vector search...
+2026-05-19 20:27:23.353 | INFO     | services.retriever:search:427 - ✅ Retrieved 0 candidates
+2026-05-19 20:27:23.353 | INFO     | app.services.medical_engine:retrieve:463 - ⚠️ Procedure-based candidates: 0
+2026-05-19 20:27:23.353 | INFO     | app.services.medical_engine:llm_call:503 - 🧠 Calling LLM with structured parser
+2026-05-19 20:27:27.619 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 20:27:27.619 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 20:27:27.620 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 20:27:27.620 | SUCCESS  | app.services.medical_engine:llm_call:548 - ✅ All deterministic enforcement rules applied
+2026-05-19 20:34:40.240 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 560408
+2026-05-19 20:34:40.281 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 560408
+2026-05-19 20:34:43.950 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 560408
+2026-05-19 20:34:44.569 | INFO     | services.clinical_parser:extract_closure_sections:164 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 20:34:44.571 | INFO     | services.clinical_parser:extract_closure_sections:182 - 📏 Total closure size matches: 0
+2026-05-19 20:34:44.572 | INFO     | services.clinical_parser:extract_closure_sections:276 - 📊 FINAL CLOSURES: []
+2026-05-19 20:34:44.572 | INFO     | services.clinical_parser:extract_destruction_sections:456 - 🔍 Extracting destruction sections...
+2026-05-19 20:34:44.573 | INFO     | services.clinical_parser:extract_destruction_sections:602 - 📊 Total destruction sections: 0
+2026-05-19 20:34:44.573 | INFO     | services.clinical_parser:extract_xtrac_sections:847 - 🔍 Extracting Xtrac sections...
+2026-05-19 20:34:44.575 | INFO     | services.clinical_parser:extract_xtrac_sections:898 - ✅ Xtrac parsed | location=Chest | qty=1 | area=44.0
+2026-05-19 20:34:44.575 | INFO     | services.clinical_parser:extract_xtrac_sections:919 - 📊 Total xtrac sections: 1
+2026-05-19 20:34:44.575 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 20:34:44.576 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 20:34:44.577 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 20:34:44.577 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-19 20:34:44.577 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-19 20:34:45.023 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_xtrac': True, 'xtrac_sections': [{'label': 'xtrac_1', 'text': "Xtrac Laser Treatment (Xtrac)\nLocation: Chest\nQuantity: 1\nDiscussed all risks & benefits of treatment discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options, risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation.\xa0\xa0\nThe Xtrac energy dose is based on the patient's skin type which was determined by me.\nEnergy: 225 mJ/cm^2\xa0 (decreased by 25%)\nLocation: chest\nTotal body surface area treated (sq.cm): 44cm^2\nProtective eyewear utilized by patient. Patient\xa0tolerated well.", 'location': 'Chest', 'quantity': 1, 'total_area': 44.0}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-19 20:34:45.023 | INFO     | app.services.medical_engine:retrieve:296 - 🔴 XTRAC DETECTED
+2026-05-19 20:34:45.023 | INFO     | app.services.medical_engine:retrieve:303 - 📌 Xtrac section → area=44.0
+2026-05-19 20:34:49.664 | INFO     | services.retriever:xtrac_filter:1292 - 📦 Raw Xtrac candidates: 4
+2026-05-19 20:34:49.664 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96920 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:34:49.664 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96921 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:34:49.664 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96922 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:34:49.664 | INFO     | services.retriever:xtrac_filter:1327 - ✅ Xtrac match → 96999 | area=44.0 | range=0.0-999999.0
+2026-05-19 20:34:49.664 | INFO     | services.retriever:xtrac_filter:1358 - 🎯 FINAL Xtrac candidates: ['96920', '96921', '96922', '96999']
+2026-05-19 20:34:49.914 | INFO     | app.services.medical_engine:retrieve:312 - ↳ Retrieved 4 xtrac candidates
+2026-05-19 20:34:49.914 | INFO     | app.services.medical_engine:retrieve:449 - ✅ Total combined candidates (deduped): 4
+2026-05-19 20:34:49.914 | INFO     | app.services.medical_engine:llm_call:503 - 🧠 Calling LLM with structured parser
+2026-05-19 20:34:54.284 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 20:34:54.284 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 20:34:54.284 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 20:34:54.284 | SUCCESS  | app.services.medical_engine:llm_call:548 - ✅ All deterministic enforcement rules applied
