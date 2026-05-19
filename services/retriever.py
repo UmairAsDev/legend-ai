@@ -1003,3 +1003,113 @@ class CodeRetriever:
             return await self._destruction_malignant_filter(quantity, size, location)
 
         return []
+    
+
+    # =========================================================
+    # 🔹 SHAVE REMOVAL FILTER
+    # =========================================================
+    async def shave_removal_filter(
+        self,
+        location_group: str,
+        size: float | None
+    ):
+
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                minSize,
+                maxSize,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'shave removal'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            filtered = []
+
+            for r in rows:
+
+                try:
+
+                    desc = (
+                        r.get("description") or ""
+                    ).lower()
+
+                    # -------------------------
+                    # LOCATION FILTER
+                    # -------------------------
+                    if location_group == "face":
+
+                        if not any(k in desc for k in [
+                            "face", "ears", "eyelids",
+                            "nose", "lips", "mucous membrane"
+                        ]):
+                            continue
+
+                    elif location_group == "special":
+
+                        if not any(k in desc for k in [
+                            "scalp", "neck",
+                            "hands", "feet",
+                            "genitalia"
+                        ]):
+                            continue
+
+                    else:
+
+                        if not any(k in desc for k in [
+                            "trunk", "arms", "legs"
+                        ]):
+                            continue
+
+                    # -------------------------
+                    # SIZE FILTER
+                    # -------------------------
+                    if size is not None:
+
+                        min_s = float(r.get("minSize") or 0)
+                        max_s = float(r.get("maxSize") or 999)
+
+                        if not (min_s <= size <= max_s):
+                            continue
+
+                    filtered.append(r)
+
+                except Exception as e:
+                    logger.warning(
+                        f"⚠️ Shave filter failed: {e}"
+                    )
+
+            # -------------------------
+            # FALLBACK
+            # if no size → choose smallest code
+            # -------------------------
+            if size is None and filtered:
+
+                filtered = sorted(
+                    filtered,
+                    key=lambda x: float(x.get("maxSize") or 0)
+                )
+
+                return [filtered[0]]
+
+            logger.info(
+                f"✅ Shave candidates: {len(filtered)}"
+            )
+
+            return filtered

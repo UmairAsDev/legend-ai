@@ -25,6 +25,27 @@ DESTRUCTION_KEYWORDS = [
     "cryosurgery", "electrodesiccation"
 ]
 
+SHAVE_KEYWORDS = [
+    "shave removal",
+    "shave biopsy",
+    "epidermal lesion shave",
+    "dermal lesion shave"
+]
+
+SHAVE_FACE_KEYWORDS = [
+    "face", "ear", "ears", "eyelid", "eyelids",
+    "nose", "lip", "lips", "mucous membrane"
+]
+
+SHAVE_SPECIAL_KEYWORDS = [
+    "scalp", "neck", "hand", "hands",
+    "foot", "feet", "genitalia"
+]
+
+SHAVE_TRUNK_KEYWORDS = [
+    "trunk", "arm", "arms", "leg", "legs"
+]
+
 class ParserUtils:
     # =========================================================
     # 🔹 NORMALIZE TEXT
@@ -205,3 +226,62 @@ class ParserUtils:
     def detect_keyword(self, text: str, keywords: List[str]) -> bool:
         text = self.normalize(text)
         return any(k in text for k in keywords)
+    
+
+    # =========================================================
+    # 🔹 EXTRACT SIZE FROM X x Y FORMAT
+    # =========================================================
+    def extract_max_dimension(self, text: str) -> float | None:
+
+        if not text:
+            return None
+
+        patterns = [
+            r"([\d\.]+)\s*[xX×]\s*([\d\.]+)",
+            r"([\d\.]+)\s*cm\s*[xX×]\s*([\d\.]+)\s*cm",
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+
+            if match:
+                try:
+                    vals = [
+                        float(match.group(1)),
+                        float(match.group(2))
+                    ]
+
+                    size = max(vals)
+
+                    logger.info(f"📏 Parsed shave size={size}")
+                    return size
+
+                except Exception:
+                    continue
+
+        # fallback single number
+        single = re.search(r"([\d\.]+)\s*cm", text, re.IGNORECASE)
+
+        if single:
+            try:
+                return float(single.group(1))
+            except:
+                pass
+
+        return None
+
+
+    # =========================================================
+    # 🔹 SHAVE LOCATION GROUP
+    # =========================================================
+    def classify_shave_location_group(self, location: str) -> str:
+
+        location = (location or "").lower()
+
+        if any(k in location for k in SHAVE_FACE_KEYWORDS):
+            return "face"
+
+        if any(k in location for k in SHAVE_SPECIAL_KEYWORDS):
+            return "special"
+
+        return "trunk"

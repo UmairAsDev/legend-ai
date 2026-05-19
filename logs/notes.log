@@ -20788,3 +20788,164 @@ Pressure was applied to achieve hemostasis. Vaseline was applied at the wound si
 2026-05-11 18:30:22.393 | INFO     | utils.engine_utils:enforce_destruction_quantity:427 - ✅ Standard destruction CPT → forcing qty=7
 2026-05-11 18:30:22.393 | SUCCESS  | utils.engine_utils:enforce_destruction_quantity:446 - ✅ Destruction quantity enforcement completed
 2026-05-11 18:30:22.394 | SUCCESS  | app.services.medical_engine:llm_call:424 - ✅ All deterministic enforcement rules applied
+2026-05-18 20:01:33.058 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 658372
+2026-05-18 20:01:33.125 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 658372
+2026-05-18 20:01:36.821 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 658372
+2026-05-18 20:01:37.426 | INFO     | services.clinical_parser:extract_closure_sections:161 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-18 20:01:37.429 | INFO     | services.clinical_parser:extract_closure_sections:179 - 📏 Total closure size matches: 0
+2026-05-18 20:01:37.431 | INFO     | services.clinical_parser:extract_closure_sections:273 - 📊 FINAL CLOSURES: []
+2026-05-18 20:01:37.432 | INFO     | services.clinical_parser:extract_destruction_sections:453 - 🔍 Extracting destruction sections...
+2026-05-18 20:01:37.436 | INFO     | services.clinical_parser:extract_destruction_sections:472 - 🔍 Processing destruction section 1
+2026-05-18 20:01:37.439 | INFO     | services.clinical_parser:extract_destruction_sections:589 - ✅ Destruction parsed | type=db | qty=1 | location=Neck | size=None
+2026-05-18 20:01:37.439 | INFO     | services.clinical_parser:extract_destruction_sections:599 - 📊 Total destruction sections: 1
+2026-05-18 20:01:37.441 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-18 20:01:37.441 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-18 20:01:37.441 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-18 20:01:37.442 | INFO     | app.services.medical_engine:parse:91 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-18 20:01:39.716 | INFO     | app.services.medical_engine:retrieve:119 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': True, 'destruction_sections': [{'label': 'destruction_1', 'text': 'Destruction Benign (DB)\nLocation: Neck\nQuantity: 1\nMethod: shave removal\nChoice: Simple\nDiscussed diagnosis, treatment options and risks to patient and patient agreed to proceed with destruction of benign lesion.\nPost treatment instructions were given to the patient. Patient aware to call the office for any signs of infection which includes erythema, edema, exudate, tenderness in the area treated.', 'destruction_type': 'db', 'location': 'Neck', 'quantity': 1, 'method': 'shave removal', 'choice': 'Simple', 'size': None}], 'has_procedure': True, 'closure_aggregated': []}
+2026-05-18 20:01:39.716 | INFO     | app.services.medical_engine:retrieve:152 - 🔴 DESTRUCTION DETECTED
+2026-05-18 20:01:39.718 | INFO     | app.services.medical_engine:retrieve:162 - 📌 Destruction Section → label=destruction_1 | type=db | qty=1 | size=None | location=Neck
+2026-05-18 20:01:48.528 | INFO     | services.retriever:_destruction_benign_filter:158 - ✅ Destruction benign candidates: 21
+2026-05-18 20:01:48.765 | INFO     | app.services.medical_engine:retrieve:178 - ↳ Retrieved 21 destruction candidates
+2026-05-18 20:01:48.765 | INFO     | app.services.medical_engine:retrieve:325 - ✅ Total combined candidates (deduped): 21
+2026-05-18 20:01:48.766 | INFO     | app.services.medical_engine:llm_call:379 - 🧠 Calling LLM with structured parser
+2026-05-18 20:01:56.806 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-18 20:01:56.806 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-18 20:01:56.808 | INFO     | utils.engine_utils:enforce_destruction_quantity:351 - 📦 Candidate lookup built: 21 CPTs
+2026-05-18 20:01:56.808 | INFO     | utils.engine_utils:enforce_destruction_quantity:376 - 🔍 Processing destruction CPT: 17110
+2026-05-18 20:01:56.809 | INFO     | utils.engine_utils:enforce_destruction_quantity:405 - 📊 CPT=17110 | qty_from_parser=1 | addon=False
+2026-05-18 20:01:56.809 | INFO     | utils.engine_utils:enforce_destruction_quantity:427 - ✅ Standard destruction CPT → forcing qty=1
+2026-05-18 20:01:56.809 | SUCCESS  | utils.engine_utils:enforce_destruction_quantity:446 - ✅ Destruction quantity enforcement completed
+2026-05-18 20:01:56.809 | SUCCESS  | app.services.medical_engine:llm_call:424 - ✅ All deterministic enforcement rules applied
+2026-05-18 20:03:40.738 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 388540
+2026-05-18 20:03:40.739 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 388540
+2026-05-18 20:03:41.334 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 388540
+2026-05-18 20:03:41.947 | INFO     | services.clinical_parser:extract_closure_sections:161 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-18 20:03:41.953 | INFO     | services.clinical_parser:extract_closure_sections:179 - 📏 Total closure size matches: 0
+2026-05-18 20:03:41.953 | INFO     | services.clinical_parser:extract_closure_sections:273 - 📊 FINAL CLOSURES: []
+2026-05-18 20:03:41.953 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-18 20:03:41.955 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-18 20:03:41.955 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-18 20:03:41.956 | INFO     | app.services.medical_engine:parse:91 - 🧾 biopsyNotes AFTER CLEAN: A. Shave Removal
+Clinical Diagnosis: C005 Aesthetics Blemishes
+Location: Left Upper Back
+Method: Shave
+Lesion Size: 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled A. #RA19-1671. 
+The patient tolerated the procedure well with no complications and minimal bleeding.
+ bacitracin was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.
+Repair: 
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+B. Shave RemovalClinical Diagnosis: C005 Aesthetics BlemishesLocation: Mid Back
+Method: Shave
+Lesion Size: 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled B. #RA19-1672. 
+The patient tolerated the procedure well with no complications and minimal bleeding.
+ bacitracin was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.
+Repair: 
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+C. Shave RemovalClinical Diagnosis: C005 Aesthetics BlemishesLocation: Right Upper Back
+Method: Shave
+Lesion Size: 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled C. #RA19-1673. 
+The patient tolerated the procedure well with no complications and minimal bleeding.
+ bacitracin was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.
+Repair: 
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+D. Shave RemovalClinical Diagnosis: C005 Aesthetics BlemishesLocation: Left Mid Back
+Method: Shave
+Lesion Size: 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled D. #RA19-1674. 
+The patient tolerated the procedure well with no complications and minimal bleeding.
+ bacitracin was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.
+Repair: 
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+E. Shave RemovalClinical Diagnosis: C005 Aesthetics BlemishesLocation: Left Upper Back
+Method: Shave
+Lesion Size: 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled E. #RA19-1675. 
+The patient tolerated the procedure well with no complications and minimal bleeding.
+ bacitracin was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.
+Repair: 
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+F. Shave RemovalClinical Diagnosis: C005 Aesthetics BlemishesLocation: Mid Lower Back
+Method: Shave
+Lesion Size: 
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 1% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled F. #RA19-1676. 
+The patient tolerated the procedure well with no complications and minimal bleeding.
+ bacitracin was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.
+Repair: 
+Pressure was applied to achieve hemostasis. Bacitracin was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-05-18 20:03:43.437 | INFO     | app.services.medical_engine:retrieve:119 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_procedure': False, 'closure_aggregated': []}
+2026-05-18 20:03:43.445 | WARNING  | app.services.medical_engine:retrieve:346 - ⚠️ FALLBACK SEARCH TRIGGERED
+2026-05-18 20:03:43.447 | INFO     | services.retriever:search:414 - 🔍 Running multi-table vector search...
+2026-05-18 20:03:48.291 | INFO     | services.retriever:search:427 - ✅ Retrieved 40 candidates
+2026-05-18 20:03:48.291 | INFO     | app.services.medical_engine:retrieve:350 - ⚠️ Fallback candidates: 40
+2026-05-18 20:03:48.296 | INFO     | app.services.medical_engine:llm_call:379 - 🧠 Calling LLM with structured parser
+2026-05-18 20:03:52.723 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-18 20:03:52.734 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-18 20:03:52.740 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-18 20:03:52.744 | SUCCESS  | app.services.medical_engine:llm_call:424 - ✅ All deterministic enforcement rules applied
+2026-05-19 14:35:16.955 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 642296
+2026-05-19 14:35:17.014 | INFO     | app.services.medical_engine:fetch:39 - 📥 Fetching note: 642296
+2026-05-19 14:35:20.702 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 642296
+2026-05-19 14:35:21.319 | INFO     | services.clinical_parser:extract_closure_sections:162 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 14:35:21.319 | INFO     | services.clinical_parser:extract_closure_sections:180 - 📏 Total closure size matches: 0
+2026-05-19 14:35:21.319 | INFO     | services.clinical_parser:extract_closure_sections:274 - 📊 FINAL CLOSURES: []
+2026-05-19 14:35:21.327 | INFO     | services.clinical_parser:extract_closure_sections:162 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-19 14:35:21.327 | INFO     | services.clinical_parser:extract_closure_sections:180 - 📏 Total closure size matches: 0
+2026-05-19 14:35:21.327 | INFO     | services.clinical_parser:extract_closure_sections:274 - 📊 FINAL CLOSURES: []
+2026-05-19 14:35:21.333 | INFO     | services.clinical_parser:extract_excision_sections:116 - 📊 Total excision sections: 0
+2026-05-19 14:35:21.334 | INFO     | services.clinical_parser:extract_destruction_sections:454 - 🔍 Extracting destruction sections...
+2026-05-19 14:35:21.342 | INFO     | services.clinical_parser:extract_destruction_sections:600 - 📊 Total destruction sections: 0
+2026-05-19 14:35:21.342 | INFO     | services.clinical_parser:extract_shave_removal_sections:613 - 🔍 Extracting shave removal sections...
+2026-05-19 14:35:21.342 | INFO     | services.clinical_parser:extract_shave_removal_sections:686 - ✅ Shave parsed | group=trunk | size=None | location=
+2026-05-19 14:35:21.350 | INFO     | utils.parser_utils:extract_max_dimension:256 - 📏 Parsed shave size=4.0
+2026-05-19 14:35:21.352 | INFO     | services.clinical_parser:extract_shave_removal_sections:686 - ✅ Shave parsed | group=trunk | size=4.0 | location=Umbilicus
+2026-05-19 14:35:21.352 | INFO     | services.clinical_parser:extract_shave_removal_sections:707 - 📊 Total shave sections: 2
+2026-05-19 14:35:21.353 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-19 14:35:21.353 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-19 14:35:21.353 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-19 14:35:21.353 | INFO     | app.services.medical_engine:parse:92 - 🧾 biopsyNotes AFTER CLEAN: B. Shave Removal
+Clinical Diagnosis: L91.0 Scar Keloid
+Location: Umbilicus
+Method: Shave
+Lesion Size: 4.0 - 4.0 cm
+Excision Size, including margins: 4.0 x 4 cm
+The patient was evaluated preoperative and noted to be in stable condition. 
+ Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. 
+ This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. 
+After consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled B. #WC24-1746. 
+The patient tolerated the procedure well with no complications and minimal bleeding.
+ Vaseline was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.
+Repair: Electrodessication 
+The wound was left to heal by secondary intention after electrodessication for homeostasis. 
+Pressure was applied to achieve hemostasis. Vaseline was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.
+2026-05-19 14:35:21.354 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: [{'location_group': 'trunk', 'size': None, 'quantity': 1, 'locations': ['']}, {'location_group': 'trunk', 'size': 4.0, 'quantity': 1, 'locations': ['Umbilicus']}]
+2026-05-19 14:35:25.369 | INFO     | app.services.medical_engine:retrieve:121 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': True, 'shave_removal_sections': [{'label': 'shave_1', 'text': 'B. Shave Removal\n', 'location': '', 'location_group': 'trunk', 'size': None, 'quantity': 1}, {'label': 'shave_2', 'text': 'Clinical Diagnosis: L91.0 Scar Keloid\nLocation: Umbilicus\nMethod: Shave\nLesion Size: 4.0 - 4.0 cm\nExcision Size, including margins: 4.0 x 4 cm\nThe patient was evaluated preoperative and noted to be in stable condition. \n Informed consent was obtained from the patient. All risks, benefits, and alternatives regarding the survey have been reviewed in detail with the patient. \n This includes risks of bleeding, infection, scarring recurrence of lesion and need for further procedures. \nAfter consent was obtained, attention was turned toward the area of interest which was disinfected and cleaned with alcohol. Local anesthetic, 2% lidocaine with epinephrine was infiltrated around the site. An elliptical incision with the appropriate margins was made using a Number 15. Dissection of the surrounding/overlying tissue was performed to isolate, expose and remove the lesion. The specimen was placed in a bottle labeled B. #WC24-1746. \nThe patient tolerated the procedure well with no complications and minimal bleeding.\n Vaseline was applied at the wound site and covered with a press dressing. Wound care instructions reviewed and given to the patient.\nRepair: Electrodessication \nThe wound was left to heal by secondary intention after electrodessication for homeostasis. \nPressure was applied to achieve hemostasis. Vaseline was applied at the wound site and it was bandaged. Patient tolerated the procedure well and wound care instructions were reviewed and given to the patient.', 'location': 'Umbilicus', 'location_group': 'trunk', 'size': 4.0, 'quantity': 1}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': [{'location_group': 'trunk', 'size': None, 'quantity': 1, 'locations': ['']}, {'location_group': 'trunk', 'size': 4.0, 'quantity': 1, 'locations': ['Umbilicus']}]}
+2026-05-19 14:35:25.482 | INFO     | app.services.medical_engine:retrieve:219 - 🔴 SHAVE REMOVAL DETECTED
+2026-05-19 14:35:32.658 | INFO     | services.retriever:shave_removal_filter:1111 - ✅ Shave candidates: 4
+2026-05-19 14:35:32.897 | INFO     | app.services.medical_engine:retrieve:354 - ✅ Total combined candidates (deduped): 4
+2026-05-19 14:35:32.899 | INFO     | app.services.medical_engine:llm_call:408 - 🧠 Calling LLM with structured parser
+2026-05-19 14:35:38.308 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-19 14:35:38.308 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-19 14:35:38.308 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-19 14:35:38.309 | SUCCESS  | app.services.medical_engine:llm_call:453 - ✅ All deterministic enforcement rules applied

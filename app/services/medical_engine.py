@@ -14,7 +14,8 @@ from services.reranker import Reranker
 from utils.engine_utils import (
     serialize_data, clean_note_data, 
     enforce_closure_addon, enforce_excision_quantity,
-    aggregate_closures, enforce_destruction_quantity
+    aggregate_closures, enforce_destruction_quantity,
+    aggregate_shave_removals
 )
 
 # =========================
@@ -89,6 +90,7 @@ class CodingNodes:
             parsed = self.parser.parse(state["cleaned_note"])
             parsed = aggregate_closures(parsed)
             logger.info(f"🧾 biopsyNotes AFTER CLEAN: {state['cleaned_note'].get('biopsyNotes')}")
+            parsed = aggregate_shave_removals(parsed)
             return {"parsed": parsed}
         except Exception as e:
             raise
@@ -207,6 +209,33 @@ class CodingNodes:
                 logger.info(f"   ↳ Retrieved {len(biopsy)} biopsy candidates")
 
                 all_candidates.extend(biopsy)
+
+
+            # -------------------------
+            # 🔴 SHAVE REMOVAL
+            # -------------------------
+            if parsed.get("has_shave_removal"):
+
+                logger.info("🔴 SHAVE REMOVAL DETECTED")
+
+                for sec in parsed.get(
+                    "shave_removal_aggregated",
+                    []
+                ):
+
+                    res = await self.retriever.shave_removal_filter(
+                        location_group=sec.get("location_group"),
+                        size=sec.get("size")
+                    )
+
+                    for r in res:
+
+                        r["source"] = "shave_removal"
+                        r["shave_quantity"] = sec.get("quantity")
+                        r["shave_location_group"] = (sec.get("location_group"))
+                        r["shave_size"] = sec.get("size")
+
+                    all_candidates.extend(res)
 
             # -------------------------
             # 🔴 MOHS (FINAL SAFE VERSION)

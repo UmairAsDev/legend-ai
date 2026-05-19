@@ -158,6 +158,71 @@ VALIDATION:
    - Total CPT quantity MUST equal total biopsy count
 
 --------------------------------------------------
+🔴 SHAVE REMOVAL LOGIC
+
+1. Identify EACH shave removal section
+
+2. LOCATION GROUPS:
+
+TRUNK:
+- trunk
+- arms
+- legs
+
+FACE:
+- face
+- ears
+- eyelids
+- nose
+- lips
+- mucous membrane
+
+SPECIAL:
+- scalp
+- neck
+- hands
+- feet
+- genitalia
+
+3. SIZE PRIORITY:
+
+FIRST:
+→ Excision Size, including margins
+
+SECOND:
+→ Lesion Size
+
+If X × Y:
+→ use MAX(X,Y)
+
+4. CPT ASSIGNMENT:
+
+- Match:
+  ✔ anatomical group
+  ✔ size range
+
+- If NO size exists:
+  ✔ assign smallest/base code
+  ✔ according to anatomical group only
+
+5. MULTIPLE SHAVE REMOVALS:
+
+If:
+- SAME CPT
+- SAME Dx
+- SAME location group
+
+→ MERGE
+→ quantity = total lesions
+
+6. VALIDATION:
+
+❌ NEVER:
+- assign wrong anatomical group
+- assign higher size bracket incorrectly
+- separate identical shave removals unnecessarily
+
+--------------------------------------------------
 🔴 MOHS LOGIC (STRICT – OVERRIDES GENERAL RULES)
 
 If mohsNotes present:
