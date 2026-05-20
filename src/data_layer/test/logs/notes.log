@@ -2870,3 +2870,13 @@ During task with name 'retrieve' and id '6da88c3c-d92b-98fe-2e76-b3ba2423574b'
 2026-05-20 14:29:09.586 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 654242
 2026-05-20 14:29:09.589 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 715119
 2026-05-20 14:29:10.172 | INFO     | __main__:append_to_json:106 - 4 records processed | Total stored: 4
+2026-05-20 19:25:13.940 | INFO     | __main__:append_to_json:83 - 446 records processed | Total stored: 446
+2026-05-20 19:27:50.994 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 520742
+2026-05-20 19:27:50.999 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 554570
+2026-05-20 19:27:51.008 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 584716
+2026-05-20 19:27:51.013 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 606615
+2026-05-20 19:27:51.014 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 644850
+2026-05-20 19:27:51.021 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 682593
+2026-05-20 19:27:51.025 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 719086
+2026-05-20 19:27:51.034 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 727425
+2026-05-20 19:27:51.661 | INFO     | __main__:append_to_json:106 - 8 records processed | Total stored: 8

@@ -30,10 +30,9 @@ async def notes():
                     npn.noteDate
                 FROM newProgressNotes npn
                 WHERE 
-                    (npn.mohsNotes LIKE '%Intense Pulsed Light%')
-                    OR (npn.biopsyNotes LIKE '%Intense Pulsed Light%')
-                    OR (npn.procedure LIKE '%Intense Pulsed Light%')
-                    AND (npn.procedure LIKE '%sq%')
+                    (npn.mohsNotes LIKE '%Filler%')
+                    OR (npn.biopsyNotes LIKE '%Filler%')
+                    OR (npn.procedure LIKE '%Filler%')
                     AND npn.noteDate > '2020-01-01'
                 """
             )
@@ -53,7 +52,7 @@ async def notes():
 
 # ------------------- JSON STORAGE -------------------
 
-def append_to_json(new_data, file_path="IPL_wom_id.json"):
+def append_to_json(new_data, file_path="filler_id.json"):
     """
     Append + deduplicate notes into a JSON file
     """
