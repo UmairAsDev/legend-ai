@@ -301,3 +301,78 @@ HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
 2026-04-24 17:56:35,646 - ERROR - Session rollback: 'minSize'
 2026-04-24 18:05:26,923 - ERROR - Session rollback: 'minSize'
 2026-04-24 19:39:18,001 - ERROR - Session rollback: insufficient data in buffer: requested 8 remaining 3
+2026-05-20 18:16:51,306 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.DatatypeMismatchError'>: argument of OR must be type boolean, not type text
+[SQL: 
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE (LOWER(proName) OR LOWER(description)) = 'intense pulsed light'
+                ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-05-20 18:19:05,433 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "description" does not exist
+[SQL: 
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE LOWER(proName) = 'intense pulsed light'
+                OR LOWER(description) = 'intense pulsed light'
+                ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-05-20 18:20:08,467 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "description" does not exist
+[SQL: 
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE LOWER(proName) = 'intense pulsed light'
+                AND LOWER(description) = 'intense pulsed light'
+                ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-05-20 18:20:48,711 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "description" does not exist
+[SQL: 
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE LOWER(proName) = 'intense pulsed light'
+                AND LOWER(description) = 'intense pulsed light'
+                ]
+(Background on this error at: https://sqlalche.me/e/20/f405)

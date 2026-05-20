@@ -10,6 +10,8 @@ from utils.parser_utils import (
     BIOPSY_KEYWORDS,
     SHAVE_KEYWORDS,
     LASER_KEYWORDS,
+    IPL_METHOD_MAP,
+    IPL_KEYWORDS,
     XTRAC_KEYWORDS,
     WOUND_KEYWORDS,
     MOHS_KEYWORDS,
@@ -921,6 +923,176 @@ class ClinicalParser:
         )
 
         return sections
+    
+
+    # =========================================================
+    # 🔹 IPL EXTRACTION
+    # =========================================================
+    def extract_ipl_sections(self, text: str):
+
+        try:
+
+            if not text:
+                logger.warning("⚠️ IPL parser received empty text")
+                return []
+
+            text_lower = text.lower()
+
+            if not any(k in text_lower for k in IPL_KEYWORDS):
+                logger.info("ℹ️ No IPL keywords detected")
+                return []
+
+            logger.info("🔍 Extracting IPL sections...")
+
+            sections = []
+
+            blocks = re.split(
+                r"(?=Intense Pulsed Light\s*\(IPL\))",
+                text,
+                flags=re.IGNORECASE
+            )
+
+            logger.info(f"📦 IPL blocks detected={len(blocks)}")
+
+            for i, block in enumerate(blocks):
+
+                try:
+
+                    block = block.strip()
+
+                    if not block:
+                        continue
+
+                    block_lower = block.lower()
+
+                    if "ipl" not in block_lower:
+                        continue
+
+                    logger.info(f"🔍 Processing IPL block {i+1}")
+
+                    # -------------------------------------------------
+                    # 🔴 LOCATION
+                    # -------------------------------------------------
+                    loc_match = re.search(
+                        r"Location:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    location = (
+                        loc_match.group(1).strip()
+                        if loc_match else ""
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 QUANTITY
+                    # -------------------------------------------------
+                    qty_match = re.search(
+                        r"Quantity:\s*(\d+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    quantity = (
+                        int(qty_match.group(1))
+                        if qty_match else 1
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 METHOD
+                    # -------------------------------------------------
+                    method_match = re.search(
+                        r"Method:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    method = (
+                        method_match.group(1).strip()
+                        if method_match else None
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 METHOD NORMALIZATION
+                    # -------------------------------------------------
+                    normalized_method = None
+
+                    if method:
+
+                        method_lower = method.lower()
+
+                        for key, value in IPL_METHOD_MAP.items():
+
+                            if key in method_lower:
+                                normalized_method = value
+                                break
+
+                        if not normalized_method:
+                            normalized_method = method_lower
+
+                    # -------------------------------------------------
+                    # 🔴 TREATMENT AREA
+                    # -------------------------------------------------
+                    area_match = re.search(
+                        r"(?:Treatment Area|Total\s*Area|Area)\s*(?:\(sq\.?\s*cm\))?\s*:\s*([\d\.]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    treatment_area = None
+
+                    if area_match:
+
+                        try:
+                            treatment_area = float(area_match.group(1))
+                        except Exception as e:
+
+                            logger.warning(
+                                f"⚠️ IPL area conversion failed: {e}"
+                            )
+
+                    logger.info(
+                        f"✅ IPL parsed | "
+                        f"location={location} | "
+                        f"qty={quantity} | "
+                        f"method={normalized_method} | "
+                        f"area={treatment_area}"
+                    )
+
+                    sections.append({
+                        "label": f"ipl_{i+1}",
+                        "text": block,
+                        "location": location,
+                        "quantity": quantity,
+                        "method": normalized_method,
+                        "treatment_area": treatment_area
+                    })
+
+                except Exception as e:
+
+                    logger.exception(
+                        f"❌ IPL block parsing failed: {e}"
+                    )
+
+                    continue
+
+            logger.info(
+                f"📊 FINAL IPL sections={len(sections)}"
+            )
+
+            logger.info(
+                f"📊 IPL DATA={sections}"
+            )
+
+            return sections
+
+        except Exception as e:
+
+            logger.exception(
+                f"❌ IPL extraction failed: {e}"
+            )
+
+            return []
 
 
     # =========================================================
@@ -953,6 +1125,7 @@ class ClinicalParser:
         shave_sections = self.extract_shave_removal_sections(biopsy_text)
         laser_sections = self.extract_laser_treatment_sections(procedure_text)
         xtrac_sections = self.extract_xtrac_sections(procedure_text)
+        ipl_sections = self.extract_ipl_sections(procedure_text)
 
         return {
             "has_biopsy": bool(biopsy_data),
@@ -984,6 +1157,9 @@ class ClinicalParser:
 
             "has_xtrac": len(xtrac_sections) > 0,
             "xtrac_sections": xtrac_sections,
+
+            "has_ipl": len(ipl_sections) > 0,
+            "ipl_sections": ipl_sections,
 
             "has_procedure": bool(procedure_text.strip())
         }

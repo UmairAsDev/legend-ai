@@ -128,6 +128,70 @@ XTRAC_KEYWORDS = [
     "xtrac therapy"
 ]
 
+IPL_KEYWORDS = [
+    "intense pulsed light",
+    "ipl"
+]
+
+IPL_METHOD_MAP = {
+
+    "hair reduction": [
+        "hair reduction",
+        "hair removal"
+    ],
+
+    "tattoo removal": [
+        "tattoo"
+    ],
+
+    "vein treatment": [
+        "vein"
+    ],
+
+    "spider veins treatment": [
+        "spider vein",
+        "spider veins"
+    ],
+
+    "skin rejuvenation": [
+        "skin rejuvenation",
+        "rejuvenation"
+    ],
+
+    "photorejuvenation treatment": [
+        "photorejuvenation"
+    ],
+
+    "rosacea treatment": [
+        "rosacea"
+    ],
+
+    "melasma treatment": [
+        "melasma"
+    ],
+
+    "acne treatment": [
+        "acne"
+    ],
+
+    "birthmark": [
+        "birthmark"
+    ],
+
+    "photofacial": [
+        "photofacial"
+    ],
+
+    "photorejuvenation treatment": [
+    "pigmented spots",
+    "lentigo",
+    "sun spots",
+    "photoaging",
+    "photodamage",
+    "pigmentation"
+    ]
+}
+
 class ParserUtils:
     # =========================================================
     # 🔹 NORMALIZE TEXT

@@ -1361,3 +1361,186 @@ class CodeRetriever:
             )
 
             return filtered
+        
+
+    # =========================================================
+    # 🔹 IPL FILTER
+    # =========================================================
+    async def ipl_filter(self, section):
+
+        try:
+
+            async with get_db_session() as db:
+
+                method = (
+                    section.get("method")
+                    or ""
+                ).lower().strip()
+
+                treatment_area = (
+                    section.get("treatment_area")
+                )
+
+                logger.info(
+                    f"🎯 IPL filter | "
+                    f"method={method} | "
+                    f"area={treatment_area}"
+                )
+
+                # =====================================================
+                # 🔴 LOAD IPL CODES
+                # =====================================================
+                query = """
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE
+                    LOWER(COALESCE(proName, '')) LIKE '%intense pulsed light%'
+                    OR proCode IN ('96920', '96921', '96922')
+            """
+
+                result = await db.execute(text(query))
+
+                rows = [
+                    self._clean_row(r)
+                    for r in result.mappings().all()
+                ]
+
+                logger.info(
+                    f"📦 IPL raw candidates={len(rows)}"
+                )
+                logger.info(
+                    f"📦 IPL RAW CODES={[r['code'] for r in rows]}"
+                )
+
+                # =====================================================
+                # 🔴 SCENARIO 1 → METHOD
+                # =====================================================
+                if method:
+
+                    logger.info(
+                        "🧠 IPL scenario=METHOD"
+                    )
+
+                    matched = []
+
+                    method_tokens = [
+                        t.strip()
+                        for t in method.split()
+                        if len(t.strip()) > 2
+                    ]
+
+                    logger.info(
+                        f"🔤 IPL method tokens={method_tokens}"
+                    )
+
+                    for r in rows:
+
+                        desc = (
+                            r.get("description", "")
+                            or ""
+                        ).lower()
+
+                        if any(
+                            token in desc
+                            for token in method_tokens
+                        ):
+
+                            matched.append(r)
+
+                    logger.info(
+                        f"✅ IPL method matches={len(matched)}"
+                    )
+
+                    logger.info(
+                        f"📦 IPL method codes="
+                        f"{[m['code'] for m in matched]}"
+                    )
+
+                    if matched:
+                        return matched
+
+                # =====================================================
+                # 🔴 SCENARIO 2 → AREA
+                # =====================================================
+                if treatment_area:
+
+                    logger.info(
+                        "🧠 IPL scenario=AREA"
+                    )
+
+                    filtered = []
+
+                    for r in rows:
+
+                        try:
+
+                            min_s = (
+                                float(r.get("minSize") or 0)
+                            )
+
+                            max_s = (
+                                float(r.get("maxSize") or 999999)
+                            )
+
+                            if min_s <= treatment_area <= max_s:
+
+                                filtered.append(r)
+
+                        except Exception as e:
+
+                            logger.warning(
+                                f"⚠️ IPL area filter failed "
+                                f"for code={r.get('code')} | {e}"
+                            )
+
+                            continue
+
+                    logger.info(
+                        f"✅ IPL area matches={len(filtered)}"
+                    )
+
+                    logger.info(
+                        f"📦 IPL area codes="
+                        f"{[m['code'] for m in filtered]}"
+                    )
+
+                    if filtered:
+                        return filtered
+
+                # =====================================================
+                # 🔴 SCENARIO 3 → DEFAULT 96920
+                # =====================================================
+                logger.info(
+                    "🧠 IPL scenario=DEFAULT_96920"
+                )
+
+                fallback = [
+                    r for r in rows
+                    if r.get("code") == "96920"
+                ]
+
+                logger.info(
+                    f"✅ IPL fallback codes="
+                    f"{[m['code'] for m in fallback]}"
+                )
+
+                return fallback
+
+        except Exception as e:
+
+            logger.exception(
+                f"❌ IPL filter failed: {e}"
+            )
+
+            return []

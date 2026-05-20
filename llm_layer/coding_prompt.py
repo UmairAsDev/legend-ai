@@ -481,6 +481,46 @@ is missing or empty:
 - use diagnosis/location for filtering
 
 --------------------------------------------------
+🔴 IPL LOGIC
+
+1. Identify EACH IPL procedure
+
+2. Extract:
+   - Method
+   - Location
+   - Quantity
+   - Treatment Area
+
+3. CPT ASSIGNMENT PRIORITY:
+
+PRIORITY 1:
+- If Method exists:
+  assign CPT whose description matches method
+
+Examples:
+- Rosacea
+- Skin Rejuvenation
+
+PRIORITY 2:
+- If no method:
+  assign CPT using treatment area range
+  using:
+    - minSize
+    - maxSize
+
+PRIORITY 3:
+- If no area:
+  assign default CPT:
+    96920
+
+4. VALIDATION
+
+❌ NEVER:
+- hallucinate IPL codes
+- assign CPT outside retrieved IPL candidates
+- ignore method when present
+
+--------------------------------------------------
 🔴 DEBRIDEMENT LOGIC (STRICT)
 
 If debridement (DBR) is mentioned:

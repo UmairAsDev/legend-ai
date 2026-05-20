@@ -21,7 +21,6 @@ from utils.engine_utils import (
 # =========================
 # 🔹 NODE CLASS (LangGraph)
 # =========================
-
 class CodingNodes:
 
     def __init__(self):
@@ -37,9 +36,7 @@ class CodingNodes:
     async def fetch(self, state):
         try:
             logger.info(f"📥 Fetching note: {state['note_id']}")
-
             data = await notes(state["note_id"])
-
             if not data:
                 raise ValueError("Note not found")
 
@@ -117,7 +114,6 @@ class CodingNodes:
         try:
             parsed = state.get("parsed", {})
             cleaned = state.get("cleaned_note", {})
-
             logger.info(f"🧠 Retrieval Decision | Parsed: {parsed}")
 
             all_candidates = []
@@ -152,7 +148,6 @@ class CodingNodes:
             if parsed.get("has_destruction"):
 
                 logger.info("🔴 DESTRUCTION DETECTED")
-
                 for sec in parsed.get("destruction_sections", []):
 
                     destruction_type = sec.get("destruction_type")
@@ -177,9 +172,7 @@ class CodingNodes:
                         location=location
                     )
 
-                    logger.info(
-                        f"↳ Retrieved {len(res)} destruction candidates"
-                    )
+                    logger.info(f"↳ Retrieved {len(res)} destruction candidates")
 
                     # -------------------------------------------------
                     # 🔴 CRITICAL FIX:
@@ -188,13 +181,9 @@ class CodingNodes:
                     for r in res:
 
                         r["source"] = f"destruction_{destruction_type}"
-
                         r["destruction_label"] = label
-
                         r["destruction_location"] = location
-
                         r["destruction_quantity"] = quantity
-
                         r["destruction_size"] = size
 
                     all_candidates.extend(res)
@@ -217,7 +206,6 @@ class CodingNodes:
             if parsed.get("has_shave_removal"):
 
                 logger.info("🔴 SHAVE REMOVAL DETECTED")
-
                 for sec in parsed.get(
                     "shave_removal_aggregated",
                     []
@@ -244,10 +232,7 @@ class CodingNodes:
             if parsed.get("has_laser_treatment"):
 
                 logger.info("🔴 LASER TREATMENT DETECTED")
-
-                procedure_text = (
-                    cleaned.get("procedure", "")
-                )
+                procedure_text = (cleaned.get("procedure", ""))
 
                 for sec in parsed.get(
                     "laser_treatment_sections",
@@ -265,25 +250,13 @@ class CodingNodes:
                         full_procedure_text=procedure_text
                     )
 
-                    logger.info(
-                        f"↳ Retrieved {len(res)} laser candidates"
-                    )
-
+                    logger.info(f"↳ Retrieved {len(res)} laser candidates")
                     for r in res:
 
                         r["source"] = "laser_treatment"
-
-                        r["laser_location"] = (
-                            sec.get("location")
-                        )
-
-                        r["laser_method"] = (
-                            sec.get("method")
-                        )
-
-                        r["laser_quantity"] = (
-                            sec.get("quantity")
-                        )
+                        r["laser_location"] = (sec.get("location"))
+                        r["laser_method"] = (sec.get("method"))
+                        r["laser_quantity"] = (sec.get("quantity"))
 
                     all_candidates.extend(res)
 
@@ -294,7 +267,6 @@ class CodingNodes:
             if parsed.get("has_xtrac"):
 
                 logger.info("🔴 XTRAC DETECTED")
-
                 for sec in parsed.get(
                     "xtrac_sections",
                     []
@@ -305,31 +277,72 @@ class CodingNodes:
                         f"area={sec.get('total_area')}"
                     )
 
-                    res = await self.retriever.xtrac_filter(
-                        total_area=sec.get("total_area")
-                    )
-
-                    logger.info(
-                        f"↳ Retrieved {len(res)} xtrac candidates"
-                    )
+                    res = await self.retriever.xtrac_filter(total_area=sec.get("total_area"))
+                    logger.info(f"↳ Retrieved {len(res)} xtrac candidates")
 
                     for r in res:
 
                         r["source"] = "xtrac"
-
-                        r["xtrac_area"] = (
-                            sec.get("total_area")
-                        )
-
-                        r["xtrac_location"] = (
-                            sec.get("location")
-                        )
-
-                        r["xtrac_quantity"] = (
-                            sec.get("quantity")
-                        )
+                        r["xtrac_area"] = (sec.get("total_area"))
+                        r["xtrac_location"] = (sec.get("location"))
+                        r["xtrac_quantity"] = (sec.get("quantity"))
 
                     all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 IPL
+            # -------------------------
+            if parsed.get("has_ipl"):
+
+                logger.info("🔴 IPL DETECTED")
+
+                has_structured_match = False
+
+                for sec in parsed.get(
+                    "ipl_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 IPL section → "
+                            f"location={sec.get('location')} | "
+                            f"qty={sec.get('quantity')} | "
+                            f"method={sec.get('method')} | "
+                            f"area={sec.get('treatment_area')}"
+                        )
+
+                        res = await self.retriever.ipl_filter(
+                            section=sec
+                        )
+
+                        logger.info(
+                            f"🎯 IPL deterministic "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "ipl"
+                            r["ipl_location"] = sec.get("location")
+                            r["ipl_quantity"] = sec.get("quantity")
+                            r["ipl_method"] = sec.get("method")
+                            r["ipl_treatment_area"] = (
+                                sec.get("treatment_area")
+                            )
+
+                        if res:
+                            has_structured_match = True
+
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+
+                        logger.exception(
+                            f"❌ IPL retrieval failed: {e}"
+                        )
 
             # -------------------------
             # 🔴 MOHS (FINAL SAFE VERSION)
@@ -345,9 +358,7 @@ class CodingNodes:
                         logger.error("❌ Mohs location missing → fallback mode")
 
                     logger.info(f"📌 Mohs → location={location}")
-
                     res = await self.retriever.mohs_filter(location) or []
-
                     logger.info(f"   ↳ Mohs candidates: {len(res)}")
 
                     # tag source
@@ -457,9 +468,7 @@ class CodingNodes:
                 logger.info("🟡 PROCEDURE DETECTED → semantic search")
 
                 embedding = state["embedding"]
-
                 candidates = await self.retriever.search(embedding)
-
                 logger.info(f"⚠️ Procedure-based candidates: {len(candidates)}")
 
                 return {"candidates": candidates}
@@ -468,9 +477,7 @@ class CodingNodes:
             # ⚠️ FINAL FALLBACK
             # -------------------------
             logger.warning("⚠️ FALLBACK SEARCH TRIGGERED")
-
             candidates = await self.retriever.search(state["embedding"])
-
             logger.info(f"⚠️ Fallback candidates: {len(candidates)}")
 
             return {"candidates": candidates}
@@ -495,9 +502,9 @@ class CodingNodes:
             logger.exception(f"❌ Rerank failed: {e}")
             raise
 
-    # -------------------------
+    # ------------------------------
     # 🔹 LLM CALL (JsonOutputParser)
-    # -------------------------
+    # ------------------------------
     async def llm_call(self, state):
         try:
             logger.info("🧠 Calling LLM with structured parser")
@@ -506,7 +513,7 @@ class CodingNodes:
             prompt, parser, formatted_prompt = build_coding_prompt(
                 {
                     "note": state["cleaned_note"],
-                    "parsed": state["parsed"]   # ✅ CRITICAL
+                    "parsed": state["parsed"]   
                 },
                 state["candidates"]
             )
@@ -516,8 +523,6 @@ class CodingNodes:
                 formatted_prompt,
                 parser=parser
             )
-
-            # 🔴 HARD FIXES (GUARANTEED OUTPUT NORMALIZATION)
 
             # -------------------------------------------------
             # 🔴 EXCISION QUANTITY
@@ -545,10 +550,7 @@ class CodingNodes:
                 llm_output=result
             )
 
-            logger.success(
-                "✅ All deterministic enforcement rules applied"
-            )
-
+            logger.success("✅ All deterministic enforcement rules applied")
             return {"llm_output": result}
 
         except Exception as e:
