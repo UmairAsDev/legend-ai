@@ -23564,3 +23564,71 @@ sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.Program
 2026-05-20 18:32:42.324 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
 2026-05-20 18:32:42.324 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
 2026-05-20 18:32:42.324 | SUCCESS  | app.services.medical_engine:llm_call:553 - ✅ All deterministic enforcement rules applied
+2026-05-20 18:38:38.075 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 611782
+2026-05-20 18:38:38.159 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 611782
+2026-05-20 18:38:43.078 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 611782
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_closure_sections:166 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_closure_sections:184 - 📏 Total closure size matches: 0
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_closure_sections:278 - 📊 FINAL CLOSURES: []
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_destruction_sections:458 - 🔍 Extracting destruction sections...
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_destruction_sections:604 - 📊 Total destruction sections: 0
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_ipl_sections:945 - 🔍 Extracting IPL sections...
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_ipl_sections:955 - 📦 IPL blocks detected=2
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_ipl_sections:971 - 🔍 Processing IPL block 2
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_ipl_sections:1054 - ✅ IPL parsed | location=left and right Cheek | qty=1 | method=None | area=None
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_ipl_sections:1079 - 📊 FINAL IPL sections=1
+2026-05-20 18:38:43.687 | INFO     | services.clinical_parser:extract_ipl_sections:1083 - 📊 IPL DATA=[{'label': 'ipl_2', 'text': 'Intense Pulsed Light (IPL)\nLocation: left and right Cheek\nQuantity: 1\nLaser Type: ND:YAG\nDose: 10.5 J to the right cheek and 11 J to the left cheek\xa0\nConsent obtained, all risks and benefits discussed Options discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options and risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation. Patient tolerated procedure well and post procedure care given.', 'location': 'left and right Cheek', 'quantity': 1, 'method': None, 'treatment_area': None}]
+2026-05-20 18:38:43.697 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-20 18:38:43.698 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-20 18:38:43.701 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-20 18:38:43.701 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-20 18:38:43.702 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-20 18:38:45.160 | INFO     | app.services.medical_engine:retrieve:117 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_ipl': True, 'ipl_sections': [{'label': 'ipl_2', 'text': 'Intense Pulsed Light (IPL)\nLocation: left and right Cheek\nQuantity: 1\nLaser Type: ND:YAG\nDose: 10.5 J to the right cheek and 11 J to the left cheek\xa0\nConsent obtained, all risks and benefits discussed Options discussed with patient. Informed patient the possible risks of treatment which includes but not limited to erythema, edema, infection, blisters,erosions, ulceration, necrosis, allergic reactions, delayed healing, hyperpigmentation/ hypopigmentation, scarring, matting, staining, bruising, recurrence of problems and/or no treatment effects. After discussion of various treatment options and risks and benefits the following management was instituted and the patient agreed to proceed. Written consent signed after explanation. Patient tolerated procedure well and post procedure care given.', 'location': 'left and right Cheek', 'quantity': 1, 'method': None, 'treatment_area': None}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-20 18:38:45.161 | INFO     | app.services.medical_engine:retrieve:298 - 🔴 IPL DETECTED
+2026-05-20 18:38:45.161 | INFO     | app.services.medical_engine:retrieve:309 - 📌 IPL section → location=left and right Cheek | qty=1 | method=None | area=None
+2026-05-20 18:38:45.161 | INFO     | services.retriever:ipl_filter:1384 - 🎯 IPL filter | method= | area=None
+2026-05-20 18:38:50.722 | INFO     | services.retriever:ipl_filter:1419 - 📦 IPL raw candidates=14
+2026-05-20 18:38:50.722 | INFO     | services.retriever:ipl_filter:1422 - 📦 IPL RAW CODES=['CI001', '96920', '96921', '96922', 'CI002', 'CI003', 'CI004', 'CI005', 'CI007', 'CI008', 'CI009', 'CI010', 'CI011', 'CI013']
+2026-05-20 18:38:50.723 | INFO     | services.retriever:ipl_filter:1524 - 🧠 IPL scenario=DEFAULT_96920
+2026-05-20 18:38:50.723 | INFO     | services.retriever:ipl_filter:1533 - ✅ IPL fallback codes=['96920']
+2026-05-20 18:38:50.946 | INFO     | app.services.medical_engine:retrieve:321 - 🎯 IPL deterministic candidates=1
+2026-05-20 18:38:50.946 | INFO     | app.services.medical_engine:retrieve:460 - ✅ Total combined candidates (deduped): 1
+2026-05-20 18:38:50.947 | INFO     | app.services.medical_engine:llm_call:510 - 🧠 Calling LLM with structured parser
+2026-05-20 18:38:53.607 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-20 18:38:53.608 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-20 18:38:53.610 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-20 18:38:53.610 | SUCCESS  | app.services.medical_engine:llm_call:553 - ✅ All deterministic enforcement rules applied
+2026-05-20 18:56:11.232 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 649177
+2026-05-20 18:56:11.258 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 649177
+2026-05-20 18:56:13.380 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 649177
+2026-05-20 18:56:14.020 | INFO     | services.clinical_parser:extract_closure_sections:166 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-05-20 18:56:14.021 | INFO     | services.clinical_parser:extract_closure_sections:184 - 📏 Total closure size matches: 0
+2026-05-20 18:56:14.021 | INFO     | services.clinical_parser:extract_closure_sections:278 - 📊 FINAL CLOSURES: []
+2026-05-20 18:56:14.023 | INFO     | services.clinical_parser:extract_destruction_sections:458 - 🔍 Extracting destruction sections...
+2026-05-20 18:56:14.024 | INFO     | services.clinical_parser:extract_destruction_sections:604 - 📊 Total destruction sections: 0
+2026-05-20 18:56:14.024 | INFO     | services.clinical_parser:extract_ipl_sections:945 - 🔍 Extracting IPL sections...
+2026-05-20 18:56:14.024 | INFO     | services.clinical_parser:extract_ipl_sections:955 - 📦 IPL blocks detected=2
+2026-05-20 18:56:14.024 | INFO     | services.clinical_parser:extract_ipl_sections:971 - 🔍 Processing IPL block 2
+2026-05-20 18:56:14.031 | INFO     | services.clinical_parser:extract_ipl_sections:1054 - ✅ IPL parsed | location=bilateral cheeks Face | qty=1 | method=None | area=None
+2026-05-20 18:56:14.031 | INFO     | services.clinical_parser:extract_ipl_sections:1079 - 📊 FINAL IPL sections=1
+2026-05-20 18:56:14.031 | INFO     | services.clinical_parser:extract_ipl_sections:1083 - 📊 IPL DATA=[{'label': 'ipl_2', 'text': 'Intense Pulsed Light (IPL)\nLocation: bilateral cheeks Face\nQuantity: 1', 'location': 'bilateral cheeks Face', 'quantity': 1, 'method': None, 'treatment_area': None}]
+2026-05-20 18:56:14.031 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-05-20 18:56:14.031 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-05-20 18:56:14.040 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-05-20 18:56:14.040 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-05-20 18:56:14.043 | INFO     | utils.engine_utils:aggregate_shave_removals:490 - 🪒 Aggregated shave removals: []
+2026-05-20 18:56:16.441 | INFO     | app.services.medical_engine:retrieve:117 - 🧠 Retrieval Decision | Parsed: {'has_biopsy': False, 'biopsy_sections': [], 'has_excision': False, 'excision_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_closure': False, 'closure_sections': [], 'has_srt': False, 'srt_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_ipl': True, 'ipl_sections': [{'label': 'ipl_2', 'text': 'Intense Pulsed Light (IPL)\nLocation: bilateral cheeks Face\nQuantity: 1', 'location': 'bilateral cheeks Face', 'quantity': 1, 'method': None, 'treatment_area': None}], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': []}
+2026-05-20 18:56:16.445 | INFO     | app.services.medical_engine:retrieve:298 - 🔴 IPL DETECTED
+2026-05-20 18:56:16.445 | INFO     | app.services.medical_engine:retrieve:309 - 📌 IPL section → location=bilateral cheeks Face | qty=1 | method=None | area=None
+2026-05-20 18:56:16.448 | INFO     | services.retriever:ipl_filter:1384 - 🎯 IPL filter | method= | area=None
+2026-05-20 18:56:21.013 | INFO     | services.retriever:ipl_filter:1419 - 📦 IPL raw candidates=14
+2026-05-20 18:56:21.016 | INFO     | services.retriever:ipl_filter:1422 - 📦 IPL RAW CODES=['CI001', '96920', '96921', '96922', 'CI002', 'CI003', 'CI004', 'CI005', 'CI007', 'CI008', 'CI009', 'CI010', 'CI011', 'CI013']
+2026-05-20 18:56:21.016 | INFO     | services.retriever:ipl_filter:1524 - 🧠 IPL scenario=DEFAULT_96920
+2026-05-20 18:56:21.016 | INFO     | services.retriever:ipl_filter:1533 - ✅ IPL fallback codes=['96920']
+2026-05-20 18:56:21.239 | INFO     | app.services.medical_engine:retrieve:321 - 🎯 IPL deterministic candidates=1
+2026-05-20 18:56:21.239 | INFO     | app.services.medical_engine:retrieve:460 - ✅ Total combined candidates (deduped): 1
+2026-05-20 18:56:21.250 | INFO     | app.services.medical_engine:llm_call:510 - 🧠 Calling LLM with structured parser
+2026-05-20 18:56:25.451 | INFO     | utils.engine_utils:enforce_closure_addon:191 - 🔧 Enforcing closure add-ons (SAFE MODE)...
+2026-05-20 18:56:25.452 | INFO     | utils.engine_utils:enforce_destruction_quantity:325 - 🔧 Enforcing destruction quantities...
+2026-05-20 18:56:25.452 | INFO     | utils.engine_utils:enforce_destruction_quantity:330 - ℹ️ No destruction sections found
+2026-05-20 18:56:25.452 | SUCCESS  | app.services.medical_engine:llm_call:553 - ✅ All deterministic enforcement rules applied
