@@ -455,3 +455,41 @@ def enforce_destruction_quantity(
         )
 
         return llm_output
+    
+
+# =========================================================
+# 🔹 AGGREGATE SHAVE REMOVALS
+# =========================================================
+def aggregate_shave_removals(parsed):
+
+    grouped = {}
+
+    for sec in parsed.get("shave_removal_sections", []):
+
+        key = (
+            sec.get("location_group"),
+            sec.get("size")
+        )
+
+        grouped.setdefault(key, {
+            "location_group": sec.get("location_group"),
+            "size": sec.get("size"),
+            "quantity": 0,
+            "locations": []
+        })
+
+        grouped[key]["quantity"] += 1
+        grouped[key]["locations"].append(
+            sec.get("location")
+        )
+
+    parsed["shave_removal_aggregated"] = (
+        list(grouped.values())
+    )
+
+    logger.info(
+        f"🪒 Aggregated shave removals: "
+        f"{parsed['shave_removal_aggregated']}"
+    )
+
+    return parsed

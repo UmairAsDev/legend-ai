@@ -158,6 +158,71 @@ VALIDATION:
    - Total CPT quantity MUST equal total biopsy count
 
 --------------------------------------------------
+🔴 SHAVE REMOVAL LOGIC
+
+1. Identify EACH shave removal section
+
+2. LOCATION GROUPS:
+
+TRUNK:
+- trunk
+- arms
+- legs
+
+FACE:
+- face
+- ears
+- eyelids
+- nose
+- lips
+- mucous membrane
+
+SPECIAL:
+- scalp
+- neck
+- hands
+- feet
+- genitalia
+
+3. SIZE PRIORITY:
+
+FIRST:
+→ Excision Size, including margins
+
+SECOND:
+→ Lesion Size
+
+If X × Y:
+→ use MAX(X,Y)
+
+4. CPT ASSIGNMENT:
+
+- Match:
+  ✔ anatomical group
+  ✔ size range
+
+- If NO size exists:
+  ✔ assign smallest/base code
+  ✔ according to anatomical group only
+
+5. MULTIPLE SHAVE REMOVALS:
+
+If:
+- SAME CPT
+- SAME Dx
+- SAME location group
+
+→ MERGE
+→ quantity = total lesions
+
+6. VALIDATION:
+
+❌ NEVER:
+- assign wrong anatomical group
+- assign higher size bracket incorrectly
+- separate identical shave removals unnecessarily
+
+--------------------------------------------------
 🔴 MOHS LOGIC (STRICT – OVERRIDES GENERAL RULES)
 
 If mohsNotes present:
@@ -324,6 +389,136 @@ If SRT or IGSRT is mentioned in procedure:
 ❌ NEVER:
    - assign both 77437 and 77438
    - skip 77436
+
+--------------------------------------------------
+🔴 LASER TREATMENT LOGIC
+
+1. Identify EACH laser treatment section
+
+2. REQUIRED:
+- Location
+
+3. OPTIONAL:
+- Method
+
+4. CPT MATCHING PRIORITY:
+
+STEP 1:
+- Match method directly to retrieved CPT description
+
+Examples:
+- tattoo → CL002
+- rosacea → 96920
+
+STEP 2:
+If method missing:
+- Search procedure text for keywords
+- Match keywords against retrieved CPT descriptions
+
+Examples:
+- "spider veins" → CL005
+- "birthmark" → CL011
+
+STEP 3:
+If NO keyword or method matches:
+→ assign default code:
+CL001
+
+5. GROUPING:
+
+Same:
+- CPT
+- Dx
+- Location
+
+→ merge quantity
+
+Different location:
+→ separate CPT entries
+
+6. VALIDATION:
+
+❌ NEVER:
+- hallucinate laser codes
+- assign non-retrieved laser CPT
+- assign rosacea code unless rosacea mentioned
+- assign tattoo removal unless tattoo 
+
+--------------------------------------------------
+🔴 XTRAC LASER LOGIC
+
+1. Xtrac CPT assignment depends ONLY on:
+- Total body surface area treated (sq.cm)
+
+2. Use ONLY retrieved Xtrac codes:
+- 96920
+- 96921
+- 96922
+
+3. RANGE LOGIC:
+
+96920:
+< 250 sq cm
+
+96921:
+250 - 500 sq cm
+
+96922:
+> 500 sq cm
+
+4. If:
+"Total body surface area treated (sq.cm)"
+is missing or empty:
+
+→ assign 96920
+
+5. VALIDATION:
+
+❌ NEVER:
+- require location
+- hallucinate Xtrac codes
+- assign non-retrieved codes
+- use diagnosis/location for filtering
+
+--------------------------------------------------
+🔴 IPL LOGIC
+
+1. Identify EACH IPL procedure
+
+2. Extract:
+   - Method
+   - Location
+   - Quantity
+   - Treatment Area
+
+3. CPT ASSIGNMENT PRIORITY:
+
+PRIORITY 1:
+- If Method exists:
+  assign CPT whose description matches method
+
+Examples:
+- Rosacea
+- Skin Rejuvenation
+
+PRIORITY 2:
+- If no method:
+  assign CPT using treatment area range
+  using:
+    - minSize
+    - maxSize
+
+PRIORITY 3:
+- If no area:
+  assign default CPT:
+    96920
+
+4. VALIDATION
+
+❌ NEVER:
+- hallucinate IPL codes
+- assign CPT outside retrieved IPL candidates
+- ignore method when present
 
 --------------------------------------------------
 🔴 DEBRIDEMENT LOGIC (STRICT)

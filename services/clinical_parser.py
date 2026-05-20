@@ -8,10 +8,15 @@ from utils.parser_utils import (
     DESTRUCTION_KEYWORDS,
     EXCISION_KEYWORDS,
     BIOPSY_KEYWORDS,
+    SHAVE_KEYWORDS,
+    LASER_KEYWORDS,
+    IPL_METHOD_MAP,
+    IPL_KEYWORDS,
+    XTRAC_KEYWORDS,
     WOUND_KEYWORDS,
     MOHS_KEYWORDS,
     DERM_KEYWORDS,
-    SRT_KEYWORDS
+    SRT_KEYWORDS,
 )
 
 class ClinicalParser:
@@ -599,6 +604,495 @@ class ClinicalParser:
         logger.info(f"📊 Total destruction sections: {len(sections)}")
 
         return sections
+    
+
+    # =========================================================
+    # 🔹 SHAVE REMOVAL EXTRACTION
+    # =========================================================
+    def extract_shave_removal_sections(self, text: str):
+
+        if not text:
+            return []
+
+        logger.info("🔍 Extracting shave removal sections...")
+
+        sections = []
+
+        blocks = re.split(
+            r"(?=Clinical Diagnosis:)",
+            text,
+            flags=re.IGNORECASE
+        )
+
+        for i, block in enumerate(blocks):
+
+            block_lower = block.lower()
+
+            # -------------------------
+            # BASIC VALIDATION
+            # -------------------------
+            if "shave" not in block_lower:
+                continue
+
+            # -------------------------
+            # LOCATION (REQUIRED)
+            # -------------------------
+            loc_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                block,
+                re.IGNORECASE
+            )
+
+            location = (
+                loc_match.group(1).strip()
+                if loc_match else ""
+            )
+
+            if not location:
+                logger.warning(
+                    "⚠️ Skipping shave section → missing location"
+                )
+                continue
+
+            # -------------------------
+            # METHOD (REQUIRED)
+            # -------------------------
+            method_match = re.search(
+                r"Method:\s*([^\n\r]+)",
+                block,
+                re.IGNORECASE
+            )
+
+            method = (
+                method_match.group(1).strip()
+                if method_match else ""
+            )
+
+            if not method:
+                logger.warning(
+                    "⚠️ Skipping shave section → missing method"
+                )
+                continue
+
+            try:
+
+                location_group = (
+                    self.utils.classify_shave_location_group(location)
+                )
+
+                size = None
+
+                # PRIORITY 1
+                exc_match = re.search(
+                    r"Excision Size.*?:\s*([^\n\r]+)",
+                    block,
+                    re.IGNORECASE
+                )
+
+                if exc_match:
+                    size = self.utils.extract_max_dimension(
+                        exc_match.group(1)
+                    )
+
+                # PRIORITY 2
+                if size is None:
+
+                    lesion_match = re.search(
+                        r"Lesion Size.*?:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    if lesion_match:
+                        size = self.utils.extract_max_dimension(
+                            lesion_match.group(1)
+                        )
+
+                logger.info(
+                    f"✅ Shave parsed | "
+                    f"group={location_group} | "
+                    f"size={size} | "
+                    f"location={location}"
+                )
+
+                sections.append({
+                    "label": f"shave_{i+1}",
+                    "text": block,
+                    "location": location,
+                    "location_group": location_group,
+                    "size": size,
+                    "quantity": 1
+                })
+
+            except Exception as e:
+                logger.warning(
+                    f"⚠️ Failed parsing shave block: {e}"
+                )
+
+        logger.info(
+            f"📊 Total shave sections: {len(sections)}"
+        )
+
+        return sections
+    
+
+    # =========================================================
+    # 🔹 LASER TREATMENT EXTRACTION
+    # =========================================================
+    def extract_laser_treatment_sections(self, text: str):
+
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        # -------------------------------------------------
+        # 🔴 DETECT LASER PRESENCE
+        # -------------------------------------------------
+        laser_present = (
+            "laser treatment" in text_lower
+            and "xtrac laser treatment" not in text_lower
+        )
+
+        if not laser_present:
+            return []
+
+        logger.info("🔍 Extracting laser treatment sections...")
+
+        sections = []
+
+        try:
+
+            # -------------------------------------------------
+            # 🔴 LOCATION (OPTIONAL)
+            # -------------------------------------------------
+            loc_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            location = (
+                loc_match.group(1).strip()
+                if loc_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 METHOD (OPTIONAL)
+            # -------------------------------------------------
+            method_match = re.search(
+                r"Method:\s*([^\n\r]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            method = (
+                method_match.group(1).strip()
+                if method_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 QUANTITY
+            # -------------------------------------------------
+            qty_match = re.search(
+                r"Quantity:\s*(\d+)",
+                text,
+                re.IGNORECASE
+            )
+
+            quantity = (
+                int(qty_match.group(1))
+                if qty_match else 1
+            )
+
+            logger.info(
+                f"✅ Laser parsed | "
+                f"location={location} | "
+                f"method={method} | "
+                f"qty={quantity}"
+            )
+
+            sections.append({
+                "label": "laser_1",
+                "text": text,
+                "location": location,
+                "method": method,
+                "quantity": quantity
+            })
+
+        except Exception as e:
+
+            logger.warning(
+                f"⚠️ Laser parsing failed: {e}"
+            )
+
+        logger.info(
+            f"📊 Total laser sections: {len(sections)}"
+        )
+
+        return sections
+    
+
+    # =========================================================
+    # 🔹 XTRAC LASER EXTRACTION
+    # =========================================================
+    def extract_xtrac_sections(self, text: str):
+
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        if not any(k in text_lower for k in XTRAC_KEYWORDS):
+            return []
+
+        logger.info("🔍 Extracting Xtrac sections...")
+
+        sections = []
+
+        try:
+
+            # -------------------------------------------------
+            # 🔴 LOCATION (OPTIONAL)
+            # -------------------------------------------------
+            loc_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            location = (
+                loc_match.group(1).strip()
+                if loc_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 QUANTITY
+            # -------------------------------------------------
+            qty_match = re.search(
+                r"Quantity:\s*(\d+)",
+                text,
+                re.IGNORECASE
+            )
+
+            quantity = (
+                int(qty_match.group(1))
+                if qty_match else 1
+            )
+
+            # -------------------------------------------------
+            # 🔴 TOTAL BODY SURFACE AREA
+            # -------------------------------------------------
+            area_match = re.search(
+                r"Total\s*body\s*surface\s*area\s*treated\s*\(sq\.?cm\)\s*:\s*([\d\.]+)",
+                text,
+                re.IGNORECASE
+            )
+
+            total_area = None
+
+            if area_match:
+                try:
+                    total_area = float(area_match.group(1))
+                except:
+                    total_area = None
+
+            logger.info(
+                f"✅ Xtrac parsed | "
+                f"location={location} | "
+                f"qty={quantity} | "
+                f"area={total_area}"
+            )
+
+            sections.append({
+                "label": "xtrac_1",
+                "text": text,
+                "location": location,
+                "quantity": quantity,
+                "total_area": total_area
+            })
+
+        except Exception as e:
+
+            logger.warning(
+                f"⚠️ Xtrac parsing failed: {e}"
+            )
+
+        logger.info(
+            f"📊 Total xtrac sections: {len(sections)}"
+        )
+
+        return sections
+    
+
+    # =========================================================
+    # 🔹 IPL EXTRACTION
+    # =========================================================
+    def extract_ipl_sections(self, text: str):
+
+        try:
+
+            if not text:
+                logger.warning("⚠️ IPL parser received empty text")
+                return []
+
+            text_lower = text.lower()
+
+            if not any(k in text_lower for k in IPL_KEYWORDS):
+                logger.info("ℹ️ No IPL keywords detected")
+                return []
+
+            logger.info("🔍 Extracting IPL sections...")
+
+            sections = []
+
+            blocks = re.split(
+                r"(?=Intense Pulsed Light\s*\(IPL\))",
+                text,
+                flags=re.IGNORECASE
+            )
+
+            logger.info(f"📦 IPL blocks detected={len(blocks)}")
+
+            for i, block in enumerate(blocks):
+
+                try:
+
+                    block = block.strip()
+
+                    if not block:
+                        continue
+
+                    block_lower = block.lower()
+
+                    if "ipl" not in block_lower:
+                        continue
+
+                    logger.info(f"🔍 Processing IPL block {i+1}")
+
+                    # -------------------------------------------------
+                    # 🔴 LOCATION
+                    # -------------------------------------------------
+                    loc_match = re.search(
+                        r"Location:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    location = (
+                        loc_match.group(1).strip()
+                        if loc_match else ""
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 QUANTITY
+                    # -------------------------------------------------
+                    qty_match = re.search(
+                        r"Quantity:\s*(\d+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    quantity = (
+                        int(qty_match.group(1))
+                        if qty_match else 1
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 METHOD
+                    # -------------------------------------------------
+                    method_match = re.search(
+                        r"Method:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    method = (
+                        method_match.group(1).strip()
+                        if method_match else None
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 METHOD NORMALIZATION
+                    # -------------------------------------------------
+                    normalized_method = None
+
+                    if method:
+
+                        method_lower = method.lower()
+
+                        for key, value in IPL_METHOD_MAP.items():
+
+                            if key in method_lower:
+                                normalized_method = value
+                                break
+
+                        if not normalized_method:
+                            normalized_method = method_lower
+
+                    # -------------------------------------------------
+                    # 🔴 TREATMENT AREA
+                    # -------------------------------------------------
+                    area_match = re.search(
+                        r"(?:Treatment Area|Total\s*Area|Area)\s*(?:\(sq\.?\s*cm\))?\s*:\s*([\d\.]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    treatment_area = None
+
+                    if area_match:
+
+                        try:
+                            treatment_area = float(area_match.group(1))
+                        except Exception as e:
+
+                            logger.warning(
+                                f"⚠️ IPL area conversion failed: {e}"
+                            )
+
+                    logger.info(
+                        f"✅ IPL parsed | "
+                        f"location={location} | "
+                        f"qty={quantity} | "
+                        f"method={normalized_method} | "
+                        f"area={treatment_area}"
+                    )
+
+                    sections.append({
+                        "label": f"ipl_{i+1}",
+                        "text": block,
+                        "location": location,
+                        "quantity": quantity,
+                        "method": normalized_method,
+                        "treatment_area": treatment_area
+                    })
+
+                except Exception as e:
+
+                    logger.exception(
+                        f"❌ IPL block parsing failed: {e}"
+                    )
+
+                    continue
+
+            logger.info(
+                f"📊 FINAL IPL sections={len(sections)}"
+            )
+
+            logger.info(
+                f"📊 IPL DATA={sections}"
+            )
+
+            return sections
+
+        except Exception as e:
+
+            logger.exception(
+                f"❌ IPL extraction failed: {e}"
+            )
+
+            return []
 
 
     # =========================================================
@@ -628,6 +1122,10 @@ class ClinicalParser:
         srt_data = self.extract_srt_sections(procedure_text, note)
         debridement_data = self.extract_debridement_sections(procedure_text)
         destruction_sections = self.extract_destruction_sections(procedure_text)
+        shave_sections = self.extract_shave_removal_sections(biopsy_text)
+        laser_sections = self.extract_laser_treatment_sections(procedure_text)
+        xtrac_sections = self.extract_xtrac_sections(procedure_text)
+        ipl_sections = self.extract_ipl_sections(procedure_text)
 
         return {
             "has_biopsy": bool(biopsy_data),
@@ -650,6 +1148,18 @@ class ClinicalParser:
 
             "has_destruction": len(destruction_sections) > 0,
             "destruction_sections": destruction_sections,
+
+            "has_shave_removal": len(shave_sections) > 0,
+            "shave_removal_sections": shave_sections,
+
+            "has_laser_treatment": len(laser_sections) > 0,
+            "laser_treatment_sections": laser_sections,
+
+            "has_xtrac": len(xtrac_sections) > 0,
+            "xtrac_sections": xtrac_sections,
+
+            "has_ipl": len(ipl_sections) > 0,
+            "ipl_sections": ipl_sections,
 
             "has_procedure": bool(procedure_text.strip())
         }

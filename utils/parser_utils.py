@@ -25,6 +25,173 @@ DESTRUCTION_KEYWORDS = [
     "cryosurgery", "electrodesiccation"
 ]
 
+SHAVE_KEYWORDS = [
+    "shave removal",
+    "shave biopsy",
+    "epidermal lesion shave",
+    "dermal lesion shave"
+]
+
+SHAVE_FACE_KEYWORDS = [
+    "face", "ear", "ears", "eyelid", "eyelids",
+    "nose", "lip", "lips", "mucous membrane"
+]
+
+SHAVE_SPECIAL_KEYWORDS = [
+    "scalp", "neck", "hand", "hands",
+    "foot", "feet", "genitalia"
+]
+
+SHAVE_TRUNK_KEYWORDS = [
+    "trunk", "arm", "arms", "leg", "legs"
+]
+
+LASER_KEYWORDS = [
+    "laser treatment",
+    "laser therapy",
+    "photofacial",
+    "laser resurfacing",
+    "laser removal"
+]
+
+LASER_METHOD_MAP = {
+    "hair reduction": [
+        "hair reduction",
+        "hair removal",
+        "lhr",
+        "diode"
+    ],
+
+    "tattoo removal": [
+        "tattoo"
+    ],
+
+    "vein treatment": [
+        "vein treatment",
+        "veins"
+    ],
+
+    "spider veins treatment": [
+        "spider veins",
+        "spider vein"
+    ],
+
+    "skin rejuvenation": [
+        "skin rejuvenation",
+        "rejuvenation"
+    ],
+
+    "skin resurfacing": [
+        "fraxel",
+        "fraxel co2",
+        "resurfacing",
+        "co2 laser"
+    ],
+
+    "rosacea": [
+        "rosacea"
+    ],
+
+    "melasma": [
+        "melasma"
+    ],
+
+    "acne": [
+        "acne",
+        "acne scar",
+        "atrophic scar"
+    ],
+
+    "age spots": [
+        "age spots",
+        "lentigo"
+    ],
+
+    "birthmark": [
+        "birthmark"
+    ],
+
+    "stretch marks": [
+        "stretch marks",
+        "striae"
+    ],
+
+    "photofacial": [
+        "photofacial",
+        "ipl"
+    ]
+}
+
+XTRAC_KEYWORDS = [
+    "xtrac",
+    "xtrac laser treatment",
+    "xtrac therapy"
+]
+
+IPL_KEYWORDS = [
+    "intense pulsed light",
+    "ipl"
+]
+
+IPL_METHOD_MAP = {
+
+    "hair reduction": [
+        "hair reduction",
+        "hair removal"
+    ],
+
+    "tattoo removal": [
+        "tattoo"
+    ],
+
+    "vein treatment": [
+        "vein"
+    ],
+
+    "spider veins treatment": [
+        "spider vein",
+        "spider veins"
+    ],
+
+    "skin rejuvenation": [
+        "skin rejuvenation",
+        "rejuvenation"
+    ],
+
+    "photorejuvenation treatment": [
+        "photorejuvenation"
+    ],
+
+    "rosacea treatment": [
+        "rosacea"
+    ],
+
+    "melasma treatment": [
+        "melasma"
+    ],
+
+    "acne treatment": [
+        "acne"
+    ],
+
+    "birthmark": [
+        "birthmark"
+    ],
+
+    "photofacial": [
+        "photofacial"
+    ],
+
+    "photorejuvenation treatment": [
+    "pigmented spots",
+    "lentigo",
+    "sun spots",
+    "photoaging",
+    "photodamage",
+    "pigmentation"
+    ]
+}
+
 class ParserUtils:
     # =========================================================
     # 🔹 NORMALIZE TEXT
@@ -205,3 +372,81 @@ class ParserUtils:
     def detect_keyword(self, text: str, keywords: List[str]) -> bool:
         text = self.normalize(text)
         return any(k in text for k in keywords)
+    
+
+    # =========================================================
+    # 🔹 EXTRACT SIZE FROM X x Y FORMAT
+    # =========================================================
+    def extract_max_dimension(self, text: str) -> float | None:
+
+        if not text:
+            return None
+
+        patterns = [
+            r"([\d\.]+)\s*[xX×]\s*([\d\.]+)",
+            r"([\d\.]+)\s*cm\s*[xX×]\s*([\d\.]+)\s*cm",
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+
+            if match:
+                try:
+                    vals = [
+                        float(match.group(1)),
+                        float(match.group(2))
+                    ]
+
+                    size = max(vals)
+
+                    logger.info(f"📏 Parsed shave size={size}")
+                    return size
+
+                except Exception:
+                    continue
+
+        # fallback single number
+        single = re.search(r"([\d\.]+)\s*cm", text, re.IGNORECASE)
+
+        if single:
+            try:
+                return float(single.group(1))
+            except:
+                pass
+
+        return None
+
+
+    # =========================================================
+    # 🔹 SHAVE LOCATION GROUP
+    # =========================================================
+    def classify_shave_location_group(self, location: str) -> str:
+
+        location = (location or "").lower()
+
+        if any(k in location for k in SHAVE_FACE_KEYWORDS):
+            return "face"
+
+        if any(k in location for k in SHAVE_SPECIAL_KEYWORDS):
+            return "special"
+
+        return "trunk"
+    
+
+    # =========================================================
+    # 🔹 NORMALIZE LASER METHOD
+    # =========================================================
+    def normalize_laser_method(self, text: str) -> str:
+
+        if not text:
+            return ""
+
+        text = text.lower().strip()
+
+        text = re.sub(r"laser", "", text)
+        text = re.sub(r"treatment", "", text)
+        text = re.sub(r"therapy", "", text)
+
+        text = re.sub(r"\s+", " ", text).strip()
+
+        return text

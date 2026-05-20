@@ -76,8 +76,8 @@ class CodeRetriever:
                         associatedWithProCode,
                         minQty,
                         maxQty,
-                        minSize,
-                        maxSize,
+                        CAST(minsize AS FLOAT) AS "minSize",
+                        CAST(maxsize AS FLOAT) AS "maxSize",
                         chargePerUnit,
                         embedding <-> CAST(:embedding AS vector) AS distance,
                         'cpt' AS type
@@ -130,8 +130,8 @@ class CodeRetriever:
                 associatedWithProCode,
                 minQty,
                 maxQty,
-                minSize,
-                maxSize,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
                 chargePerUnit,
                 0.0 AS distance,
                 'cpt' AS type
@@ -245,8 +245,8 @@ class CodeRetriever:
                 associatedWithProCode,
                 minQty,
                 maxQty,
-                minSize,
-                maxSize,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
                 chargePerUnit,
                 0.0 AS distance,
                 'cpt' AS type
@@ -580,8 +580,8 @@ class CodeRetriever:
                 associatedWithProCode,
                 minQty,
                 maxQty,
-                minSize,
-                maxSize,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
                 chargePerUnit,
                 0.0 AS distance,
                 'cpt' AS type
@@ -706,8 +706,8 @@ class CodeRetriever:
                 codeDesc AS description,
                 proName,
                 associatedWithProCode,
-                minSize,
-                maxSize,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
                 chargePerUnit,
                 0.0 AS distance,
                 'cpt' AS type
@@ -1003,3 +1003,544 @@ class CodeRetriever:
             return await self._destruction_malignant_filter(quantity, size, location)
 
         return []
+    
+
+    # =========================================================
+    # 🔹 SHAVE REMOVAL FILTER
+    # =========================================================
+    async def shave_removal_filter(
+        self,
+        location_group: str,
+        size: float | None
+    ):
+
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'shave removal'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            filtered = []
+
+            for r in rows:
+
+                try:
+
+                    desc = (
+                        r.get("description") or ""
+                    ).lower()
+
+                    # -------------------------
+                    # LOCATION FILTER
+                    # -------------------------
+                    if location_group == "face":
+
+                        if not any(k in desc for k in [
+                            "face", "ears", "eyelids",
+                            "nose", "lips", "mucous membrane"
+                        ]):
+                            continue
+
+                    elif location_group == "special":
+
+                        if not any(k in desc for k in [
+                            "scalp", "neck",
+                            "hands", "feet",
+                            "genitalia"
+                        ]):
+                            continue
+
+                    else:
+
+                        if not any(k in desc for k in [
+                            "trunk", "arms", "legs"
+                        ]):
+                            continue
+
+                    # -------------------------
+                    # SIZE FILTER
+                    # -------------------------
+                    if size is not None:
+
+                        min_s = float(r.get("minSize") or 0)
+                        max_s = float(r.get("maxSize") or 999)
+
+                        if not (min_s <= size <= max_s):
+                            continue
+
+                    filtered.append(r)
+
+                except Exception as e:
+                    logger.warning(
+                        f"⚠️ Shave filter failed: {e}"
+                    )
+
+            # -------------------------
+            # FALLBACK
+            # if no size → choose smallest code
+            # -------------------------
+            if size is None and filtered:
+
+                filtered = sorted(
+                    filtered,
+                    key=lambda x: float(x.get("maxSize") or 0)
+                )
+
+                return [filtered[0]]
+
+            logger.info(
+                f"✅ Shave candidates: {len(filtered)}"
+            )
+
+            return filtered
+        
+
+    # =========================================================
+    # 🔹 LASER TREATMENT FILTER
+    # =========================================================
+    async def laser_treatment_filter(
+        self,
+        section,
+        full_procedure_text: str
+    ):
+
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'laser treatment'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            logger.info(
+                f"📦 Raw laser candidates: {len(rows)}"
+            )
+
+            method = (
+                section.get("method") or ""
+            ).lower()
+
+            procedure_text = (
+                full_procedure_text or ""
+            ).lower()
+
+            # -------------------------------------------------
+            # 🔴 STEP 1
+            # METHOD MATCH
+            # -------------------------------------------------
+            if method:
+
+                normalized_method = re.sub(
+                    r"(laser|treatment|therapy)",
+                    "",
+                    method
+                ).strip()
+
+                logger.info(
+                    f"🔍 Laser method normalized="
+                    f"{normalized_method}"
+                )
+
+                matched = []
+
+                for r in rows:
+
+                    desc = (
+                        r.get("description") or ""
+                    ).lower()
+
+                    desc_clean = re.sub(
+                        r"(laser|treatment)",
+                        "",
+                        desc
+                    ).strip()
+
+                    if normalized_method in desc_clean:
+
+                        logger.info(
+                            f"✅ METHOD MATCH → "
+                            f"{r['code']}"
+                        )
+
+                        matched.append(r)
+
+                if matched:
+                    return matched
+
+            # -------------------------------------------------
+            # 🔴 STEP 2
+            # KEYWORD MATCH FROM PROCEDURE TEXT
+            # -------------------------------------------------
+            matched = []
+
+            for r in rows:
+
+                desc = (
+                    r.get("description") or ""
+                ).lower()
+
+                desc_clean = re.sub(
+                    r"(laser|treatment)",
+                    "",
+                    desc
+                ).strip()
+
+                keywords = [
+                    k.strip()
+                    for k in desc_clean.split()
+                    if len(k.strip()) > 3
+                ]
+
+                if any(k in procedure_text for k in keywords):
+
+                    logger.info(
+                        f"✅ PROCEDURE KEYWORD MATCH → "
+                        f"{r['code']}"
+                    )
+
+                    matched.append(r)
+
+            if matched:
+                return matched
+
+            # -------------------------------------------------
+            # 🔴 STEP 3
+            # DEFAULT CL001
+            # -------------------------------------------------
+            fallback = [
+                r for r in rows
+                if r.get("code") == "CL001"
+            ]
+
+            logger.info(
+                "⚠️ Laser fallback → CL001"
+            )
+
+            return fallback
+        
+
+    # =========================================================
+    # 🔹 XTRAC FILTER
+    # =========================================================
+    async def xtrac_filter(
+        self,
+        total_area: float | None
+    ):
+
+        async with get_db_session() as db:
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = 'xtrac laser treatment'
+            """
+
+            result = await db.execute(text(query))
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            logger.info(
+                f"📦 Raw Xtrac candidates: {len(rows)}"
+            )
+
+            # -------------------------------------------------
+            # 🔴 FALLBACK
+            # -------------------------------------------------
+            if total_area is None:
+
+                logger.warning(
+                    "⚠️ Missing Xtrac total area "
+                    "→ fallback 96920"
+                )
+
+                fallback = [
+                    r for r in rows
+                    if r.get("code") == "96920"
+                ]
+
+                return fallback
+
+            # -------------------------------------------------
+            # 🔴 RANGE FILTER
+            # -------------------------------------------------
+            filtered = []
+
+            for r in rows:
+
+                try:
+
+                    min_s = float(r.get("minSize") or 0)
+                    max_s = float(r.get("maxSize") or 999999)
+
+                    if min_s <= total_area <= max_s:
+
+                        logger.info(
+                            f"✅ Xtrac match → "
+                            f"{r['code']} | "
+                            f"area={total_area} | "
+                            f"range={min_s}-{max_s}"
+                        )
+
+                        filtered.append(r)
+
+                except Exception as e:
+
+                    logger.warning(
+                        f"⚠️ Xtrac filter failed "
+                        f"for code={r.get('code')} | {e}"
+                    )
+
+            # -------------------------------------------------
+            # 🔴 SAFETY FALLBACK
+            # -------------------------------------------------
+            if not filtered:
+
+                logger.warning(
+                    "⚠️ No Xtrac range match "
+                    "→ fallback 96920"
+                )
+
+                filtered = [
+                    r for r in rows
+                    if r.get("code") == "96920"
+                ]
+
+            logger.info(
+                f"🎯 FINAL Xtrac candidates: "
+                f"{[r['code'] for r in filtered]}"
+            )
+
+            return filtered
+        
+
+    # =========================================================
+    # 🔹 IPL FILTER
+    # =========================================================
+    async def ipl_filter(self, section):
+
+        try:
+
+            async with get_db_session() as db:
+
+                method = (
+                    section.get("method")
+                    or ""
+                ).lower().strip()
+
+                treatment_area = (
+                    section.get("treatment_area")
+                )
+
+                logger.info(
+                    f"🎯 IPL filter | "
+                    f"method={method} | "
+                    f"area={treatment_area}"
+                )
+
+                # =====================================================
+                # 🔴 LOAD IPL CODES
+                # =====================================================
+                query = """
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE
+                    LOWER(COALESCE(proName, '')) LIKE '%intense pulsed light%'
+                    OR proCode IN ('96920', '96921', '96922')
+            """
+
+                result = await db.execute(text(query))
+
+                rows = [
+                    self._clean_row(r)
+                    for r in result.mappings().all()
+                ]
+
+                logger.info(
+                    f"📦 IPL raw candidates={len(rows)}"
+                )
+                logger.info(
+                    f"📦 IPL RAW CODES={[r['code'] for r in rows]}"
+                )
+
+                # =====================================================
+                # 🔴 SCENARIO 1 → METHOD
+                # =====================================================
+                if method:
+
+                    logger.info(
+                        "🧠 IPL scenario=METHOD"
+                    )
+
+                    matched = []
+
+                    method_tokens = [
+                        t.strip()
+                        for t in method.split()
+                        if len(t.strip()) > 2
+                    ]
+
+                    logger.info(
+                        f"🔤 IPL method tokens={method_tokens}"
+                    )
+
+                    for r in rows:
+
+                        desc = (
+                            r.get("description", "")
+                            or ""
+                        ).lower()
+
+                        if any(
+                            token in desc
+                            for token in method_tokens
+                        ):
+
+                            matched.append(r)
+
+                    logger.info(
+                        f"✅ IPL method matches={len(matched)}"
+                    )
+
+                    logger.info(
+                        f"📦 IPL method codes="
+                        f"{[m['code'] for m in matched]}"
+                    )
+
+                    if matched:
+                        return matched
+
+                # =====================================================
+                # 🔴 SCENARIO 2 → AREA
+                # =====================================================
+                if treatment_area:
+
+                    logger.info(
+                        "🧠 IPL scenario=AREA"
+                    )
+
+                    filtered = []
+
+                    for r in rows:
+
+                        try:
+
+                            min_s = (
+                                float(r.get("minSize") or 0)
+                            )
+
+                            max_s = (
+                                float(r.get("maxSize") or 999999)
+                            )
+
+                            if min_s <= treatment_area <= max_s:
+
+                                filtered.append(r)
+
+                        except Exception as e:
+
+                            logger.warning(
+                                f"⚠️ IPL area filter failed "
+                                f"for code={r.get('code')} | {e}"
+                            )
+
+                            continue
+
+                    logger.info(
+                        f"✅ IPL area matches={len(filtered)}"
+                    )
+
+                    logger.info(
+                        f"📦 IPL area codes="
+                        f"{[m['code'] for m in filtered]}"
+                    )
+
+                    if filtered:
+                        return filtered
+
+                # =====================================================
+                # 🔴 SCENARIO 3 → DEFAULT 96920
+                # =====================================================
+                logger.info(
+                    "🧠 IPL scenario=DEFAULT_96920"
+                )
+
+                fallback = [
+                    r for r in rows
+                    if r.get("code") == "96920"
+                ]
+
+                logger.info(
+                    f"✅ IPL fallback codes="
+                    f"{[m['code'] for m in fallback]}"
+                )
+
+                return fallback
+
+        except Exception as e:
+
+            logger.exception(
+                f"❌ IPL filter failed: {e}"
+            )
+
+            return []
