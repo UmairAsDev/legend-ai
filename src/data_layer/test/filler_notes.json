@@ -198,5 +198,30 @@
     "physicianName": "Mahin Alamgir",
     "referringProvider": null,
     "billingProvider": "Babar Rao"
+  },
+  {
+    "noteId": 628030,
+    "provider": 61069,
+    "physician": 61069,
+    "referringPhysician": 0,
+    "noteDate": "2024-08-21 14:17:27",
+    "patientId": 186481,
+    "complaints": "Patient presents for filler to the lips.",
+    "pastHistory": "<p>Family hx Skin Cancer:  No</p><p>Family hx Melanoma: No</p><p>Alcohol: No</p><p>Smoker: Never smoker</p><p><strong style=\"color: rgb(230, 0, 0);\">Latex Allergy</strong></p><p>PregnantNo</p><p>NursingNo</p><p>Birth ControlNo</p>",
+    "assesment": "Aesthetics - Dermal Fillers\nFIllers done today.",
+    "reviewofsystem": "<p><span><b><u>Skin<br></u></b>See HPI</span></p><p><span><b><u>General<br></u></b>No fever, sweat or chills</span><span></span></p>",
+    "currentmedication": "None reported",
+    "procedure": "Filler Material (FIL)\nLocation: Lip\nQuantity: 1\nfiller type: RHA density\u00a0\nLot (Serial)# (21)22162GLO4618\nExpiration date: 2025-04-22\nQuantity used : 1ml\u00a0\nDiscussed benefits of procedure including improvement in wrinkles, lines, folds in the face, which may last for approximately 4-9 months, alternatives such as not doing any treatment, other forms of fillers, and risks of the procedure, which includes but is not limited to swelling, pain, itching, discoloration, bruising, asymmetry, and tenderness at the injection site. The patient was made aware that there may be increased bruising or discoloration with concurrent use of blood thinners, such as aspirin or other non-steroidal anti-inflammatory drugs such as Advil. The very rare risks of skin necrosis, granuloma, and blindness, especially if used around the eyes, nose, or frown lines. The development of visible lumps or nodules was discussed. The patient denied any history of allergies or hypersensitivity to components of fillers. The patient agreed to have the filler injection. Prior to the procedure, written informed consent was signed by the patient. After cleaning the area with alcohol, filler was injected. The patient tolerated the procedure well. Ice packs were placed on the area to prevent bruising. The patient was informed to call us for any signs of infection which includes redness, warmth, formation of lumps, and tender areas. The patient understood the instructions.",
+    "biopsyNotes": null,
+    "mohsNotes": null,
+    "allergy": "<span style=\"font-family: Arial; white-space-collapse: preserve;\">minoxidil</span>",
+    "examination": "- loss of volume to lips",
+    "patientSummary": "35 years old Female patient, Khouloud Olfert was seen on 08-21-2024 as a follow up patient.",
+    "diagnoses": "C002 Aesthetics Fillers",
+    "PlaceOfService": "Office",
+    "renderingProvider": "Attiya Haroon",
+    "physicianName": "Attiya Haroon",
+    "referringProvider": null,
+    "billingProvider": "Babar Rao"
   }
 ]

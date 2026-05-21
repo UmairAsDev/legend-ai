@@ -294,10 +294,7 @@ class CodingNodes:
             # 🔴 IPL
             # -------------------------
             if parsed.get("has_ipl"):
-
                 logger.info("🔴 IPL DETECTED")
-
-                has_structured_match = False
 
                 for sec in parsed.get(
                     "ipl_sections",
@@ -333,15 +330,58 @@ class CodingNodes:
                                 sec.get("treatment_area")
                             )
 
-                        if res:
-                            has_structured_match = True
-
                         all_candidates.extend(res)
 
                     except Exception as e:
 
                         logger.exception(
                             f"❌ IPL retrieval failed: {e}"
+                        )
+
+
+            # -------------------------
+            # 🔴 FILLER MATERIAL
+            # -------------------------
+            if parsed.get("has_filler_material"):
+                logger.info("🔴 FM DETECTED")
+
+                for sec in parsed.get(
+                    "filler_material_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 FM section → "
+                            f"location={sec.get('location')} | "
+                            f"qty={sec.get('quantity')} | "
+                            f"used_qty={sec.get('used_quantity')} | "
+                            
+                        )
+
+                        res = await self.retriever.filler_material_filter(
+                            section=sec
+                        )
+
+                        logger.info(
+                            f"🎯 FM deterministic "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "ipl"
+                            r["fm_location"] = sec.get("location")
+                            r["fm_quantity"] = sec.get("quantity")
+                            r["fm_used_qty"] = sec.get("used_quantity")
+                            
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+
+                        logger.exception(
+                            f"❌ FM retrieval failed: {e}"
                         )
 
             # -------------------------

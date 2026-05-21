@@ -2880,3 +2880,49 @@ During task with name 'retrieve' and id '6da88c3c-d92b-98fe-2e76-b3ba2423574b'
 2026-05-20 19:27:51.025 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 719086
 2026-05-20 19:27:51.034 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 727425
 2026-05-20 19:27:51.661 | INFO     | __main__:append_to_json:106 - 8 records processed | Total stored: 8
+2026-05-21 14:20:24.381 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-21 14:26:16.875 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-21 14:35:53.686 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-21 14:50:22.524 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-21 15:26:33.250 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-21 15:46:19.512 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'legendprod-writer.c1tzyznfnbpf.us-west-1.rds.amazonaws.com'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-05-21 16:02:52.449 | INFO     | __main__:append_to_json:83 - 1 records processed | Total stored: 1
+2026-05-21 16:04:09.738 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 520742
+2026-05-21 16:04:09.751 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 554570
+2026-05-21 16:04:09.770 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 584716
+2026-05-21 16:04:09.784 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 606615
+2026-05-21 16:04:09.787 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 628030
+2026-05-21 16:04:09.796 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 644850
+2026-05-21 16:04:09.803 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 682593
+2026-05-21 16:04:09.810 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 719086
+2026-05-21 16:04:09.815 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 727425
+2026-05-21 16:04:10.480 | INFO     | __main__:append_to_json:106 - 9 records processed | Total stored: 9
+2026-05-21 16:41:15.275 | INFO     | __main__:append_to_json:83 - 1 records processed | Total stored: 1
+2026-05-21 16:42:12.093 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 520742
+2026-05-21 16:42:12.108 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 554570
+2026-05-21 16:42:12.121 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 584716
+2026-05-21 16:42:12.128 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 606615
+2026-05-21 16:42:12.137 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 628030
+2026-05-21 16:42:12.153 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 644850
+2026-05-21 16:42:12.168 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 653424
+2026-05-21 16:42:12.168 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 682593
+2026-05-21 16:42:12.182 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 719086
+2026-05-21 16:42:12.194 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 727425
+2026-05-21 16:42:12.851 | INFO     | __main__:append_to_json:106 - 10 records processed | Total stored: 10
+2026-05-21 16:42:22.851 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 520742
+2026-05-21 16:42:22.851 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 554570
+2026-05-21 16:42:22.851 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 584716
+2026-05-21 16:42:22.864 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 606615
+2026-05-21 16:42:22.865 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 628030
+2026-05-21 16:42:22.870 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 644850
+2026-05-21 16:42:22.874 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 653424
+2026-05-21 16:42:22.877 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 682593
+2026-05-21 16:42:22.885 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 719086
+2026-05-21 16:42:22.891 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 727425
+2026-05-21 16:42:23.500 | INFO     | __main__:append_to_json:106 - 10 records processed | Total stored: 10

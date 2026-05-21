@@ -1093,6 +1093,144 @@ class ClinicalParser:
             )
 
             return []
+        
+
+
+    # =========================================================
+    # 🔹 FILLER MATERIAL EXTRACTION
+    # =========================================================
+    def extract_filler_material_sections(self, text: str):
+
+        try:
+
+            if not text:
+                logger.warning("⚠️ Filler material parser received empty text")
+                return []
+
+            text_lower = text.lower()
+
+            if not 'filler material' in text_lower:
+                logger.info("ℹ️ No filler material detected")
+                return []
+
+            logger.info("🔍 Extracting filler material sections...")
+
+            sections = []
+
+            blocks = re.split(
+                r"(?=Filler Material\s)",
+                text,
+                flags=re.IGNORECASE
+            )
+
+            logger.info(f"📦 FM blocks detected={len(blocks)}")
+
+            for i, block in enumerate(blocks):
+
+                try:
+
+                    block = block.strip()
+
+                    if not block:
+                        continue
+
+                    block_lower = block.lower()
+
+                    if "filler material" not in block_lower:
+                        continue
+
+                    logger.info(f"🔍 Processing FM block {i+1}")
+
+                    # -------------------------------------------------
+                    # 🔴 LOCATION
+                    # -------------------------------------------------
+                    loc_match = re.search(
+                        r"Location:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    location = (
+                        loc_match.group(1).strip()
+                        if loc_match else ""
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 QUANTITY
+                    # -------------------------------------------------
+                    qty_match = re.search(
+                        r"Quantity:\s*(\d+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    quantity = (
+                        int(qty_match.group(1))
+                        if qty_match else 1
+                    )
+
+                    # -------------------------------------------------
+                    # 🔴 Quantity Used
+                    # -------------------------------------------------
+                    quantity_used_match = re.search(
+                        r"Quantity used :\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    used_quantity = 1 
+
+                    if quantity_used_match:
+                        quantity_text = quantity_used_match.group(1)
+
+                        # Extract only the integer from values like:
+                        # "1 cc", "1 ml", "1mm", "25 units"
+                        number_match = re.search(r"\d+", quantity_text)
+
+                        if number_match:
+                            used_quantity = int(number_match.group())
+
+
+                    logger.info(
+                        f"✅ Filler Material parsed | "
+                        f"location={location} | "
+                        f"qty={quantity} | "
+                        f"used_qty={used_quantity}"
+                    )
+
+                    sections.append({
+                        "label": f"ipl_{i+1}",
+                        "text": block,
+                        "location": location,
+                        "quantity": quantity,
+                        "used_quantity": used_quantity
+                    })
+
+                except Exception as e:
+
+                    logger.exception(
+                        f"❌ Filler Material block parsing failed: {e}"
+                    )
+
+                    continue
+
+            logger.info(
+                f"📊 FINAL Filler Material sections={len(sections)}"
+            )
+
+            logger.info(
+                f"📊 Filler Material DATA={sections}"
+            )
+
+            return sections
+
+        except Exception as e:
+
+            logger.exception(
+                f"❌ Filler Material extraction failed: {e}"
+            )
+
+            return []
 
 
     # =========================================================
@@ -1126,6 +1264,7 @@ class ClinicalParser:
         laser_sections = self.extract_laser_treatment_sections(procedure_text)
         xtrac_sections = self.extract_xtrac_sections(procedure_text)
         ipl_sections = self.extract_ipl_sections(procedure_text)
+        filler_material_sections = self.extract_filler_material_sections(procedure_text)
 
         return {
             "has_biopsy": bool(biopsy_data),
@@ -1160,6 +1299,9 @@ class ClinicalParser:
 
             "has_ipl": len(ipl_sections) > 0,
             "ipl_sections": ipl_sections,
+
+            "has_filler_material": len(filler_material_sections) > 0,
+            "filler_material_sections": filler_material_sections,
 
             "has_procedure": bool(procedure_text.strip())
         }

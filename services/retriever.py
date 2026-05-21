@@ -155,9 +155,7 @@ class CodeRetriever:
                 if min_q <= quantity <= max_q:
                     filtered.append(r)
 
-            logger.info(
-                f"✅ Destruction benign candidates: {len(filtered)}"
-            )
+            logger.info(f"✅ Destruction benign candidates: {len(filtered)}")
 
             return filtered
         
@@ -221,9 +219,7 @@ class CodeRetriever:
             if quantity > 14:
                 filtered.extend(addon_codes)
 
-            logger.info(
-                f"✅ DPM filtered candidates: {len(filtered)}"
-            )
+            logger.info(f"✅ DPM filtered candidates: {len(filtered)}")
 
             return filtered
         
@@ -261,9 +257,7 @@ class CodeRetriever:
                 for r in result.mappings().all()
             ]
 
-            logger.info(
-                f"📦 Raw DM candidates: {len(rows)}"
-            )
+            logger.info(f"📦 Raw DM candidates: {len(rows)}")
 
             location = (location or "").lower()
 
@@ -298,10 +292,7 @@ class CodeRetriever:
 
             for r in rows:
 
-                desc = (
-                    r.get("description", "")
-                    or ""
-                ).lower()
+                desc = (r.get("description", "") or "").lower()
 
                 # -------------------------------------------------
                 # 🔴 ANATOMICAL FILTER
@@ -1046,9 +1037,7 @@ class CodeRetriever:
 
                 try:
 
-                    desc = (
-                        r.get("description") or ""
-                    ).lower()
+                    desc = (r.get("description") or "").lower()
 
                     # -------------------------
                     # LOCATION FILTER
@@ -1091,9 +1080,7 @@ class CodeRetriever:
                     filtered.append(r)
 
                 except Exception as e:
-                    logger.warning(
-                        f"⚠️ Shave filter failed: {e}"
-                    )
+                    logger.warning(f"⚠️ Shave filter failed: {e}")
 
             # -------------------------
             # FALLBACK
@@ -1108,9 +1095,7 @@ class CodeRetriever:
 
                 return [filtered[0]]
 
-            logger.info(
-                f"✅ Shave candidates: {len(filtered)}"
-            )
+            logger.info(f"✅ Shave candidates: {len(filtered)}")
 
             return filtered
         
@@ -1152,13 +1137,8 @@ class CodeRetriever:
                 f"📦 Raw laser candidates: {len(rows)}"
             )
 
-            method = (
-                section.get("method") or ""
-            ).lower()
-
-            procedure_text = (
-                full_procedure_text or ""
-            ).lower()
+            method = (section.get("method") or "").lower()
+            procedure_text = (full_procedure_text or "").lower()
 
             # -------------------------------------------------
             # 🔴 STEP 1
@@ -1181,10 +1161,7 @@ class CodeRetriever:
 
                 for r in rows:
 
-                    desc = (
-                        r.get("description") or ""
-                    ).lower()
-
+                    desc = (r.get("description") or "").lower()
                     desc_clean = re.sub(
                         r"(laser|treatment)",
                         "",
@@ -1192,7 +1169,6 @@ class CodeRetriever:
                     ).strip()
 
                     if normalized_method in desc_clean:
-
                         logger.info(
                             f"✅ METHOD MATCH → "
                             f"{r['code']}"
@@ -1211,10 +1187,7 @@ class CodeRetriever:
 
             for r in rows:
 
-                desc = (
-                    r.get("description") or ""
-                ).lower()
-
+                desc = (r.get("description") or "").lower()
                 desc_clean = re.sub(
                     r"(laser|treatment)",
                     "",
@@ -1248,9 +1221,7 @@ class CodeRetriever:
                 if r.get("code") == "CL001"
             ]
 
-            logger.info(
-                "⚠️ Laser fallback → CL001"
-            )
+            logger.info("⚠️ Laser fallback → CL001")
 
             return fallback
         
@@ -1283,15 +1254,12 @@ class CodeRetriever:
             """
 
             result = await db.execute(text(query))
-
             rows = [
                 self._clean_row(r)
                 for r in result.mappings().all()
             ]
 
-            logger.info(
-                f"📦 Raw Xtrac candidates: {len(rows)}"
-            )
+            logger.info(f"📦 Raw Xtrac candidates: {len(rows)}")
 
             # -------------------------------------------------
             # 🔴 FALLBACK
@@ -1334,7 +1302,6 @@ class CodeRetriever:
                         filtered.append(r)
 
                 except Exception as e:
-
                     logger.warning(
                         f"⚠️ Xtrac filter failed "
                         f"for code={r.get('code')} | {e}"
@@ -1377,10 +1344,7 @@ class CodeRetriever:
                     or ""
                 ).lower().strip()
 
-                treatment_area = (
-                    section.get("treatment_area")
-                )
-
+                treatment_area = (section.get("treatment_area"))
                 logger.info(
                     f"🎯 IPL filter | "
                     f"method={method} | "
@@ -1410,58 +1374,41 @@ class CodeRetriever:
             """
 
                 result = await db.execute(text(query))
-
                 rows = [
                     self._clean_row(r)
                     for r in result.mappings().all()
                 ]
 
-                logger.info(
-                    f"📦 IPL raw candidates={len(rows)}"
-                )
-                logger.info(
-                    f"📦 IPL RAW CODES={[r['code'] for r in rows]}"
-                )
+                logger.info(f"📦 IPL raw candidates={len(rows)}")
+                logger.info(f"📦 IPL RAW CODES={[r['code'] for r in rows]}")
 
                 # =====================================================
                 # 🔴 SCENARIO 1 → METHOD
                 # =====================================================
                 if method:
 
-                    logger.info(
-                        "🧠 IPL scenario=METHOD"
-                    )
+                    logger.info("🧠 IPL scenario=METHOD")
 
                     matched = []
-
                     method_tokens = [
                         t.strip()
                         for t in method.split()
                         if len(t.strip()) > 2
                     ]
 
-                    logger.info(
-                        f"🔤 IPL method tokens={method_tokens}"
-                    )
+                    logger.info(f"🔤 IPL method tokens={method_tokens}")
 
                     for r in rows:
 
-                        desc = (
-                            r.get("description", "")
-                            or ""
-                        ).lower()
+                        desc = (r.get("description", "") or "").lower()
 
                         if any(
                             token in desc
                             for token in method_tokens
                         ):
-
                             matched.append(r)
 
-                    logger.info(
-                        f"✅ IPL method matches={len(matched)}"
-                    )
-
+                    logger.info(f"✅ IPL method matches={len(matched)}")
                     logger.info(
                         f"📦 IPL method codes="
                         f"{[m['code'] for m in matched]}"
@@ -1475,30 +1422,19 @@ class CodeRetriever:
                 # =====================================================
                 if treatment_area:
 
-                    logger.info(
-                        "🧠 IPL scenario=AREA"
-                    )
-
+                    logger.info("🧠 IPL scenario=AREA")
                     filtered = []
 
                     for r in rows:
 
                         try:
-
-                            min_s = (
-                                float(r.get("minSize") or 0)
-                            )
-
-                            max_s = (
-                                float(r.get("maxSize") or 999999)
-                            )
+                            min_s = (float(r.get("minSize") or 0))
+                            max_s = (float(r.get("maxSize") or 999999))
 
                             if min_s <= treatment_area <= max_s:
-
                                 filtered.append(r)
 
                         except Exception as e:
-
                             logger.warning(
                                 f"⚠️ IPL area filter failed "
                                 f"for code={r.get('code')} | {e}"
@@ -1506,10 +1442,7 @@ class CodeRetriever:
 
                             continue
 
-                    logger.info(
-                        f"✅ IPL area matches={len(filtered)}"
-                    )
-
+                    logger.info(f"✅ IPL area matches={len(filtered)}")
                     logger.info(
                         f"📦 IPL area codes="
                         f"{[m['code'] for m in filtered]}"
@@ -1521,9 +1454,7 @@ class CodeRetriever:
                 # =====================================================
                 # 🔴 SCENARIO 3 → DEFAULT 96920
                 # =====================================================
-                logger.info(
-                    "🧠 IPL scenario=DEFAULT_96920"
-                )
+                logger.info("🧠 IPL scenario=DEFAULT_96920")
 
                 fallback = [
                     r for r in rows
@@ -1538,9 +1469,94 @@ class CodeRetriever:
                 return fallback
 
         except Exception as e:
+            logger.exception(f"❌ IPL filter failed: {e}")
+            return []
+        
 
-            logger.exception(
-                f"❌ IPL filter failed: {e}"
-            )
+    # =========================================================
+    # 🔹 FILLER MATERIAL FILTER
+    # =========================================================
+    async def filler_material_filter(self, section):
 
+        try:
+
+            async with get_db_session() as db:
+
+                quantity = (section.get("quantity") or "")
+                quantity_used = (section.get("used_quantity"))
+                logger.info(
+                    f"🎯 fm filter | "
+                    f"Quantity={quantity} | "
+                    f"Used Quantity={quantity_used}"
+                )
+
+                # =====================================================
+                # 🔴 LOAD FM CODES
+                # =====================================================
+                query = """
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE
+                    proCode IN ('11950', '11951', '11952', '11954')
+            """
+
+                result = await db.execute(text(query))
+                
+                rows = [
+                    self._clean_row(r)
+                    for r in result.mappings().all()
+                ]
+
+                logger.info(f"📦 FM raw candidates={len(rows)}")
+                logger.info(f"📦 FM RAW CODES = {[r['code'] for r in rows]}")
+
+                if quantity_used:
+                    logger.info("🧠 FM scenario = Used Quantity")
+
+                    filtered = []
+
+                    for r in rows:
+
+                        try:
+                            min_s = (float(r.get("minSize") or 0))
+                            max_s = (float(r.get("maxSize") or 999999))
+
+                            if min_s <= quantity_used <= max_s:
+                                filtered.append(r)
+
+                        except Exception as e:
+                            logger.warning(
+                                f"⚠️ FM Used Quantity failed "
+                                f"for code={r.get('code')} | {e}"
+                            )
+
+                            continue
+
+                    logger.info(f"✅ FM Used Quantity matches={len(filtered)}")
+
+                    logger.info(
+                        f"📦 FM Qty Used codes = "
+                        f"{[m['code'] for m in filtered]}"
+                    )
+
+                    if filtered:
+                        return filtered
+
+
+                logger.info("🧠 FM Fetched all rows")
+                return rows
+
+        except Exception as e:
+            logger.exception(f"❌ Filter Material filter failed: {e}")
             return []

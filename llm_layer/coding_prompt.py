@@ -445,6 +445,13 @@ Different location:
 - assign tattoo removal unless tattoo 
 
 --------------------------------------------------
+🔴 FILLER MATERIAL LOGIC
+
+- Assign relevant filler material CPT
+- Match the quantity used with the retrieved code to assign the correct one
+- 1 cc = 1 mm
+
+--------------------------------------------------
 🔴 XTRAC LASER LOGIC
 
 1. Xtrac CPT assignment depends ONLY on:
