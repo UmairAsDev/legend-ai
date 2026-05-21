@@ -452,6 +452,12 @@ Different location:
 - 1 cc = 1 mm
 
 --------------------------------------------------
+🔴 FILLER LOGIC
+
+- First match method to Retrieved Code Description to assign relevant CPT code
+- If method is missing or the mentioned method don't match the descriptionof any retrieved codes, then assign best relevant cpt code to the filler procedures
+
+--------------------------------------------------
 🔴 XTRAC LASER LOGIC
 
 1. Xtrac CPT assignment depends ONLY on:

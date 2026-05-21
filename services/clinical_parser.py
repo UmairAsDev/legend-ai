@@ -1199,7 +1199,7 @@ class ClinicalParser:
                     )
 
                     sections.append({
-                        "label": f"ipl_{i+1}",
+                        "label": f"fm_{i+1}",
                         "text": block,
                         "location": location,
                         "quantity": quantity,
@@ -1231,7 +1231,137 @@ class ClinicalParser:
             )
 
             return []
+        
 
+    # =========================================================
+    # 🔹 FILLER EXTRACTION
+    # =========================================================
+    def extract_filler_sections(self, text: str):
+
+        try:
+
+            if not text:
+                logger.warning("⚠️ Filler parser received empty text")
+                return []
+
+            text_lower = text.lower()
+
+            if "filler (filler)" not in text_lower:
+                logger.info("ℹ️ No filler detected")
+                return []
+
+            logger.info("🔍 Extracting filler sections...")
+
+            sections = []
+
+            # Match only the filler section content
+            filler_blocks = re.finditer(
+                r"""
+                Filler\s*\(Filler\)      # Start of filler section
+                .*?                      # Capture everything inside it
+                (?=                      # Stop when next section begins
+                    \n[A-Za-z\s]+\([^)]+\)
+                    |\Z
+                )
+                """,
+                text,
+                re.IGNORECASE | re.DOTALL | re.VERBOSE
+            )
+
+            filler_blocks = list(filler_blocks)
+
+            logger.info(f"📦 Filler blocks detected={len(filler_blocks)}")
+
+            for i, match in enumerate(filler_blocks):
+
+                try:
+
+                    block = match.group(0).strip()
+
+                    logger.info(
+                        f"🔍 Processing Filler block {i+1}"
+                    )
+
+                    # -----------------------------------------
+                    # LOCATION
+                    # -----------------------------------------
+                    loc_match = re.search(
+                        r"Location:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    location = (
+                        loc_match.group(1).strip()
+                        if loc_match else ""
+                    )
+
+                    # -----------------------------------------
+                    # QUANTITY
+                    # -----------------------------------------
+                    qty_match = re.search(
+                        r"Quantity:\s*(\d+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    quantity = (
+                        int(qty_match.group(1))
+                        if qty_match else 1
+                    )
+
+                    # -----------------------------------------
+                    # METHOD
+                    # -----------------------------------------
+                    method_match = re.search(
+                        r"Method:\s*([^\n\r]+)",
+                        block,
+                        re.IGNORECASE
+                    )
+
+                    method = (
+                        method_match.group(1).strip()
+                        if method_match else ""
+                    )
+
+                    logger.info(
+                        f"✅ Filler parsed | "
+                        f"location={location} | "
+                        f"qty={quantity} | "
+                        f"method={method}"
+                    )
+
+                    sections.append({
+                        "label": f"filler_{i+1}",
+                        "text": block,
+                        "location": location,
+                        "quantity": quantity,
+                        "method": method
+                    })
+
+                except Exception as e:
+                    logger.exception(
+                        f"❌ Filler block parsing failed: {e}"
+                    )
+                    continue
+
+            logger.info(
+                f"📊 FINAL Filler sections={len(sections)}"
+            )
+            logger.info(
+                f"📊 Filler DATA={sections}"
+            )
+
+            return sections
+
+        except Exception as e:
+
+            logger.exception(
+                f"❌ Filler extraction failed: {e}"
+            )
+
+            return []
+        
 
     # =========================================================
     # 🔹 MAIN PARSER
@@ -1264,6 +1394,7 @@ class ClinicalParser:
         laser_sections = self.extract_laser_treatment_sections(procedure_text)
         xtrac_sections = self.extract_xtrac_sections(procedure_text)
         ipl_sections = self.extract_ipl_sections(procedure_text)
+        filler_sections = self.extract_filler_sections(procedure_text)
         filler_material_sections = self.extract_filler_material_sections(procedure_text)
 
         return {
@@ -1299,6 +1430,9 @@ class ClinicalParser:
 
             "has_ipl": len(ipl_sections) > 0,
             "ipl_sections": ipl_sections,
+
+            "has_filler": len(filler_sections) > 0,
+            "filler_sections": filler_sections,
 
             "has_filler_material": len(filler_material_sections) > 0,
             "filler_material_sections": filler_material_sections,

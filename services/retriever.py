@@ -1560,3 +1560,113 @@ class CodeRetriever:
         except Exception as e:
             logger.exception(f"❌ Filter Material filter failed: {e}")
             return []
+        
+
+    # =========================================================
+    # 🔹 FILLER FILTER
+    # =========================================================
+    async def filler_filter(self, section):
+
+        try:
+            async with get_db_session() as db:
+
+                method = (
+                    section.get("method")
+                    or ""
+                ).lower().strip()
+
+                location = (
+                    section.get("location")
+                    or ""
+                ).lower().strip()
+
+                logger.info(
+                    f"🎯 Filler filter | "
+                    f"method={method} | "
+                    f"location={location}"
+                )
+
+                # =====================================================
+                # 🔴 LOAD IPL CODES
+                # =====================================================
+                query = """
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE
+                    CAST(SUBSTRING(proCode, 3) AS INTEGER) BETWEEN 81 AND 126
+                    AND proCode LIKE 'CF%'
+                """
+
+                result = await db.execute(text(query))
+                rows = [
+                    self._clean_row(r)
+                    for r in result.mappings().all()
+                ]
+
+                logger.info(f"📦 Filler raw candidates={len(rows)}")
+                logger.info(f"📦 Filler RAW CODES={[r['code'] for r in rows]}")
+
+                # =====================================================
+                # 🔴 SCENARIO 1 → METHOD
+                # =====================================================
+                if method:
+
+                    logger.info("🧠 Filler scenario = METHOD")
+
+                    matched = []
+                    method_tokens = [
+                        t.strip()
+                        for t in method.split()
+                        if len(t.strip()) > 2
+                    ]
+
+                    logger.info(f"🔤 Filler method tokens={method_tokens}")
+
+                    for r in rows:
+                        desc = (r.get("description", "") or "").lower()
+
+                        if any(
+                            token in desc
+                            for token in method_tokens
+                        ):
+                            matched.append(r)
+
+                    logger.info(f"✅ Filler method matches={len(matched)}")
+                    logger.info(
+                        f"📦 Filler method codes="
+                        f"{[m['code'] for m in matched]}"
+                    )
+
+                    if matched:
+                        return matched
+
+                # =====================================================
+                # 🔴 SCENARIO 2 → FALLBACK TO DEFAULT
+                # =====================================================
+
+                fallback = [
+                    r for r in rows
+                    if r.get("code") == "CF081"
+                ]
+
+                logger.info(
+                    f"✅ IPL fallback code="
+                    f"{[m['code'] for m in fallback]}"
+                )
+
+                return fallback
+
+        except Exception as e:
+            logger.exception(f"❌ Filler filter failed: {e}")
+            return []

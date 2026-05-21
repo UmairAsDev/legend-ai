@@ -371,7 +371,7 @@ class CodingNodes:
 
                         for r in res:
 
-                            r["source"] = "ipl"
+                            r["source"] = "fm"
                             r["fm_location"] = sec.get("location")
                             r["fm_quantity"] = sec.get("quantity")
                             r["fm_used_qty"] = sec.get("used_quantity")
@@ -382,6 +382,52 @@ class CodingNodes:
 
                         logger.exception(
                             f"❌ FM retrieval failed: {e}"
+                        )
+
+
+            # -------------------------
+            # 🔴 FILLER 
+            # -------------------------
+            if parsed.get("has_filler"):
+                logger.info("🔴 Filler DETECTED")
+
+                for sec in parsed.get(
+                    "filler_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 Filler section → "
+                            f"qty = {sec.get('quantity')} | "
+                            f"method = {sec.get('method')} | "
+                            f"location = {sec.get('location')} | "
+                            
+                        )
+
+                        res = await self.retriever.filler_filter(
+                            section=sec
+                        )
+
+                        logger.info(
+                            f"🎯 Filler deterministic "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "filler"
+                            r["filler_method"] = sec.get("method")
+                            r["filler_location"] = sec.get("location")
+                            r["filler_quantity"] = sec.get("quantity")
+                            
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+
+                        logger.exception(
+                            f"❌ Filler retrieval failed: {e}"
                         )
 
             # -------------------------
