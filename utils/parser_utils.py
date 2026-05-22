@@ -125,9 +125,7 @@ CHEMICAL_METHOD_MAP = {
     ],
 
     "retinoic acid": [
-        "retinoic",
         "retinoic acid",
-        "retinol"
     ],
 
     "trichloroacetic acid": [
