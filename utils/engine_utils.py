@@ -493,3 +493,49 @@ def aggregate_shave_removals(parsed):
     )
 
     return parsed
+
+
+# =========================================================
+# 🔴 CHEMICAL PEEL AGGREGATION
+# =========================================================
+def aggregate_chemical_peels(parsed):
+
+    logger.info("🔧 Aggregating chemical peels...")
+
+    grouped = {}
+
+    for sec in parsed.get(
+        "chemical_peel_sections",
+        []
+    ):
+
+        key = (
+            f"{sec.get('type')}_"
+            f"{sec.get('method')}_"
+            f"{sec.get('location')}"
+        )
+
+        grouped.setdefault(key, {
+            "type": sec.get("type"),
+            "method": sec.get("method"),
+            "location": sec.get("location"),
+            "quantity": 0,
+            "sections": []
+        })
+
+        grouped[key]["quantity"] += int(
+            sec.get("quantity") or 1
+        )
+
+        grouped[key]["sections"].append(sec)
+
+    parsed["chemical_peel_aggregated"] = (
+        list(grouped.values())
+    )
+
+    logger.info(
+        f"📊 Aggregated chemical peels="
+        f"{len(parsed['chemical_peel_aggregated'])}"
+    )
+
+    return parsed

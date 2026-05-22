@@ -4,19 +4,17 @@ from loguru import logger
 
 from utils.parser_utils import (
     ParserUtils,
+    CHEMICAL_PEEL_KEYWORDS, CHEMICAL_METHOD_MAP, CHEMICAL_CHOICE_MAP,
+    IPL_METHOD_MAP, IPL_KEYWORDS,
     DEBRIDEMENT_KEYWORDS,
-    DESTRUCTION_KEYWORDS,
     EXCISION_KEYWORDS,
     BIOPSY_KEYWORDS,
-    SHAVE_KEYWORDS,
-    LASER_KEYWORDS,
-    IPL_METHOD_MAP,
-    IPL_KEYWORDS,
     XTRAC_KEYWORDS,
     WOUND_KEYWORDS,
     MOHS_KEYWORDS,
     DERM_KEYWORDS,
     SRT_KEYWORDS,
+    
 )
 
 class ClinicalParser:
@@ -1364,19 +1362,189 @@ class ClinicalParser:
         
 
     # =========================================================
+    # 🔹 CHEMICAL PEEL EXTRACTION
+    # =========================================================
+    def extract_chemical_peel_sections(self, text: str) -> List[Dict]:
+
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        if not any(k in text_lower for k in CHEMICAL_PEEL_KEYWORDS):
+            return []
+
+        logger.info("🔍 Extracting chemical peel sections...")
+
+        sections = []
+
+        pattern = (
+            r"(.*?"
+            r"(?:chemical peel\s*\(peel\)|skin medica chemical peel\s*\(peel\))"
+            r".*?)"
+            r"(?=(?:chemical peel\s*\(peel\)|skin medica chemical peel\s*\(peel\)|$))"
+        )
+
+        matches = list(
+            re.finditer(
+                pattern,
+                text,
+                re.IGNORECASE | re.DOTALL
+            )
+        )
+
+        for i, match in enumerate(matches):
+
+            block = match.group(1).strip()
+
+            logger.info(f"🔍 Processing chemical peel block {i+1}")
+
+            # -------------------------------------------------
+            # 🔴 LOCATION
+            # -------------------------------------------------
+            location_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                block,
+                re.IGNORECASE
+            )
+
+            location = (
+                location_match.group(1).strip()
+                if location_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 AREA TREATED
+            # -------------------------------------------------
+            area_match = re.search(
+                r"Area treated:\s*([^\n\r]+)",
+                block,
+                re.IGNORECASE
+            )
+
+            area_treated = (
+                area_match.group(1).strip()
+                if area_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 QUANTITY
+            # -------------------------------------------------
+            qty_match = re.search(
+                r"Quantity:\s*(\d+)",
+                block,
+                re.IGNORECASE
+            )
+
+            quantity = int(qty_match.group(1)) if qty_match else 1
+
+            # -------------------------------------------------
+            # 🔴 METHOD
+            # -------------------------------------------------
+            method_match = re.search(
+                r"Method:\s*([^\n\r]+)",
+                block,
+                re.IGNORECASE
+            )
+
+            method = (
+                method_match.group(1).strip()
+                if method_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 CHEMICAL
+            # -------------------------------------------------
+            chemical_match = re.search(
+                r"Chemical:\s*([^\n\r]+)",
+                block,
+                re.IGNORECASE
+            )
+
+            chemical = (
+                chemical_match.group(1).strip()
+                if chemical_match else ""
+            )
+
+            # -------------------------------------------------
+            # 🔴 FALLBACK METHOD INFERENCE
+            # -------------------------------------------------
+            combined = f"{block} {chemical}".lower()
+
+            if not method:
+
+                for normalized, keywords in CHEMICAL_METHOD_MAP.items():
+
+                    if any(k in combined for k in keywords):
+
+                        method = normalized
+                        logger.info(
+                            f"🧠 Inferred chemical peel method={method}"
+                        )
+                        break
+
+            # -------------------------------------------------
+            # 🔴 CHOICE
+            # -------------------------------------------------
+            choice = ""
+
+            if "epidermal" in combined:
+                choice = "epidermal"
+
+            elif "dermal" in combined:
+                choice = "dermal"
+
+            # -------------------------------------------------
+            # 🔴 TYPE
+            # -------------------------------------------------
+            peel_type = "chemical_peel"
+
+            if choice == "epidermal":
+                peel_type = "chemical_peel_epidermal"
+
+            elif choice == "dermal":
+                peel_type = "chemical_peel_dermal"
+
+            logger.info(
+                f"✅ Chemical Peel → "
+                f"type={peel_type} | "
+                f"location={location} | "
+                f"method={method} | "
+                f"chemical={chemical}"
+            )
+
+            sections.append({
+                "type": peel_type,
+                "location": location,
+                "quantity": quantity,
+                "method": method,
+                "chemical": chemical,
+                "choice": choice,
+                "area_treated": area_treated,
+                "text": block
+            })
+
+        logger.info(
+            f"📊 Total chemical peel sections: {len(sections)}"
+        )
+
+        return sections
+        
+
+    # =========================================================
     # 🔹 MAIN PARSER
     # =========================================================
     def parse(self, note: Dict[str, Any]) -> Dict[str, Any]:
 
+        procedure_text = note.get("procedure") or ""
         biopsy_text = note.get("biopsyNotes") or ""
         mohs_text = note.get("mohsNotes") or ""
-        procedure_text = note.get("procedure") or ""
 
         closure_data = []
 
+        closure_data += self.extract_closure_sections(procedure_text)
         closure_data += self.extract_closure_sections(biopsy_text)
         closure_data += self.extract_closure_sections(mohs_text)
-        closure_data += self.extract_closure_sections(procedure_text)
 
         biopsy_data = self.extract_biopsy_sections(biopsy_text) \
             if self.utils.detect_keyword(biopsy_text, BIOPSY_KEYWORDS) else []
@@ -1387,55 +1555,59 @@ class ClinicalParser:
         mohs_data = self.extract_mohs_sections(mohs_text) \
             if self.utils.detect_keyword(mohs_text, MOHS_KEYWORDS) else []
         
-        srt_data = self.extract_srt_sections(procedure_text, note)
-        debridement_data = self.extract_debridement_sections(procedure_text)
-        destruction_sections = self.extract_destruction_sections(procedure_text)
-        shave_sections = self.extract_shave_removal_sections(biopsy_text)
-        laser_sections = self.extract_laser_treatment_sections(procedure_text)
-        xtrac_sections = self.extract_xtrac_sections(procedure_text)
-        ipl_sections = self.extract_ipl_sections(procedure_text)
-        filler_sections = self.extract_filler_sections(procedure_text)
         filler_material_sections = self.extract_filler_material_sections(procedure_text)
+        destruction_sections = self.extract_destruction_sections(procedure_text)
+        chemical_sections = self.extract_chemical_peel_sections(procedure_text)
+        laser_sections = self.extract_laser_treatment_sections(procedure_text)
+        debridement_data = self.extract_debridement_sections(procedure_text)
+        shave_sections = self.extract_shave_removal_sections(biopsy_text)
+        filler_sections = self.extract_filler_sections(procedure_text)
+        xtrac_sections = self.extract_xtrac_sections(procedure_text)
+        srt_data = self.extract_srt_sections(procedure_text, note)
+        ipl_sections = self.extract_ipl_sections(procedure_text)
 
         return {
-            "has_biopsy": bool(biopsy_data),
-            "biopsy_sections": biopsy_data,
-
-            "has_excision": bool(excision_data),
-            "excision_sections": excision_data,
-
-            "has_mohs": bool(mohs_data),
-            "mohs_sections": mohs_data,
-
-            "has_closure": bool(closure_data),
-            "closure_sections": closure_data,
-
-            "has_srt": bool(srt_data),
-            "srt_sections": srt_data,
-
-            "has_debridement": bool(debridement_data),
-            "debridement_sections": debridement_data,
+            "has_filler_material": len(filler_material_sections) > 0,
+            "filler_material_sections": filler_material_sections,
 
             "has_destruction": len(destruction_sections) > 0,
             "destruction_sections": destruction_sections,
 
-            "has_shave_removal": len(shave_sections) > 0,
-            "shave_removal_sections": shave_sections,
+            "has_chemical_peel": len(chemical_sections) > 0,
+            "chemical_peel_sections": chemical_sections,
 
             "has_laser_treatment": len(laser_sections) > 0,
             "laser_treatment_sections": laser_sections,
 
-            "has_xtrac": len(xtrac_sections) > 0,
-            "xtrac_sections": xtrac_sections,
+            "has_shave_removal": len(shave_sections) > 0,
+            "shave_removal_sections": shave_sections,
 
-            "has_ipl": len(ipl_sections) > 0,
-            "ipl_sections": ipl_sections,
+            "has_debridement": bool(debridement_data),
+            "debridement_sections": debridement_data,
 
             "has_filler": len(filler_sections) > 0,
             "filler_sections": filler_sections,
 
-            "has_filler_material": len(filler_material_sections) > 0,
-            "filler_material_sections": filler_material_sections,
+            "has_xtrac": len(xtrac_sections) > 0,
+            "xtrac_sections": xtrac_sections,
+
+            "has_excision": bool(excision_data),
+            "excision_sections": excision_data,
+
+            "has_ipl": len(ipl_sections) > 0,
+            "ipl_sections": ipl_sections,
+
+            "has_closure": bool(closure_data),
+            "closure_sections": closure_data,
+
+            "has_biopsy": bool(biopsy_data),
+            "biopsy_sections": biopsy_data,
+
+            "has_mohs": bool(mohs_data),
+            "mohs_sections": mohs_data,
+
+            "has_srt": bool(srt_data),
+            "srt_sections": srt_data,
 
             "has_procedure": bool(procedure_text.strip())
         }

@@ -494,6 +494,44 @@ is missing or empty:
 - use diagnosis/location for filtering
 
 --------------------------------------------------
+🔴 CHEMICAL PEEL LOGIC
+
+There are 3 chemical peel categories:
+
+1. Chemical Peel
+   Codes:
+   CP001 - CP009
+
+2. Chemical Peel Epidermal
+   Codes:
+   15788, 15792
+
+3. Chemical Peel Dermal
+   Codes:
+   15789, 15793
+
+--------------------------------------------------
+RULES:
+
+1. Use ONLY retrieved candidates
+
+2. Chemical Peel:
+   - Match method keywords against code description
+   - If no method matched:
+     → fallback = CP001
+
+3. Epidermal / Dermal:
+   - Match choice keywords against code description
+   - If no choice match:
+     → return all retrieved candidates
+
+4. GROUPING:
+   - SAME CPT + SAME location + SAME Dx
+     → merge quantity
+
+5. NEVER hallucinate chemical peel codes
+
+--------------------------------------------------
 🔴 IPL LOGIC
 
 1. Identify EACH IPL procedure

@@ -18,19 +18,6 @@ DERM_KEYWORDS = [
     "infected skin", "crust", "debris",
     "xerosis", "flaky", "dry skin"
 ]
-DESTRUCTION_KEYWORDS = [
-    "destruction premalignant", "destruction premalignant lesion (dpm)",
-    "destruction malignant", "destruction malignant lesion (dm)",
-    "destruction benign", "destruction benign (db)",
-    "cryosurgery", "electrodesiccation"
-]
-
-SHAVE_KEYWORDS = [
-    "shave removal",
-    "shave biopsy",
-    "epidermal lesion shave",
-    "dermal lesion shave"
-]
 
 SHAVE_FACE_KEYWORDS = [
     "face", "ear", "ears", "eyelid", "eyelids",
@@ -41,86 +28,6 @@ SHAVE_SPECIAL_KEYWORDS = [
     "scalp", "neck", "hand", "hands",
     "foot", "feet", "genitalia"
 ]
-
-SHAVE_TRUNK_KEYWORDS = [
-    "trunk", "arm", "arms", "leg", "legs"
-]
-
-LASER_KEYWORDS = [
-    "laser treatment",
-    "laser therapy",
-    "photofacial",
-    "laser resurfacing",
-    "laser removal"
-]
-
-LASER_METHOD_MAP = {
-    "hair reduction": [
-        "hair reduction",
-        "hair removal",
-        "lhr",
-        "diode"
-    ],
-
-    "tattoo removal": [
-        "tattoo"
-    ],
-
-    "vein treatment": [
-        "vein treatment",
-        "veins"
-    ],
-
-    "spider veins treatment": [
-        "spider veins",
-        "spider vein"
-    ],
-
-    "skin rejuvenation": [
-        "skin rejuvenation",
-        "rejuvenation"
-    ],
-
-    "skin resurfacing": [
-        "fraxel",
-        "fraxel co2",
-        "resurfacing",
-        "co2 laser"
-    ],
-
-    "rosacea": [
-        "rosacea"
-    ],
-
-    "melasma": [
-        "melasma"
-    ],
-
-    "acne": [
-        "acne",
-        "acne scar",
-        "atrophic scar"
-    ],
-
-    "age spots": [
-        "age spots",
-        "lentigo"
-    ],
-
-    "birthmark": [
-        "birthmark"
-    ],
-
-    "stretch marks": [
-        "stretch marks",
-        "striae"
-    ],
-
-    "photofacial": [
-        "photofacial",
-        "ipl"
-    ]
-}
 
 XTRAC_KEYWORDS = [
     "xtrac",
@@ -189,6 +96,89 @@ IPL_METHOD_MAP = {
     "photoaging",
     "photodamage",
     "pigmentation"
+    ]
+}
+
+CHEMICAL_PEEL_KEYWORDS = [
+    "chemical peel",
+    "chemical peel (peel)",
+    "skin medica chemical peel",
+    "skin medica peel",
+    "illuminize peel",
+    "vitalize peel",
+    "rejuvenize peel"
+]
+
+CHEMICAL_METHOD_MAP = {
+
+    "salicylic acid": [
+        "salicylic acid"
+    ],
+
+    "glycolic acid": [
+        "glycolic",
+        "glycolic acid"
+    ],
+
+    "lactic acid": [
+        "lactic acid"
+    ],
+
+    "retinoic acid": [
+        "retinoic",
+        "retinoic acid",
+        "retinol"
+    ],
+
+    "trichloroacetic acid": [
+        "tca",
+        "trichloroacetic"
+    ],
+
+    "beta hydroxy acid": [
+        "bha",
+        "beta hydroxy"
+    ],
+
+    "alpha hydroxy acid": [
+        "aha",
+        "alpha hydroxy"
+    ],
+
+    "phenol": [
+        "phenol"
+    ],
+
+    "jessners": [
+        "jessner"
+    ]
+}
+
+CHEMICAL_CHOICE_MAP = {
+
+    "epidermal": [
+        "epidermal"
+    ],
+
+    "dermal": [
+        "dermal"
+    ],
+
+    "facial": [
+        "facial",
+        "face"
+    ],
+
+    "nonfacial": [
+        "nonfacial",
+        "neck",
+        "arm",
+        "leg",
+        "back",
+        "chest",
+        "abdomen",
+        "hand",
+        "foot"
     ]
 }
 

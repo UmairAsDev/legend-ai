@@ -15,7 +15,7 @@ proCodeId,proId,proCode,codeDesc,associatedWithProCode,minQty,maxQty,minSize,max
 21,30,96912,Photochemotherapy; psoralens and ultraviolet A (PUVA),,1,1,0,0,0,1,1,0,1,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Photochemotherapy UVA
 22,31,96913,Photochemotherapy (Goeckerman and/or PUVA) for severe photoresponsive dermatoses requiring at least four to eight hours of care under direct supervision of the physician (includes application of medication and dressings),,1,1,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Photochemotherapy (Physician Supervision)
 24,33,15781,"Dermabrasion; regional, other than face",,1,10,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Dermabrasion Partial
-25,34,15789,"Chemical peel, nonfacial; epidermal",,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel Dermal
+25,34,15789,"Chemical peel, facial; epidermal",,1,1,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Chemical Peel Dermal
 29,28,11720,Debridement of nail(s) by any method(s); one to five,,1,5,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
 30,28,11721,Debridement of nail(s) by any method(s); six or more,,6,20,0,0,0,0,0,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Debridement
 35,37,69100,Biopsy external ear or Tragus,,1,10,0,0,0,1,1,0,0,0,0,1/1/2013,12/31/2050,0,0,0,0000-00-00 00:00:00,0000-00-00 00:00:00,0,0,0,Biopsy

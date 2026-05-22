@@ -1668,3 +1668,118 @@ class CodeRetriever:
         except Exception as e:
             logger.exception(f"❌ Filler filter failed: {e}")
             return []
+        
+
+    # =========================================================
+    # 🔹 CHEMICAL PEEL FILTER
+    # =========================================================
+    async def chemical_peel_filter(self, section):
+
+        async with get_db_session() as db:
+
+            peel_type = (section.get("type") or "").lower()
+            method = (section.get("method") or "").lower()
+            choice = (section.get("choice") or "").lower()
+
+            # -------------------------------------------------
+            # 🔴 PRO NAME
+            # -------------------------------------------------
+            if peel_type == "chemical_peel_epidermal":
+                pro_name = "chemical peel epidermal"
+
+            elif peel_type == "chemical_peel_dermal":
+                pro_name = "chemical peel dermal"
+
+            else:
+                pro_name = "chemical peel"
+
+            logger.info(
+                f"🔍 Chemical Peel filter → "
+                f"type={pro_name} | "
+                f"method={method} | "
+                f"choice={choice}"
+            )
+
+            query = """
+            SELECT
+                proCode AS code,
+                codeDesc AS description,
+                proName,
+                associatedWithProCode,
+                minQty,
+                maxQty,
+                CAST(minsize AS FLOAT) AS "minSize",
+                CAST(maxsize AS FLOAT) AS "maxSize",
+                chargePerUnit,
+                0.0 AS distance,
+                'cpt' AS type
+            FROM cpt_embeddings
+            WHERE LOWER(proName) = :pro_name
+            """
+
+            result = await db.execute(
+                text(query),
+                {
+                    "pro_name": pro_name
+                }
+            )
+
+            rows = [
+                self._clean_row(r)
+                for r in result.mappings().all()
+            ]
+
+            logger.info(f"📦 Raw chemical peel candidates: {len(rows)}")
+
+            # =================================================
+            # 🔴 STANDARD CHEMICAL PEEL
+            # =================================================
+            if pro_name == "chemical peel":
+
+                filtered = []
+
+                if method:
+
+                    for r in rows:
+                        desc = (r.get("description") or "").lower()
+
+                        if method in desc:
+                            filtered.append(r)
+
+                # 🔴 FALLBACK TO CP001
+                if not filtered:
+
+                    filtered = [
+                        r for r in rows
+                        if r.get("code") == "CP001"
+                    ]
+
+                    logger.warning(
+                        "⚠️ No chemical peel method match "
+                        "→ fallback CP001"
+                    )
+
+                return filtered
+
+            # =================================================
+            # 🔴 EPIDERMAL / DERMAL
+            # =================================================
+            filtered = []
+
+            if choice:
+
+                for r in rows:
+                    desc = (r.get("description") or "").lower()
+
+                    if choice in desc:
+                        filtered.append(r)
+
+            if filtered:
+                return filtered
+
+            logger.warning(
+                "⚠️ Choice not matched "
+                "→ returning all candidates"
+            )
+
+            return rows

@@ -1,21 +1,21 @@
 # app/services/medical_engine.py
 import re
-from loguru import logger
 
+from llm_layer.coding_prompt import build_coding_prompt
 from src.data_layer.progressnote import notes
 from llm_layer.llm_client import LLMClient
-from llm_layer.coding_prompt import build_coding_prompt
 
 from services.clinical_parser import ClinicalParser
 from services.embeddings import EmbeddingService
 from services.retriever import CodeRetriever
 from services.reranker import Reranker
+from loguru import logger
 
 from utils.engine_utils import (
-    serialize_data, clean_note_data, 
+    aggregate_shave_removals, aggregate_chemical_peels,
     enforce_closure_addon, enforce_excision_quantity,
     aggregate_closures, enforce_destruction_quantity,
-    aggregate_shave_removals
+    serialize_data, clean_note_data, 
 )
 
 # =========================
@@ -88,6 +88,7 @@ class CodingNodes:
             parsed = aggregate_closures(parsed)
             logger.info(f"🧾 biopsyNotes AFTER CLEAN: {state['cleaned_note'].get('biopsyNotes')}")
             parsed = aggregate_shave_removals(parsed)
+            parsed = aggregate_chemical_peels(parsed)
             return {"parsed": parsed}
         except Exception as e:
             raise
@@ -429,6 +430,47 @@ class CodingNodes:
                         logger.exception(
                             f"❌ Filler retrieval failed: {e}"
                         )
+
+
+            # -------------------------
+            # 🔴 CHEMICAL PEEL
+            # -------------------------
+            if parsed.get("has_chemical_peel"):
+
+                logger.info("🔴 CHEMICAL PEEL DETECTED")
+
+                for sec in parsed.get(
+                    "chemical_peel_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 Chemical Peel section → "
+                            f"type={sec.get('type')} | "
+                            f"location={sec.get('location')} | "
+                            f"method={sec.get('method')} | "
+                            f"choice={sec.get('choice')}"
+                        )
+
+                        res = await self.retriever.chemical_peel_filter(section=sec)
+                        logger.info(f"🎯 Chemical Peel candidates={len(res)}")
+
+                        for r in res:
+
+                            r["source"] = "chemical_peel"
+                            r["chemical_peel_type"] = sec.get("type")
+                            r["chemical_peel_location"] = sec.get("location")
+                            r["chemical_peel_quantity"] = sec.get("quantity")
+                            r["chemical_peel_method"] = sec.get("method")
+                            r["chemical_peel_choice"] = sec.get("choice")
+                            r["chemical_peel_area"] = sec.get("area_treated")
+
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+                        logger.exception(f"❌ Chemical Peel retrieval failed: {e}")
 
             # -------------------------
             # 🔴 MOHS (FINAL SAFE VERSION)
