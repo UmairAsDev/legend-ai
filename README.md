@@ -481,44 +481,6 @@ LLM only receives constrained candidates.
 
 ---
 
-## Future Improvements
-
-## Recommended
-
-### 1. Reranker Integration
-
-Currently partially disabled.
-
-### 2. ICD Retrieval Layer
-
-Separate ICD vector pipeline.
-
-### 3. Confidence Scoring
-
-Per CPT prediction confidence.
-
-### 4. Audit Layer
-
-Traceable coding decisions.
-
-### 5. Human-in-the-loop Review
-
-Coder validation UI.
-
-### 6. Multi-specialty Expansion
-
-Current implementation is dermatology-centric.
-
-### 7. Caching Layer
-
-Embedding and retrieval optimization.
-
-### 8. Agentic Validation
-
-Cross-check CPT consistency before finalization.
-
----
-
 ## Key Files
 
 | File                 | Responsibility           |
