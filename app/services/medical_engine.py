@@ -1,0 +1,686 @@
+# app/services/medical_engine.py
+import re
+
+from llm_layer.coding_prompt import build_coding_prompt
+from src.data_layer.progressnote import notes
+from llm_layer.llm_client import LLMClient
+
+from services.clinical_parser import ClinicalParser
+from services.embeddings import EmbeddingService
+from services.retriever import CodeRetriever
+from services.reranker import Reranker
+from loguru import logger
+
+from utils.engine_utils import (
+    aggregate_shave_removals, aggregate_chemical_peels,
+    enforce_closure_addon, enforce_excision_quantity,
+    aggregate_closures, enforce_destruction_quantity,
+    serialize_data, clean_note_data, 
+)
+
+# =========================
+# 🔹 NODE CLASS (LangGraph)
+# =========================
+class CodingNodes:
+
+    def __init__(self):
+        self.embedder = EmbeddingService()
+        self.parser = ClinicalParser()
+        self.retriever = CodeRetriever()
+        self.reranker = Reranker()
+        self.llm = LLMClient()
+
+    # -------------------------
+    # 🔹 FETCH NOTE
+    # -------------------------
+    async def fetch(self, state):
+        try:
+            logger.info(f"📥 Fetching note: {state['note_id']}")
+            data = await notes(state["note_id"])
+            if not data:
+                raise ValueError("Note not found")
+
+            return {"raw_note": data[0]}
+
+        except Exception as e:
+            logger.exception(f"❌ Fetch failed: {e}")
+            raise
+
+    # -------------------------
+    # 🔹 CLEAN NOTE
+    # -------------------------
+    async def clean(self, state):
+        try:
+            cleaned = clean_note_data(state["raw_note"])
+            cleaned = serialize_data(cleaned)
+
+            return {"cleaned_note": cleaned}
+
+        except Exception as e:
+            logger.exception(f"❌ Clean step failed: {e}")
+            raise
+
+    # -------------------------
+    # 🔹 BUILD QUERY
+    # -------------------------
+    async def query(self, state):
+        try:
+            query_parts = []
+            for k, v in state["cleaned_note"].items():
+                if v:
+                    query_parts.append(f"{k}: {v}")
+
+            query_text = " | ".join(query_parts)
+
+            return {"query_text": query_text}
+
+        except Exception as e:
+            logger.exception(f"❌ Query creation failed: {e}")
+            raise
+
+
+    # -------------------------
+    # 🔹 PARSER
+    # -------------------------
+    async def parse(self, state):
+        try:
+            parsed = self.parser.parse(state["cleaned_note"])
+            parsed = aggregate_closures(parsed)
+            logger.info(f"🧾 biopsyNotes AFTER CLEAN: {state['cleaned_note'].get('biopsyNotes')}")
+            parsed = aggregate_shave_removals(parsed)
+            parsed = aggregate_chemical_peels(parsed)
+            return {"parsed": parsed}
+        except Exception as e:
+            raise
+
+    # -------------------------
+    # 🔹 EMBEDDING
+    # -------------------------
+    async def embed(self, state):
+        try:
+            embeddings = await self.embedder.generate_embeddings_batch(
+                [state["query_text"]]
+            )
+
+            return {"embedding": embeddings[0]}
+
+        except Exception as e:
+            logger.exception(f"❌ Embedding failed: {e}")
+            raise
+
+    # -------------------------
+    # 🔹 RETRIEVE
+    # -------------------------
+    async def retrieve(self, state):
+        try:
+            parsed = state.get("parsed", {})
+            cleaned = state.get("cleaned_note", {})
+            logger.info(f"🧠 Retrieval Decision | Parsed: {parsed}")
+
+            all_candidates = []
+
+            # -------------------------
+            # 🔴 EXCISION (FIRST PRIORITY BUT NOT EXCLUSIVE)
+            # -------------------------
+            if parsed.get("has_excision"):
+                logger.info("🔴 EXCISION DETECTED")
+
+                for sec in parsed.get("excision_sections", []):
+                    size = sec.get("size")
+                    text = sec.get("text", "")
+
+                    # 🔹 Extract location
+                    loc_match = re.search(r"Location:\s*(.*)", text)
+                    location = loc_match.group(1).strip() if loc_match else ""
+
+                    logger.info(f"📌 Excision Section → size={size}, location={location}")
+
+                    if size:
+                        res = await self.retriever.excision_filter(size, location)
+                        logger.info(f"   ↳ Retrieved {len(res)} excision candidates")
+                        all_candidates.extend(res)
+                    else:
+                        logger.warning("⚠️ Excision section missing size → skipped")
+
+
+            # -------------------------
+            # 🔴 DESTRUCTION
+            # -------------------------
+            if parsed.get("has_destruction"):
+
+                logger.info("🔴 DESTRUCTION DETECTED")
+                for sec in parsed.get("destruction_sections", []):
+
+                    destruction_type = sec.get("destruction_type")
+                    quantity = sec.get("quantity")
+                    size = sec.get("size")
+                    label = sec.get("label")
+                    location = sec.get("location")
+
+                    logger.info(
+                        f"📌 Destruction Section → "
+                        f"label={label} | "
+                        f"type={destruction_type} | "
+                        f"qty={quantity} | "
+                        f"size={size} | "
+                        f"location={location}"
+                    )
+
+                    res = await self.retriever.destruction_filter(
+                        destruction_type=destruction_type,
+                        quantity=quantity,
+                        size=size,
+                        location=location
+                    )
+
+                    logger.info(f"↳ Retrieved {len(res)} destruction candidates")
+
+                    # -------------------------------------------------
+                    # 🔴 CRITICAL FIX:
+                    # Attach parsed section metadata
+                    # -------------------------------------------------
+                    for r in res:
+
+                        r["source"] = f"destruction_{destruction_type}"
+                        r["destruction_label"] = label
+                        r["destruction_location"] = location
+                        r["destruction_quantity"] = quantity
+                        r["destruction_size"] = size
+
+                    all_candidates.extend(res)
+
+            # -------------------------
+            # 🔴 BIOPSY (ALWAYS ADD IF PRESENT)
+            # -------------------------
+            if parsed.get("has_biopsy"):
+                logger.info("🔴 BIOPSY DETECTED")
+
+                biopsy = await self.retriever.biopsy_filter()
+                logger.info(f"   ↳ Retrieved {len(biopsy)} biopsy candidates")
+
+                all_candidates.extend(biopsy)
+
+
+            # -------------------------
+            # 🔴 SHAVE REMOVAL
+            # -------------------------
+            if parsed.get("has_shave_removal"):
+
+                logger.info("🔴 SHAVE REMOVAL DETECTED")
+                for sec in parsed.get(
+                    "shave_removal_aggregated",
+                    []
+                ):
+
+                    res = await self.retriever.shave_removal_filter(
+                        location_group=sec.get("location_group"),
+                        size=sec.get("size")
+                    )
+
+                    for r in res:
+
+                        r["source"] = "shave_removal"
+                        r["shave_quantity"] = sec.get("quantity")
+                        r["shave_location_group"] = (sec.get("location_group"))
+                        r["shave_size"] = sec.get("size")
+
+                    all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 LASER TREATMENT
+            # -------------------------
+            if parsed.get("has_laser_treatment"):
+
+                logger.info("🔴 LASER TREATMENT DETECTED")
+                procedure_text = (cleaned.get("procedure", ""))
+
+                for sec in parsed.get(
+                    "laser_treatment_sections",
+                    []
+                ):
+
+                    logger.info(
+                        f"📌 Laser section → "
+                        f"location={sec.get('location')} | "
+                        f"method={sec.get('method')}"
+                    )
+
+                    res = await self.retriever.laser_treatment_filter(
+                        section=sec,
+                        full_procedure_text=procedure_text
+                    )
+
+                    logger.info(f"↳ Retrieved {len(res)} laser candidates")
+                    for r in res:
+
+                        r["source"] = "laser_treatment"
+                        r["laser_location"] = (sec.get("location"))
+                        r["laser_method"] = (sec.get("method"))
+                        r["laser_quantity"] = (sec.get("quantity"))
+
+                    all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 XTRAC LASER
+            # -------------------------
+            if parsed.get("has_xtrac"):
+
+                logger.info("🔴 XTRAC DETECTED")
+                for sec in parsed.get(
+                    "xtrac_sections",
+                    []
+                ):
+
+                    logger.info(
+                        f"📌 Xtrac section → "
+                        f"area={sec.get('total_area')}"
+                    )
+
+                    res = await self.retriever.xtrac_filter(total_area=sec.get("total_area"))
+                    logger.info(f"↳ Retrieved {len(res)} xtrac candidates")
+
+                    for r in res:
+
+                        r["source"] = "xtrac"
+                        r["xtrac_area"] = (sec.get("total_area"))
+                        r["xtrac_location"] = (sec.get("location"))
+                        r["xtrac_quantity"] = (sec.get("quantity"))
+
+                    all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 IPL
+            # -------------------------
+            if parsed.get("has_ipl"):
+                logger.info("🔴 IPL DETECTED")
+
+                for sec in parsed.get(
+                    "ipl_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 IPL section → "
+                            f"location={sec.get('location')} | "
+                            f"qty={sec.get('quantity')} | "
+                            f"method={sec.get('method')} | "
+                            f"area={sec.get('treatment_area')}"
+                        )
+
+                        res = await self.retriever.ipl_filter(
+                            section=sec
+                        )
+
+                        logger.info(
+                            f"🎯 IPL deterministic "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "ipl"
+                            r["ipl_location"] = sec.get("location")
+                            r["ipl_quantity"] = sec.get("quantity")
+                            r["ipl_method"] = sec.get("method")
+                            r["ipl_treatment_area"] = (
+                                sec.get("treatment_area")
+                            )
+
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+
+                        logger.exception(
+                            f"❌ IPL retrieval failed: {e}"
+                        )
+
+
+            # -------------------------
+            # 🔴 FILLER MATERIAL
+            # -------------------------
+            if parsed.get("has_filler_material"):
+                logger.info("🔴 FM DETECTED")
+
+                for sec in parsed.get(
+                    "filler_material_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 FM section → "
+                            f"location={sec.get('location')} | "
+                            f"qty={sec.get('quantity')} | "
+                            f"used_qty={sec.get('used_quantity')} | "
+                            
+                        )
+
+                        res = await self.retriever.filler_material_filter(
+                            section=sec
+                        )
+
+                        logger.info(
+                            f"🎯 FM deterministic "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "fm"
+                            r["fm_location"] = sec.get("location")
+                            r["fm_quantity"] = sec.get("quantity")
+                            r["fm_used_qty"] = sec.get("used_quantity")
+                            
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+
+                        logger.exception(
+                            f"❌ FM retrieval failed: {e}"
+                        )
+
+
+            # -------------------------
+            # 🔴 FILLER 
+            # -------------------------
+            if parsed.get("has_filler"):
+                logger.info("🔴 Filler DETECTED")
+
+                for sec in parsed.get(
+                    "filler_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 Filler section → "
+                            f"qty = {sec.get('quantity')} | "
+                            f"method = {sec.get('method')} | "
+                            f"location = {sec.get('location')} | "
+                            
+                        )
+
+                        res = await self.retriever.filler_filter(
+                            section=sec
+                        )
+
+                        logger.info(
+                            f"🎯 Filler deterministic "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "filler"
+                            r["filler_method"] = sec.get("method")
+                            r["filler_location"] = sec.get("location")
+                            r["filler_quantity"] = sec.get("quantity")
+                            
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+
+                        logger.exception(
+                            f"❌ Filler retrieval failed: {e}"
+                        )
+
+
+            # -------------------------
+            # 🔴 CHEMICAL PEEL
+            # -------------------------
+            if parsed.get("has_chemical_peel"):
+
+                logger.info("🔴 CHEMICAL PEEL DETECTED")
+
+                for sec in parsed.get(
+                    "chemical_peel_sections",
+                    []
+                ):
+
+                    try:
+
+                        logger.info(
+                            f"📌 Chemical Peel section → "
+                            f"type={sec.get('type')} | "
+                            f"location={sec.get('location')} | "
+                            f"method={sec.get('method')} | "
+                            f"choice={sec.get('choice')}"
+                        )
+
+                        res = await self.retriever.chemical_peel_filter(section=sec)
+                        logger.info(f"🎯 Chemical Peel candidates={len(res)}")
+
+                        for r in res:
+
+                            r["source"] = "chemical_peel"
+                            r["chemical_peel_type"] = sec.get("type")
+                            r["chemical_peel_location"] = sec.get("location")
+                            r["chemical_peel_quantity"] = sec.get("quantity")
+                            r["chemical_peel_method"] = sec.get("method")
+                            r["chemical_peel_choice"] = sec.get("choice")
+                            r["chemical_peel_area"] = sec.get("area_treated")
+
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+                        logger.exception(f"❌ Chemical Peel retrieval failed: {e}")
+
+            # -------------------------
+            # 🔴 MOHS (FINAL SAFE VERSION)
+            # -------------------------
+            if parsed.get("has_mohs"):
+                logger.info("🔴 MOHS DETECTED")
+                logger.info(f"🧠 Mohs Sections: {parsed.get('mohs_sections')}")
+
+                for sec in parsed.get("mohs_sections", []):
+                    location = sec.get("location", "")
+
+                    if not location:
+                        logger.error("❌ Mohs location missing → fallback mode")
+
+                    logger.info(f"📌 Mohs → location={location}")
+                    res = await self.retriever.mohs_filter(location) or []
+                    logger.info(f"   ↳ Mohs candidates: {len(res)}")
+
+                    # tag source
+                    for r in res:
+                        r["source"] = "mohs"
+
+                    all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 CLOSURE
+            # -------------------------
+            if parsed.get("has_closure"):
+
+                logger.info("🔴 CLOSURE DETECTED (AGGREGATED MODE)")
+
+                for group in parsed.get("closure_aggregated", []):
+                    size = group.get("total_size")
+                    ctype = group.get("type")
+                    group_key = group.get("group_key")
+
+                    logger.info(
+                        f"📊 Closure Aggregated → group={group_key}, "
+                        f"type={ctype}, total_size={size}"
+                    )
+
+                    if size:
+                        location_group = group.get("group_key", "").split("_")[-1]
+                        res = await self.retriever.closure_filter(size, location_group, ctype)
+
+                        for r in res:
+                            r["source"] = "closure"
+                            r["closure_group"] = group_key  # 🔥 important for debugging
+
+                        logger.info(f"   ↳ Retrieved {len(res)} closure candidates")
+
+                        all_candidates.extend(res)
+                    else:
+                        logger.warning("⚠️ Closure missing size → skipped")
+
+
+            # -------------------------
+            # 🔴 SRT PROCEDURE
+            # -------------------------
+            if parsed.get("has_srt"):
+                logger.info("🔴 SRT DETECTED")
+
+                for sec in parsed.get("srt_sections", []):
+
+                    logger.info(
+                        f"🧠 SRT Decision → kv={sec.get('kv')} | "
+                        f"ultrasound={sec.get('ultrasound')} | "
+                        f"images_present={sec.get('images_present')}"
+                    )
+
+                    res = await self.retriever.srt_filter(sec)
+
+                    for r in res:
+                        r["source"] = "srt"
+
+                    all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 DEBRIDEMENT
+            # -------------------------
+            if parsed.get("has_debridement"):
+                logger.info("🔴 DEBRIDEMENT DETECTED")
+
+                for sec in parsed.get("debridement_sections", []):
+
+                    logger.info(
+                        f"🧠 Debridement Decision → depth={sec.get('depth')} | "
+                        f"nail={sec.get('nail')} | derm={sec.get('dermatologic')} | "
+                        f"wound={sec.get('is_wound')} | qty={sec.get('quantity')}"
+                    )
+
+                    res = await self.retriever.debridement_filter(sec)
+
+                    for r in res:
+                        r["source"] = "debridement"
+
+                    all_candidates.extend(res)
+
+
+            # -------------------------
+            # 🔴 IF ANY PROCEDURAL CODES FOUND → RETURN
+            # -------------------------
+            if all_candidates:
+                # 🔹 Deduplicate (important)
+                unique = {}
+                for c in all_candidates:
+                    key = (c.get("code"), c.get("type"), c.get("source"), c.get("location"))
+                    if key not in unique:
+                        unique[key] = c
+
+                final_candidates = list(unique.values())
+
+                logger.info(f"✅ Total combined candidates (deduped): {len(final_candidates)}")
+
+                return {"candidates": final_candidates}
+
+            # -------------------------
+            # 🟡 PROCEDURE-BASED FALLBACK (SEMANTIC)
+            # -------------------------
+            if parsed.get("has_procedure"):
+                logger.info("🟡 PROCEDURE DETECTED → semantic search")
+
+                embedding = state["embedding"]
+                candidates = await self.retriever.search(embedding)
+                logger.info(f"⚠️ Procedure-based candidates: {len(candidates)}")
+
+                return {"candidates": candidates}
+
+            # -------------------------
+            # ⚠️ FINAL FALLBACK
+            # -------------------------
+            logger.warning("⚠️ FALLBACK SEARCH TRIGGERED")
+            candidates = await self.retriever.search(state["embedding"])
+            logger.info(f"⚠️ Fallback candidates: {len(candidates)}")
+
+            return {"candidates": candidates}
+
+        except Exception as e:
+            logger.exception(f"❌ Retrieval failed: {e}")
+            raise
+
+
+    # -------------------------
+    # 🔹 RERANK
+    # -------------------------
+    async def rerank(self, state):
+        try:
+            ranked = self.reranker.rerank(
+            state["candidates"],
+            state
+        )
+            return {"reranked": ranked}
+
+        except Exception as e:
+            logger.exception(f"❌ Rerank failed: {e}")
+            raise
+
+    # ------------------------------
+    # 🔹 LLM CALL (JsonOutputParser)
+    # ------------------------------
+    async def llm_call(self, state):
+        try:
+            logger.info("🧠 Calling LLM with structured parser")
+
+            # 🔹 Get prompt + parser
+            prompt, parser, formatted_prompt = build_coding_prompt(
+                {
+                    "note": state["cleaned_note"],
+                    "parsed": state["parsed"]   
+                },
+                state["candidates"]
+            )
+
+            # 🔹 LLM call with parser
+            result = await self.llm.generate_response(
+                formatted_prompt,
+                parser=parser
+            )
+
+            # -------------------------------------------------
+            # 🔴 EXCISION QUANTITY
+            # -------------------------------------------------
+            result = enforce_excision_quantity(
+                state["parsed"],
+                result
+            )
+
+            # -------------------------------------------------
+            # 🔴 CLOSURE ADD-ON
+            # -------------------------------------------------
+            result = enforce_closure_addon(
+                state["parsed"],
+                state["candidates"],
+                result
+            )
+
+            # -------------------------------------------------
+            # 🔴 DESTRUCTION QUANTITY
+            # -------------------------------------------------
+            result = enforce_destruction_quantity(
+                parsed=state["parsed"],
+                retrieved_candidates=state["candidates"],
+                llm_output=result
+            )
+
+            logger.success("✅ All deterministic enforcement rules applied")
+            return {"llm_output": result}
+
+        except Exception as e:
+            logger.exception(f"❌ LLM step failed: {e}")
+            raise

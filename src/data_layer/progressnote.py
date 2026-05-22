@@ -1,3 +1,5 @@
+# src/data_layer/progressnote.py
+
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
@@ -56,7 +58,7 @@ if __name__ == "__main__":
     async def main():
         try:
             # Run your logic
-            data = await notes(711974)
+            data = await notes(706753)
             print(data)
         finally:
             await conn.dispose()

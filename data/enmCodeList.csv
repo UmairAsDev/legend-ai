@@ -1,0 +1,50 @@
+enmCodeId,enmCode,enmCodeDesc,enmType,encounterTime,facilityCode,enmLevel,deleted,effectiveDate,expireDate
+1,99201,Office visit (level 1),newPat,10,11,1,0,1/1/2013,12/31/2020
+2,99202,Office visit (level 2),newPat,20,11,2,0,1/1/2013,12/31/2050
+3,99203,Office visit (level 3),newPat,30,11,3,0,1/1/2013,12/31/2050
+4,99204,Office visit (level 4),newPat,45,11,4,0,1/1/2013,12/31/2050
+5,99205,Office visit (level 5),newPat,60,11,5,0,1/1/2013,12/31/2050
+6,99241,Office visit (level 1),consult,15,11,1,0,1/1/2013,12/31/2050
+7,99242,Office visit (level 2),consult,30,11,2,0,1/1/2013,12/31/2050
+8,99243,Office visit (level 3),consult,40,11,3,0,1/1/2013,12/31/2050
+9,99244,Office visit (level 4),consult,60,11,4,0,1/1/2013,12/31/2050
+10,99245,Office visit (level 5),consult,80,11,5,0,1/1/2013,12/31/2050
+11,99211,Office visit (level 1),estPat,5,11,1,0,1/1/2013,12/31/2050
+12,99212,Office visit (level 2),estPat,10,11,2,0,1/1/2013,12/31/2050
+13,99213,Office visit (level 3),estPat,15,11,3,0,1/1/2013,12/31/2050
+14,99214,Office visit (level 4),estPat,25,11,4,0,1/1/2013,12/31/2050
+15,99215,Office visit (level 5),estPat,40,11,5,0,1/1/2013,12/31/2050
+16,99024,Initial Surgical Evaluation,other,0,11,4,1,1/1/2013,12/31/2050
+17,99050,Midical Service After Hours,other,0,11,4,1,1/1/2013,12/31/2050
+20,99056,Non-office Medical Service,other,0,11,4,1,1/1/2013,12/31/2050
+21,99058,Office Emergency Care,other,0,11,4,1,1/1/2013,12/31/2050
+22,99381,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+23,99382,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+24,99383,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+25,99384,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+26,99385,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+27,99386,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+28,99387,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+29,99388,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+30,99389,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+31,99390,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+32,99391,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+33,99392,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+34,99393,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+35,99394,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+36,99395,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+37,99396,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+38,99397,Preventative office visit,other,0,11,0,0,1/1/2013,12/31/2050
+39,99441,Telephone evaluation and management service ,other,10,11,0,0,1/1/2013,12/31/2050
+40,99442,Telephone evaluation and management service ,other,10,11,0,0,1/1/2013,12/31/2050
+41,99443,Telephone evaluation and management service ,other,10,11,0,0,1/1/2013,12/31/2050
+42,99335,Home visit,0,11,11,0,0,1/1/2013,12/31/2050
+43,99341,Home visit,other,10,11,1,0,1/1/2013,12/31/2050
+44,99342,Home visit - New Patient,other,10,11,1,0,1/1/2013,12/31/2050
+45,99343,Home visit - New Patient,other,10,11,1,0,1/1/2013,12/31/2050
+46,99344,Home visit - New Patient,other,10,11,1,0,1/1/2013,12/31/2050
+47,99345,Home visit - New Patient,other,10,11,1,0,1/1/2013,12/31/2050
+48,99347,Home visit - Est. Patient,other,10,11,1,0,1/1/2013,12/31/2050
+49,99348,Home visit - Est. Patient,other,10,11,1,0,1/1/2013,12/31/2050
+50,99349,Home visit - Est. Patient,other,10,11,1,0,1/1/2013,12/31/2050
+51,99350,Home visit - Est. Patient,other,10,11,1,0,1/1/2013,12/31/2050

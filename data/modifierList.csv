@@ -1,0 +1,82 @@
+modifierId,modifier,modifierDesc,enmModifier,modifierDetDesc,deleted
+1,22,Unusal Procedure Service,0," 	Unusual procedural service - Surgeries for which services performed are significantly greater than usually required, may be billed with the 22 modifier added to the CPT code. Include a concise statement about how the service differs from the usual. Supportive documentation, e.g., operative reports, pathology reports, etc. must be submitted with the claim.",0
+2,24,Unrelatred E/M Post-Op,1,Unrelated Evaluation & Management service by the same physician during a postoperative period.,0
+3,25,Unrelated E/M Same Day,1," 	Significant, separately identifiable E&M service by the same physician on the same day of the procedure or other therapeutic service which has (0-10 day global period). A separate diagnosis is not needed. This modifier is used on the E &M service",0
+4,26,Professional Component,0,Professional Component Certain procedures are a combination of a physician component may be identified by adding the modifier 26 to the usual procedure number. All diagnostic testing with a technical and professional component done in an outpatient or inpatient setting must reflect the 26 modifier. The fiscal intermediary (Part A Medicare) will reimburse the facility for the technical component.,0
+5,51,Multiple Procedures,0,Multiple Procedures for Internal use only by Carrier.,0
+6,52,Reduced Services,0,"Reduced Services - Use modifier 52 (reduced service) to indicate a service or procedure is partially reduced or eliminated at the physician's election. If claims are submitted electronically with Modifier 52, we will request medical records from the provider before we can process the claims. If claims are submitted on paper for Modifier 52, we expect that medical records will accompany the claim; without this information, your claim may be denied. Include office records, test results, operative notes, or hospital records to substantiate the reason for reporting a reduced service.",0
+7,55,Post-Op Management,0,Postoperative management only. When one physician performs the postoperative management and another physician has performed the surgical procedure.,0
+8,57,Decision for Surgery,1,"Initial Decision for surgery (90-day global period). This modifier is used on E&M service, the day before or the day of surgery to exempt it from the global surgery package.",0
+9,58,Related Procedure Post-Op,0,"Staged or related procedure or service by the same physician during the postoperative period. If a less extensive procedure fails, and a more extensive procedure is required, the second procedure is payable separately. Modifier 58 must be reported with the second procedure.",0
+10,76,Repeat Procedure Same MD,0,Repeat procedure by same physician: . Indicate the reason or the different times for the repeat procedure in item 19 of the CMS 1500 Form or the electronic equivalent.,0
+11,79,Unusal Procedure Post-Op,0,"Return to the operating room for a related procedure during the postoperative period. The physician may need to indicate that another procedure was performed during the postoperative period of the initial procedure. When this subsequent procedure is related to the first, and requires the use of the operating room, it should be reported by adding modifier 78 to the related procedure.",0
+12,99,Multiple Modifiers,0,"The Multi-Carrier System (MCS) will now allow you to send up to four modifiers per line of service on your claims for both electronically submitted and paper claims. Please indicate the pricing modifiers in the first two positions and processing or informational modifiers in the third and fourth positions.
+
+Use modifier 99 when more than four modifiers are needed on a line of service. In situations that require five or more modifiers, indicate modifier 99 in the first modifier field on the line of service and the remaining modifiers would be entered in the narrative field of an EMC claim or Item 19 of a 1500 claim form. For Example: 79, RT, LT, QU, GA",0
+13,50,Bilateral Procedure,0,Bilateral procedure and Bilateral services are procedures performed on both sides of the body during the same operative session or on the same day. ,0
+14,59,Multiple,0,"Distinct procedural service - The physician may need to indicate that a procedure or service was distinct or separate from other services performed on the same day. This may represent a different session or patient encounter, different procedure or surgery, different site, separate lesion, or separate injury. However, when another already established modifier is appropriate, it should be used rather than modifier 59.",0
+15,TM,Telemedicine,1,Medicare Telemedicine,0
+16,GT,Telemedicine,1,Telemedicine Medi-Cal,0
+17,EJ,For a Series of Drugs Injections,0,Subsequent claim for EPO course of therapy.,0
+18,GC,Resident Involved in the Services,1,This service has been performed in part by a resident under the direction of a teaching physician,0
+19,LT,Procedure on Left Side of Body,0,Left side (use to identify procedures performed on the LEFT side of the body),0
+20,RT,Procedure on the Right Side of the Body,0,Right side (use to identify procedures performed on the RIGHT side of the body),0
+21,53,Discontinued Procedure,0,"Discontinued Procedure - Under certain circumstances, the physician may elect to terminate a surgical or diagnostic procedure. Due to extenuating circumstances, or those that threaten the well being of the patient, it may be necessary to indicate that a surgical or diagnostic procedure was started but discontinued. If claims are submitted electronically with Modifier 53, we will request medical records from the provider before we can process the claims. If claims are submitted on paper for Modifier 53, we expect that medical records will accompany the claim, without this information, your claim may be denied. Include office records, test results, operative notes, or hospital records to substantiate the reason for reporting a reduced service. If this information is not received, your claim may be denied.",0
+22,73,Discontinued Procedure No Anesthesia,0,"Discontinued Out-Patient Hospital/Ambulatory Surgery Center (ASC) Procedure Prior to the Administration of
+Anesthesia.",0
+23,74,Discontinued Procedure After Anesthesia,0,"Discontinued Out-Patient Hospital/Ambulatory Surgery Center (ASC) Procedure After Administration of
+Anesthesia.",0
+24,AS,Surgery Assistant,0,"Physician assistant, nurse practitioner, or clinical nurse specialist service for assistant at surgery",0
+25,GA,Cosmatic Procedures ,0,"Item or service expected to be denied as not reasonable and necessary and an advance beneficiary notice was given to the beneficiary.
+
+These are so- called "" medical necessity"" denials.",0
+26,TC,Technical Component,0,Represents the technical component of a service or procedure and includes the cost of equipment and supplies to perform that service or procedure. This modifier corresponds to the equipment/facility part of a given service or procedure.,0
+27,gw,gw,1,gw,0
+28,AG,Primary physician,0,"Used to denote a primary surgeon. In the case of multiple primary surgeons, two or more surgeons can use modifier AG for the same patient on the same date of service if the procedures are performed independently and in different specialty areas.",0
+29,95,Synchronous Telemedicine Service Rendered via Real,1,Synchronous Telemedicine Service Rendered via Real-Time Interactive Audio and Video Telecommunications System.,0
+30,FA,"Left Hand, thumb",0,,0
+31,F1,"Left Hand, second digit",0,,0
+32,F2,"Left Hand, third digit",0,,0
+33,F3,"Left Hand, fourth digit",0,,0
+34,F4,"Left Hand, fifth digit",0,,0
+35,F5,"Right Hand, thumb",0,,0
+36,F6,"Right Hand, second digit",0,,0
+37,F7,"Right Hand, third digit",0,,0
+38,F8,"Right Hand, fourth digit",0,,0
+39,F9,"Right Hand, fifth digit",0,,0
+40,TA,"Left foot, great toe",0,,0
+41,T1,"Left foot, second digit",0,,0
+42,T2,"Left foot, third digit",0,,0
+43,T3,"Left foot, fourth digit",0,,0
+44,T4,"Left foot, fifth digit",0,,0
+45,T5,"Right foot, great toe",0,,0
+46,T6,"Right foot, second digit",0,,0
+47,T7,"Right foot, third digit",0,,0
+48,T8,"Right foot, fourth digit",0,,0
+49,T9,"Right foot, fifth digit",0,,0
+50,E1,"Upper left, eyelid",0,,0
+51,E2,"Lower left, eyelid",0,,0
+52,E3,"Upper right, eyelid",0,,0
+53,E4,"Lower right, eyelid",0,,0
+54,XU,Unusual non-overlapping service,0,,0
+55,JW,Drug amount discarded/not administered to any pati,0,"
+Modifier: JW
+Modifier Description:
+Drug amount discarded/not administered to any patient.
+
+Example:
+Effective January 1, 2017, the JW modifier must be used to report discarded amounts of a single-dose container drug in order to obtain payment for a discarded amount of drug from single-dose or single-use packaging.
+
+When the HCPCS code Unit of Service (UOS) is less than the drug quantity contained in the single-use vial or single-dose package:
+The quantity administered (units used) is billed on one claim line without the JW modifier.
+The quantity discarded (units wasted) is billed on a separate claim line with the JW modifier.
+Key Points:
+
+The JW modifier must be billed on a separate line to provide payment for the amount of discarded drug or biological.
+Providers must document the amount used and the amount of discarded drugs in the beneficiary’s medical record.",0
+56,JZ,Zero drug amount discarded/not administered to any,0,"Modifier: JZ
+Modifier Description:
+Zero drug amount discarded/not administered to any patient.
+
+Example:
+Effective July 1, 2023, the JZ modifier must be reported on a claim to attest that no amount of drug was discarded and eligible for payment. The modifier is used only for Medicare Part B drugs supplied in “single-dose” or “single-use” containers.",0
