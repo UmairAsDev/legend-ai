@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
     async def main():
         try:
-            note_ids = [538144, 559549, 589477, 620097, 665607, 714593]
+            note_ids = [624860, 655328, 695520, 720032]
 
             data = await notes(note_ids)
 

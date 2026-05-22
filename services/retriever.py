@@ -1621,7 +1621,6 @@ class CodeRetriever:
                 # 🔴 SCENARIO 1 → METHOD
                 # =====================================================
                 if method:
-
                     logger.info("🧠 Filler scenario = METHOD")
 
                     matched = []
@@ -1635,7 +1634,6 @@ class CodeRetriever:
 
                     for r in rows:
                         desc = (r.get("description", "") or "").lower()
-
                         if any(
                             token in desc
                             for token in method_tokens

@@ -2934,3 +2934,9 @@ During task with name 'retrieve' and id '6da88c3c-d92b-98fe-2e76-b3ba2423574b'
 2026-05-21 20:00:02.264 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 665607
 2026-05-21 20:00:02.282 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 714593
 2026-05-21 20:00:03.021 | INFO     | __main__:append_to_json:106 - 6 records processed | Total stored: 6
+2026-05-22 12:14:16.099 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 624860
+2026-05-22 12:14:16.106 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 655328
+2026-05-22 12:14:16.117 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 695520
+2026-05-22 12:14:16.123 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 720032
+2026-05-22 12:14:16.796 | INFO     | __main__:append_to_json:106 - 4 records processed | Total stored: 10
+2026-05-22 12:48:01.132 | INFO     | __main__:append_to_json:92 - 1 records processed | Total stored: 1
