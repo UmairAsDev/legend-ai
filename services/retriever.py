@@ -1,6 +1,4 @@
-import asyncio
 from typing import List, Dict, Any
-from sqlalchemy.engine import RowMapping
 from decimal import Decimal
 
 import re
@@ -10,12 +8,6 @@ from loguru import logger
 
 
 class CodeRetriever:
-
-    # -------------------------
-    # 🔹 Helper: pgvector format
-    # -------------------------
-    def _format_embedding(self, embedding: List[float]) -> str:
-        return f"[{','.join(map(str, embedding))}]"
 
     # -------------------------
     # 🔹 CRITICAL: Clean DB row (Decimal fix)
@@ -60,62 +52,6 @@ class CodeRetriever:
 
         return cleaned
 
-    # -------------------------
-    # 🔹 CPT VECTOR SEARCH
-    # -------------------------
-    async def _search_cpt(self, embedding: List[float], k: int) -> List[Dict[str, Any]]:
-        emb = self._format_embedding(embedding)
-
-        async with get_db_session() as db:
-            result = await db.execute(
-                text("""
-                    SELECT 
-                        proCode AS code,
-                        codeDesc AS description,
-                        proName,
-                        associatedWithProCode,
-                        minQty,
-                        maxQty,
-                        CAST(minsize AS FLOAT) AS "minSize",
-                        CAST(maxsize AS FLOAT) AS "maxSize",
-                        chargePerUnit,
-                        embedding <-> CAST(:embedding AS vector) AS distance,
-                        'cpt' AS type
-                    FROM cpt_embeddings
-                    ORDER BY embedding <-> CAST(:embedding AS vector)
-                    LIMIT :k
-                """),
-                {"embedding": emb, "k": k}
-            )
-
-            rows = [self._clean_row(row) for row in result.mappings().all()]
-            return rows
-
-    # -------------------------
-    # 🔹 EM SEARCH
-    # -------------------------
-    async def _search_em(self, embedding: List[float], k: int) -> List[Dict[str, Any]]:
-        emb = self._format_embedding(embedding)
-
-        async with get_db_session() as db:
-            result = await db.execute(
-                text("""
-                    SELECT 
-                        enmCode AS code,
-                        enmCodeDesc AS description,
-                        encounterTime,
-                        enmLevel,
-                        embedding <-> CAST(:embedding AS vector) AS distance,
-                        'em' AS type
-                    FROM em_embeddings
-                    ORDER BY embedding <-> CAST(:embedding AS vector)
-                    LIMIT :k
-                """),
-                {"embedding": emb, "k": k}
-            )
-
-            return [self._clean_row(row) for row in result.mappings().all()]
-        
     # -------------------------
     # 🔹 DESTRUCTION QURIES
     # -------------------------
@@ -374,56 +310,6 @@ class CodeRetriever:
             return filtered
 
     # -------------------------
-    # 🔹 MODIFIER SEARCH
-    # -------------------------
-    async def _search_modifier(self, embedding: List[float], k: int) -> List[Dict[str, Any]]:
-        emb = self._format_embedding(embedding)
-
-        async with get_db_session() as db:
-            result = await db.execute(
-                text("""
-                    SELECT 
-                        modifier AS code,
-                        modifierDesc AS description,
-                        modifierDetDesc,
-                        embedding <-> CAST(:embedding AS vector) AS distance,
-                        'modifier' AS type
-                    FROM modifier_embeddings
-                    ORDER BY embedding <-> CAST(:embedding AS vector)
-                    LIMIT :k
-                """),
-                {"embedding": emb, "k": k}
-            )
-
-            return [self._clean_row(row) for row in result.mappings().all()]
-
-    # -------------------------
-    # 🔹 MAIN SEARCH
-    # -------------------------
-    async def search(self, query_embedding: List[float], top_k: int = 40) -> List[Dict[str, Any]]:
-        try:
-            logger.info("🔍 Running multi-table vector search...")
-
-            cpt_res, em_res, mod_res = await asyncio.gather(
-                self._search_cpt(query_embedding, 30),
-                self._search_em(query_embedding, 5),
-                self._search_modifier(query_embedding, 5),
-            )
-
-            results: List[Dict[str, Any]] = []
-            results.extend(cpt_res)
-            results.extend(em_res)
-            results.extend(mod_res)
-
-            logger.info(f"✅ Retrieved {len(results)} candidates")
-
-            return results
-
-        except Exception as e:
-            logger.exception(f"❌ Retrieval failed: {e}")
-            raise
-
-    # -------------------------
     # 🔴 BIOPSY FILTER
     # -------------------------
     async def biopsy_filter(self):
@@ -513,19 +399,19 @@ class CodeRetriever:
 
             logger.info(f"🎯 Mohs filtered candidates: {len(filtered)}")
 
-            # -------------------------
-            # 🔴 SAFETY: missing location
-            # -------------------------
+            # SAFETY: missing location — default to trunk/extremity codes.
+            # Returning high-risk codes (17311/17312) for an unknown location
+            # would cause overbilling; trunk codes are the safer default.
             if not location:
-                logger.warning("⚠️ Missing Mohs location → returning ALL Mohs codes (no filtering)")
-                return rows
+                logger.warning("Mohs location missing — defaulting to trunk codes (17313/17314)")
+                filtered = [r for r in rows if str(r.get("code", "")) in ("17313", "17314")]
+                return filtered if filtered else rows
 
-            # -------------------------
-            # 🔴 SAFETY: no match after filtering
-            # -------------------------
+            # SAFETY: no match after location filtering — same conservative default.
             if not filtered:
-                logger.warning("⚠️ No filtered Mohs match → returning ALL Mohs codes")
-                return rows
+                logger.warning("No Mohs location match — defaulting to trunk codes (17313/17314)")
+                filtered = [r for r in rows if str(r.get("code", "")) in ("17313", "17314")]
+                return filtered if filtered else rows
 
             # -------------------------
             # ✅ FINAL RETURN (CRITICAL FIX)

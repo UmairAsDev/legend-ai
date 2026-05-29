@@ -61,8 +61,8 @@ class CSVHandler:
                     "proName": self._safe_str(row.get("proName")),
                     "minQty": self._safe_int(row.get("minQty")),
                     "maxQty": self._safe_int(row.get("maxQty")),
-                    "minSize": self._safe_str(row.get("minSize")),
-                    "maxSize": self._safe_str(row.get("maxSize")),
+                    "minSize": self._safe_float(row.get("minSize")),
+                    "maxSize": self._safe_float(row.get("maxSize")),
                     "chargePerUnit": self._safe_float(row.get("chargePerUnit")),
                 })
 
@@ -92,7 +92,7 @@ class CSVHandler:
                 results.append({
                     "enmCode": code,
                     "enmCodeDesc": self._safe_str(row.get("enmCodeDesc")),
-                    "encounterTime": self._safe_str(row.get("encounterTime")),
+                    "encounterTime": self._safe_int(row.get("encounterTime")),
                     "enmLevel": self._safe_int(row.get("enmLevel")),
                 })
 

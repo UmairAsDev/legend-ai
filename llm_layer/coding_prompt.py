@@ -3,7 +3,6 @@
 import json
 from typing import Dict, Any
 
-from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 
@@ -17,11 +16,13 @@ class CPTCode(BaseModel):
     modifier: str | None = None
     linked_dx: list[str]
     quantity: str
+    charge_per_unit: bool = False
 
 class EMCode(BaseModel):
     code: str
     modifier: str | None = None
     linked_dx: list[str]
+    charge_per_unit: bool = False
 
 class Codes(BaseModel):
     cpt_codes: list[CPTCode]
@@ -30,27 +31,52 @@ class Codes(BaseModel):
 class OutputSchema(BaseModel):
     patient_summary: str
     codes: Codes
-    justification: dict
+    # justification removed — reasoning engine owns all per-code justification
 
 # =========================
-# 🔹 PROMPT BUILDER
+# PROMPT BUILDER
 # =========================
 
-def build_coding_prompt(note_data: Dict[str, Any], retrieved_codes):
+def _slim_confirmed(code: dict) -> dict:
+    """Strip internal engine fields before sending confirmed codes to the LLM."""
+    keep = {"code", "description", "quantity", "source", "confidence"}
+    return {k: v for k, v in code.items() if k in keep}
+
+
+def _slim_candidate(code: dict) -> dict:
+    """Strip internal engine fields before sending ambiguous candidates to the LLM."""
+    keep = {"code", "description", "proName", "associatedWithProCode", "type", "minSize", "maxSize"}
+    return {k: v for k, v in code.items() if k in keep}
+
+
+def build_coding_prompt(
+    note_data: Dict[str, Any],
+    confirmed_codes: list,
+    ambiguous_candidates: list,
+):
 
     parser = JsonOutputParser(pydantic_object=OutputSchema)
     format_instructions = parser.get_format_instructions()
     template = """
 You are a certified medical coding expert.
 
-Your task is to:
-1. Analyze the FULL patient note carefully
-2. Generate structured patient summary
-3. Assign accurate:
-   - Justifiable CPT code
-   - E/M code (if applicable)
-   - Modifiers
-   - ICD-10 code
+Your task:
+1. Generate a concise patient summary.
+2. PRE-SELECTED CODES: include ALL of them in cpt_codes unchanged — only add linked_dx.
+3. SUPPLEMENTARY CODES: for every procedure CLEARLY DOCUMENTED in the note that is NOT
+   already covered by a pre-selected code, select the best matching CPT from the
+   supplementary lookup and add it to cpt_codes with linked_dx.
+4. If there are no pre-selected codes, code ALL documented procedures using the lookup.
+
+Rules:
+- Do NOT change pre-selected code values, descriptions, or quantities.
+- Only add codes that appear in the supplementary lookup — no hallucinations.
+- Do NOT assign modifiers (system handles them after your output).
+- Do NOT assign an E/M code — leave em_code.code as empty string "".
+- Never output quantity = 0. If quantity is 0, omit that code.
+- Do NOT code a procedure that is not explicitly documented in the patient note.
+  If a procedure type exists in the supplementary lookup but is not mentioned in
+  the note, do not assign it. Omitting a code is always safer than guessing one.
 
 --------------------------------------------------
 🔴 CORE GROUPING RULE (HIGHEST PRIORITY)
@@ -141,6 +167,11 @@ VALIDATION:
 - assign code if the cpt size range don't match the size retrieved from DM lesion size, look for one that falls within that range, alo list separtely for each entry
 - assign add-on without primary
 - hallucinate CPTs outside retrieved list
+
+QUANTITY VALIDATION:
+- DB / DPM: total coded quantity across all entries must equal total lesion count from the note.
+- DM: each lesion is coded separately — one entry per lesion, quantity = 1 each.
+- If the note does not state a quantity, do not assume one — use parsed_data quantity.
 --------------------------------------------------
 🔴 BIOPSY LOGIC
 
@@ -222,6 +253,12 @@ If:
 - assign higher size bracket incorrectly
 - separate identical shave removals unnecessarily
 
+QUANTITY VALIDATION:
+- Sum of all shave removal quantities across all entries must equal the
+  total number of shave removal lesions documented in the note.
+- If size boundary is exactly at a CPT range limit (e.g. 0.5cm on a 0.1–0.5cm code),
+  assign the code whose maxSize includes that value — do not move to the next range.
+
 --------------------------------------------------
 🔴 MOHS LOGIC (STRICT – OVERRIDES GENERAL RULES)
 
@@ -301,8 +338,14 @@ For EACH site:
    - Use (CPT + Dx + Location)
 
 7. RESTRICTIONS:
-   ❌ No inferred sizes  
-   ❌ No quantity = 0  
+   ❌ No inferred sizes
+   ❌ No quantity = 0
+
+QUANTITY VALIDATION:
+- quantity per entry = number of lesions at that location with that Dx.
+- If size is at the upper boundary of a range (e.g. exactly 2.0cm in a 1.1–2.0cm code),
+  assign that code — do not move to the higher range.
+- If the note does not document a size, do not assign an excision code at all.
 
 --------------------------------------------------
 🔴 CLOSURE LOGIC (STRICT)
@@ -420,9 +463,12 @@ Examples:
 - "birthmark" → CL011
 
 STEP 3:
-If NO keyword or method matches:
-→ assign default code:
-CL001
+If NO keyword or method matches but laser treatment IS documented in the note:
+→ assign CL001 (general laser treatment)
+
+If laser treatment is NOT clearly documented in the note:
+→ do NOT assign any laser code
+→ do not use CL001 as a catch-all for unrelated procedures
 
 5. GROUPING:
 
@@ -606,7 +652,10 @@ If debridement (DBR) is mentioned:
 --------------------------------------------------
 🔴 E/M CODING
 
-- Assign E/M only if supported by office visit level in the note
+E/M code selection is handled DETERMINISTICALLY by the system after your output.
+- Set em_code to: {"code": "", "modifier": null, "linked_dx": []}
+- Do NOT assign or guess an E/M code yourself
+- Do NOT leave a placeholder like "99213" — leave code as empty string ""
 --------------------------------------------------
 🔴 ICD10/DX CODING
 
@@ -624,25 +673,41 @@ Use ALL relevant fields:
 - diagnoses
 
 --------------------------------------------------
-🔴 PARSED DATA (HIGHEST PRIORITY INPUT):
+PATIENT NOTE (source of truth — always takes precedence):
+{note_data}
+
+--------------------------------------------------
+PARSED DATA (system-extracted procedure parameters — use as a guide, but if
+parsed_data conflicts with what the note actually says, the note wins):
 {parsed_data}
 
 --------------------------------------------------
-Retrieved Codes:
-{retrieved_codes}
+PRE-SELECTED PROCEDURE CODES (rule engine output — do not modify):
+The following CPT codes were selected deterministically.
+Include every one of them in your output cpt_codes list exactly as given.
+Your only task for these is to fill in linked_dx.
+{pre_selected_codes}
 
 --------------------------------------------------
-Patient Note:
-{note_data}
+SUPPLEMENTARY CODE LOOKUP — select from these only for procedures NOT already covered above:
+{supplementary_codes}
 
 --------------------------------------------------
 {format_instructions}
 """
-    prompt = ChatPromptTemplate.from_template(template)
+    slim_confirmed = [_slim_confirmed(c) for c in confirmed_codes]
+    slim_ambiguous = [_slim_candidate(c) for c in ambiguous_candidates]
 
-    return prompt, parser, prompt.format(
-        retrieved_codes=json.dumps(retrieved_codes, indent=2),
-        parsed_data=json.dumps(note_data.get("parsed", {}), indent=2),
-        note_data=json.dumps(note_data.get("note", {}), indent=2),
-        format_instructions=format_instructions,
+    # Direct string substitution — no ChatPromptTemplate so no template
+    # escaping issues. JSON literals in the rules use literal { } characters
+    # since we're not inside a format string.
+    formatted = (
+        template
+        .replace("{note_data}",        json.dumps(note_data.get("note", {}), indent=2))
+        .replace("{parsed_data}",      json.dumps(note_data.get("parsed", {}), indent=2))
+        .replace("{pre_selected_codes}", json.dumps(slim_confirmed, indent=2))
+        .replace("{supplementary_codes}", json.dumps(slim_ambiguous, indent=2))
+        .replace("{format_instructions}", format_instructions)
     )
+
+    return None, parser, formatted

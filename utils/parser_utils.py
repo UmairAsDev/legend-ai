@@ -21,12 +21,17 @@ DERM_KEYWORDS = [
 
 SHAVE_FACE_KEYWORDS = [
     "face", "ear", "ears", "eyelid", "eyelids",
-    "nose", "lip", "lips", "mucous membrane"
+    "nose", "lip", "lips", "mucous membrane",
+    # anatomical adjectives
+    "nasal", "perinasal", "perioral", "periorbital",
+    "auricular", "brow", "cheek", "chin", "forehead",
+    "temple", "malar", "frontal", "labial", "buccal",
 ]
 
 SHAVE_SPECIAL_KEYWORDS = [
     "scalp", "neck", "hand", "hands",
-    "foot", "feet", "genitalia"
+    "foot", "feet", "genitalia",
+    "finger", "toe", "palmar", "plantar",
 ]
 
 XTRAC_KEYWORDS = [

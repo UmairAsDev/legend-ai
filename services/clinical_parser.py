@@ -339,38 +339,25 @@ class ClinicalParser:
 
         sections = []
 
-        # -------------------------
-        # 🔴 SPLIT INTO BLOCKS (NEW)
-        # -------------------------
+        # ---------------------------------------------------------------
+        # PATH 1: Structured blocks — Debridement (DBR) tag present
+        # ---------------------------------------------------------------
         blocks = re.split(r"(?=Debridement\s*\(DBR\))", text, flags=re.IGNORECASE)
+        structured_blocks = [b.strip() for b in blocks if b.strip() and "debridement" in b.lower()]
 
-        for i, block in enumerate(blocks):
-            block = block.strip()
+        for i, block in enumerate(structured_blocks):
             block_lower = block.lower()
+            logger.info(f"Processing structured debridement block {i+1}")
 
-            if not block or "debridement" not in block_lower:
-                continue
-
-            logger.info(f"🔍 Processing debridement block {i+1}")
-
-            # =========================================================
-            # 🔴 STRICT VALIDATION (CRITICAL FIX)
-            # =========================================================
+            # Require only the minimum fields for structured blocks
             has_location = re.search(r"location:\s*.+", block_lower)
             has_quantity = re.search(r"quantity:\s*\d+", block_lower)
-            has_method = re.search(r"method:\s*.+", block_lower)
-            has_choice = re.search(r"choice:\s*.+", block_lower)
 
-            if not (has_location and has_quantity and has_method and has_choice):
-                logger.warning(
-                    "⛔ Skipping debridement → missing required fields "
-                    "(location/quantity/method/choice)"
-                )
+            if not has_quantity:
+                logger.warning("Skipping structured debridement — quantity missing")
                 continue
 
-            # =========================================================
-            # 🔴 DEPTH (same logic, but scoped per block)
-            # =========================================================
+            # ---- Depth ----
             if "partial thickness" in block_lower or "superficial" in block_lower or "shave" in block_lower:
                 depth = "partial"
             elif "full thickness" in block_lower:
@@ -380,68 +367,63 @@ class ClinicalParser:
             else:
                 depth = "unknown"
 
-            # -------------------------
-            # 🔴 NAIL
-            # -------------------------
             nail = any(k in block_lower for k in ["nail", "toenail", "fingernail"])
-
-            # -------------------------
-            # 🔴 DERMATOLOGIC
-            # -------------------------
             is_dermatologic = any(k in block_lower for k in DERM_KEYWORDS)
-
-            # -------------------------
-            # 🔴 WOUND
-            # -------------------------
             is_wound = any(k in block_lower for k in WOUND_KEYWORDS)
-
-            # -------------------------
-            # 🔴 QUANTITY (block-level FIX)
-            # -------------------------
             qty_match = re.search(r"quantity:\s*(\d+)", block_lower)
             quantity = int(qty_match.group(1)) if qty_match else 1
-
-            # -------------------------
-            # 🔴 LOCATION (NEW)
-            # -------------------------
             loc_match = re.search(r"location:\s*([^\n\r]+)", block, re.IGNORECASE)
             location = loc_match.group(1).strip() if loc_match else ""
-
-            # -------------------------
-            # 🔴 METHOD (NEW)
-            # -------------------------
             method_match = re.search(r"method:\s*([^\n\r]+)", block, re.IGNORECASE)
             method = method_match.group(1).strip() if method_match else ""
-
-            # -------------------------
-            # 🔴 CHOICE (NEW)
-            # -------------------------
             choice_match = re.search(r"choice:\s*([^\n\r]+)", block, re.IGNORECASE)
             choice = choice_match.group(1).strip() if choice_match else ""
 
-            logger.info(
-                f"🧠 Debridement VALID → depth={depth}, nail={nail}, "
-                f"derm={is_dermatologic}, wound={is_wound}, qty={quantity}, "
-                f"location={location}"
-            )
-
-            # =========================================================
-            # 🔴 FINAL SECTION (ONLY VALID ONES)
-            # =========================================================
+            logger.info(f"Debridement structured: depth={depth} nail={nail} wound={is_wound} qty={quantity}")
             sections.append({
-                "depth": depth,
-                "nail": nail,
-                "dermatologic": is_dermatologic,
-                "is_wound": is_wound,
-                "quantity": quantity,
-                "location": location,
-                "method": method,
-                "choice": choice,
-                "text": block
+                "depth": depth, "nail": nail, "dermatologic": is_dermatologic,
+                "is_wound": is_wound, "quantity": quantity,
+                "location": location, "method": method, "choice": choice,
+                "text": block,
             })
 
-        logger.info(f"📊 Valid debridement sections: {len(sections)}")
+        # ---------------------------------------------------------------
+        # PATH 2: Free-text debridement — no (DBR) tag, plain narrative
+        # e.g. "Debridement of wound edges and base was done."
+        # Only runs when structured path found nothing.
+        # ---------------------------------------------------------------
+        if not sections:
+            text_lower = text.lower()
+            wound_deb = re.search(
+                r"debridement\s+of\s+(?:wound|ulcer|base|edge|tissue)",
+                text_lower
+            )
+            nail_deb = re.search(r"nail\s+debridement|debridement\s+of\s+nail", text_lower)
+            derm_deb = any(k in text_lower for k in DERM_KEYWORDS) and "debridement" in text_lower
 
+            if wound_deb or nail_deb or derm_deb:
+                if "partial thickness" in text_lower or "superficial" in text_lower:
+                    depth = "partial"
+                elif "full thickness" in text_lower:
+                    depth = "full"
+                elif "subcutaneous" in text_lower:
+                    depth = "subcutaneous"
+                else:
+                    depth = "unknown"
+
+                nail = bool(nail_deb) or any(k in text_lower for k in ["nail", "toenail", "fingernail"])
+                is_wound = bool(wound_deb) or any(k in text_lower for k in WOUND_KEYWORDS)
+                is_dermatologic = derm_deb
+
+                logger.info(f"Debridement free-text: depth={depth} nail={nail} wound={is_wound}")
+                sections.append({
+                    "depth": depth, "nail": nail, "dermatologic": is_dermatologic,
+                    "is_wound": is_wound, "quantity": 1,
+                    "location": "", "method": "", "choice": "",
+                    "text": text[:200],
+                })
+
+        logger.info(f"Valid debridement sections: {len(sections)}")
         return sections
     
 
@@ -475,19 +457,19 @@ class ClinicalParser:
             logger.info(f"🔍 Processing destruction section {i+1}")
 
             # -------------------------
-            # 🔴 DETERMINE TYPE
+            # DETERMINE TYPE
             # -------------------------
             if "premalignant" in lower:
                 destruction_type = "dpm"
-                required_fields = ["location", "quantity", "method"]
+                required_fields = ["quantity"]          # qty drives DPM code selection
 
             elif "malignant" in lower:
                 destruction_type = "dm"
-                required_fields = ["location", "quantity", "method", "size"]
+                required_fields = ["location", "quantity"]  # size optional — selector falls back if absent
 
             else:
                 destruction_type = "db"
-                required_fields = ["location", "quantity", "method", "choice"]
+                required_fields = ["quantity"]          # qty drives DB code (17110/17111)
 
             # -------------------------
             # 🔴 EXTRACTIONS
@@ -616,11 +598,12 @@ class ClinicalParser:
 
         sections = []
 
-        blocks = re.split(
-            r"(?=Clinical Diagnosis:)",
-            text,
-            flags=re.IGNORECASE
-        )
+        # Split on lettered section headers (A., B., C. ...) so that the
+        # "Shave Removal" header line and its metadata stay in the same block.
+        # Splitting on "Clinical Diagnosis:" (old approach) separates the
+        # header from the fields, causing the "shave" check to fail on the
+        # metadata block.
+        blocks = re.split(r"(?=(?:^|\n)[A-Z]\.\s+)", text, flags=re.MULTILINE)
 
         for i, block in enumerate(blocks):
 
@@ -879,21 +862,25 @@ class ClinicalParser:
             )
 
             # -------------------------------------------------
-            # 🔴 TOTAL BODY SURFACE AREA
+            # TOTAL BODY SURFACE AREA
+            # Accepts multiple formats found in real notes:
+            #   "Total body surface area treated (sq.cm): 312"
+            #   "Area Treated 312"
+            #   "Area Treated: 312"
             # -------------------------------------------------
-            area_match = re.search(
-                r"Total\s*body\s*surface\s*area\s*treated\s*\(sq\.?cm\)\s*:\s*([\d\.]+)",
-                text,
-                re.IGNORECASE
-            )
-
             total_area = None
-
-            if area_match:
-                try:
-                    total_area = float(area_match.group(1))
-                except:
-                    total_area = None
+            area_patterns = [
+                r"Total\s*body\s*surface\s*area\s*treated\s*\(sq\.?cm\)\s*:?\s*([\d\.]+)",
+                r"Area\s+Treated\s*:?\s*([\d\.]+)",
+            ]
+            for pat in area_patterns:
+                area_match = re.search(pat, text, re.IGNORECASE)
+                if area_match:
+                    try:
+                        total_area = float(area_match.group(1))
+                    except (ValueError, TypeError):
+                        total_area = None
+                    break
 
             logger.info(
                 f"✅ Xtrac parsed | "
@@ -1532,6 +1519,81 @@ class ClinicalParser:
         
 
     # =========================================================
+    # E/M DATA EXTRACTION
+    # =========================================================
+    def extract_em_data(self, note: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Extract signals needed for deterministic E/M code selection:
+        - patient_type  : 'newPat' | 'estPat' | 'consult' | None
+        - encounter_time: documented visit time in minutes
+        - em_level      : explicitly documented level (1-5)
+        - explicit_em_code: if a 9921x / 9920x code appears verbatim in the note
+        """
+        text = " ".join([
+            note.get("complaints") or "",
+            note.get("patientSummary") or "",
+            note.get("procedure") or "",
+            note.get("assesment") or "",
+            note.get("reviewofsystem") or "",
+        ]).lower()
+
+        # Patient type
+        patient_type = None
+        if any(k in text for k in ["new patient", "new pt", "new visit", "initial visit"]):
+            patient_type = "newPat"
+        elif any(k in text for k in [
+            "established patient", "established pt", "est. patient", "est patient",
+            "follow-up", "follow up", "return visit", "f/u",
+        ]):
+            patient_type = "estPat"
+        elif any(k in text for k in ["consult", "consultation", "second opinion"]):
+            patient_type = "consult"
+
+        # Encounter time (minutes)
+        encounter_time = None
+        time_patterns = [
+            r"total\s+(?:visit\s+)?time[:\s]+(\d+)\s*(?:min|minutes?)",
+            r"time\s+spent[:\s]+(\d+)\s*(?:min|minutes?)",
+            r"(\d+)\s*(?:min|minutes?)\s+(?:total|spent|of\s+(?:visit|encounter|counseling))",
+            r"encounter\s+time[:\s]+(\d+)",
+            r"visit\s+time[:\s]+(\d+)\s*(?:min|minutes?)?",
+        ]
+        for pattern in time_patterns:
+            m = re.search(pattern, text)
+            if m:
+                encounter_time = int(m.group(1))
+                break
+
+        # Explicit level mention (e.g. "level 3", "level 4 visit")
+        em_level = None
+        level_match = re.search(r"\blevel\s+([1-5])\b", text)
+        if level_match:
+            em_level = int(level_match.group(1))
+
+        # Verbatim E/M code in note
+        em_code_match = re.search(r"\b(9920[2-5]|9921[1-5]|9924[1-5])\b", text)
+        explicit_em_code = em_code_match.group(1) if em_code_match else None
+
+        # MDM-based level — used when neither time nor explicit level is documented
+        mdm_level: int | None = None
+        if patient_type and encounter_time is None and em_level is None and not explicit_em_code:
+            from services.mdm_classifier import classify_mdm_level
+            mdm_level = classify_mdm_level(note)
+
+        logger.info(
+            f"E/M signals  type={patient_type}  time={encounter_time}min  "
+            f"level={em_level}  mdm={mdm_level}  explicit={explicit_em_code}"
+        )
+
+        return {
+            "patient_type": patient_type,
+            "encounter_time": encounter_time,
+            "em_level": em_level,
+            "mdm_level": mdm_level,
+            "explicit_em_code": explicit_em_code,
+        }
+
+    # =========================================================
     # 🔹 MAIN PARSER
     # =========================================================
     def parse(self, note: Dict[str, Any]) -> Dict[str, Any]:
@@ -1609,5 +1671,7 @@ class ClinicalParser:
             "has_srt": bool(srt_data),
             "srt_sections": srt_data,
 
-            "has_procedure": bool(procedure_text.strip())
+            "has_procedure": bool(procedure_text.strip()),
+
+            "em_data": self.extract_em_data(note),
         }

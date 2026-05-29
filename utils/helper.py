@@ -23,6 +23,8 @@ def htmlparser(notes_data:list[dict]) -> list[dict]:
             "assesment",
             "procedure",
             "mohsNotes",
+            "pastHistory",
+            "reviewofsystem",
         ]
 
         for note in cleaned:
