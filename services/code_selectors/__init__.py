@@ -1,3 +1,4 @@
+from services.code_selectors.att_selector import AttSelector
 from services.code_selectors.excision_selector import ExcisionSelector
 from services.code_selectors.shave_removal_selector import ShaveRemovalSelector
 from services.code_selectors.destruction_selector import DestructionSelector
@@ -9,6 +10,7 @@ from services.code_selectors.debridement_selector import DebridementSelector
 from services.code_selectors.xtrac_selector import XtracSelector
 
 __all__ = [
+    "AttSelector",
     "ExcisionSelector",
     "ShaveRemovalSelector",
     "DestructionSelector",

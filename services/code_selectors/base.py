@@ -4,6 +4,7 @@ import csv
 import math
 from pathlib import Path
 from typing import Dict, List, Optional
+from loguru import logger
 
 _CSV_PATH = Path(__file__).parent.parent.parent / "data" / "proCodeList.csv"
 _CACHE: Dict[str, List[dict]] = {}
@@ -26,20 +27,21 @@ def load_codes_by_name(pro_name: str) -> List[dict]:
     with open(_CSV_PATH, newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
             if str(row.get("proName", "")).strip().lower() == key:
+                parent = _normalise_assoc(row.get("associatedWithProCode"))
+                addon_flag = str(row.get("addOn", "0")).strip() == "1"
                 rows.append({
                     "code": str(row["proCode"]).strip(),
                     "description": str(row.get("codeDesc", "")).strip(),
                     "proName": str(row.get("proName", "")).strip(),
                     "type": "cpt",
-                    "associatedWithProCode": _normalise_assoc(row.get("associatedWithProCode")),
+                    "associatedWithProCode": parent,
                     "minSize": _f(row.get("minSize")),
                     "maxSize": _f(row.get("maxSize")),
                     "minQty": _i(row.get("minQty")),
                     "maxQty": _i(row.get("maxQty")),
-                    "addOn": str(row.get("addOn", "0")).strip() == "1",
-                    "billWithIntEM": str(row.get("billWithIntEM", "0")).strip() == "1",
-                    "billWithFUEM": str(row.get("billWithFUEM", "0")).strip() == "1",
-                    "billAlone": str(row.get("billAlone", "0")).strip() == "1",
+                    "chargePerUnit": str(row.get("chargePerUnit", "0")).strip() == "1",
+                    # add-on: true when addOn flag is set OR parent code is linked
+                    "addOn": addon_flag or (parent is not None),
                 })
 
     _CACHE[key] = rows
@@ -188,7 +190,7 @@ def match_desc_by_location(candidates: List[dict], location_group: str) -> List[
         r for r in candidates
         if any(k in (r.get("description") or "").lower() for k in keywords)
     ]
-    return filtered if filtered else candidates
+    return filtered
 
 
 # ------------------------------------------------------------------
@@ -203,25 +205,24 @@ def match_by_size(
     size: float,
     location_group: Optional[str] = None,
 ) -> Optional[dict]:
-    """
-    Return the single candidate whose [minSize, maxSize] range contains size.
 
-    A small epsilon (0.005 cm) is applied to maxSize comparisons to absorb
-    floating-point rounding from the parser (e.g. 2.0000000001 should match
-    the 1.1-2.0 bracket, not overflow to the next one).
-    """
     pool = _filter_by_location(candidates, location_group) if location_group else candidates
 
     for row in pool:
         min_s = float(row["minSize"])
         max_s = float(row["maxSize"])
+
         if min_s <= size <= max_s + _EPSILON:
             return row
+    
+    logger.warning(
+        f"No size match: "
+        f"size={size}, "
+        f"group={location_group}, "
+        f"candidates={[r['code'] for r in pool]}"
+    )
 
-    if pool:
-        return max(pool, key=lambda r: float(r["maxSize"]))
     return None
-
 
 def _filter_by_location(candidates: List[dict], location_group: str) -> List[dict]:
     return match_desc_by_location(candidates, location_group)

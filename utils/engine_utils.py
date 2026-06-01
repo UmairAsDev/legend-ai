@@ -18,7 +18,7 @@ from services.em_selector import select_em_code
 from services.modifier_engine import (
     assign_em_modifier,
     assign_laterality_modifiers,
-    assign_multiple_procedure_modifiers,
+    assign_distinct_procedure_modifiers,
 )
 
 
@@ -436,11 +436,53 @@ def enforce_confirmed_codes(
             "modifier": None,
             "linked_dx": fallback_dx,
             "quantity": str(conf.get("quantity", "1")),
+            "site_id": conf.get("site_id", ""),   # carry from selector — critical for conflict detection
         })
         existing.add(code)
         logger.info(f"Injected missing confirmed code: {code}")
 
     llm_output["codes"]["cpt_codes"] = cpt_codes
+    return llm_output
+
+
+# =============================================================
+# SITE-ID ENRICHMENT
+# =============================================================
+
+def enrich_with_site_ids(
+    llm_output: Dict[str, Any],
+    candidates: List[Dict],
+) -> Dict[str, Any]:
+    """
+    Stamp site_id onto every CPT code in the LLM output that is missing one.
+
+    The LLM receives pre-selected confirmed codes but produces its own output
+    dicts — these never carry site_id.  This function matches each output code
+    against the candidates list by code number and copies the site_id over,
+    making the site identity available to the lesion validator and modifier engine.
+
+    Must run after all enforcement passes (enforce_confirmed_codes, etc.) so
+    every code that will be validated is already in llm_output.
+    """
+    candidate_site: Dict[str, str] = {
+        str(c.get("code", "")).strip(): str(c.get("site_id", "")).strip()
+        for c in candidates
+        if c.get("code") and c.get("site_id")
+    }
+
+    enriched = 0
+    for cpt in llm_output.get("codes", {}).get("cpt_codes", []):
+        code = str(cpt.get("code", "")).strip()
+        if cpt.get("site_id") or not code:
+            continue
+        site_id = candidate_site.get(code, "")
+        if site_id:
+            cpt["site_id"] = site_id
+            enriched += 1
+
+    if enriched:
+        logger.debug(f"enrich_with_site_ids: stamped {enriched} code(s) with site_id")
+
     return llm_output
 
 
@@ -527,26 +569,28 @@ def enforce_em_and_modifiers(
     parsed: Dict[str, Any],
     llm_output: Dict[str, Any],
     note: Dict[str, Any] | None = None,
+    sites: List[Dict] | None = None,
 ) -> Dict[str, Any]:
     """
     Post-LLM deterministic enforcement:
     1. Select E/M code using explicit code → documented time → explicit level → MDM level.
-    2. Check if E/M is billable alongside the assigned CPT codes.
-    3. Assign modifier -25 (or -57) to the E/M code.
-    4. Assign LT/RT laterality modifiers to eligible CPT codes.
-    5. Assign modifier -51 to secondary CPT codes when multiple procedures are billed.
+    2. Assign modifier -25 (or -57) to the E/M code.
+    3. Assign LT/RT laterality modifiers to eligible CPT codes (site-scoped).
+    4. Assign modifier -59 to secondary non-add-on codes at distinct sites
+       (Phase 8: site-aware; falls back to legacy logic when sites unavailable).
 
     For E/M-only notes (no CPT codes), linked_dx is populated from the note's
     diagnoses field so the E/M code is fully coded without LLM involvement.
     """
+    from services.modifier_engine import assign_distinct_procedure_modifiers
     from services.mdm_classifier import extract_diagnoses_from_note
 
     try:
-        em_data = parsed.get("em_data", {})
+        em_data      = parsed.get("em_data", {})
         patient_type = em_data.get("patient_type")
         encounter_time = em_data.get("encounter_time")
-        em_level = em_data.get("em_level")
-        mdm_level = em_data.get("mdm_level")
+        em_level     = em_data.get("em_level")
+        mdm_level    = em_data.get("mdm_level")
         explicit_em_code = em_data.get("explicit_em_code")
 
         cpt_codes: List = llm_output.get("codes", {}).get("cpt_codes", [])
@@ -556,12 +600,17 @@ def enforce_em_and_modifiers(
             llm_output["codes"]["cpt_codes"] = assign_laterality_modifiers(
                 llm_output["codes"]["cpt_codes"], parsed
             )
-            llm_output["codes"]["cpt_codes"] = assign_multiple_procedure_modifiers(
-                llm_output["codes"]["cpt_codes"]
-            )
+            # Phase 8: use site-aware -59 when site data is available
+            if sites:
+                llm_output["codes"]["cpt_codes"] = assign_distinct_procedure_modifiers(
+                    llm_output["codes"]["cpt_codes"], sites
+                )
+            else:
+                llm_output["codes"]["cpt_codes"] = assign_multiple_procedure_modifiers(
+                    llm_output["codes"]["cpt_codes"]
+                )
 
-        # Determine E/M code — priority chain:
-        # explicit code > documented time > explicit level > MDM-inferred level
+        # E/M code priority: explicit → time → level → MDM
         em_row = None
         if explicit_em_code:
             em_row = {"enmCode": explicit_em_code, "enmCodeDesc": "Office visit"}
@@ -578,7 +627,6 @@ def enforce_em_and_modifiers(
             apply_cpt_modifiers()
             return llm_output
 
-        # Build linked_dx: prefer LLM-provided, fall back to note diagnoses field
         linked_dx = llm_output.get("codes", {}).get("em_code", {}).get("linked_dx") or []
         if not linked_dx and note:
             linked_dx = extract_diagnoses_from_note(note)
@@ -589,7 +637,10 @@ def enforce_em_and_modifiers(
         em_code_dict = assign_em_modifier(em_code_dict, has_procedures, is_surgery_decision=False)
 
         llm_output["codes"]["em_code"] = em_code_dict
-        logger.info(f"E/M assigned: {em_code_dict['code']}  modifier={em_code_dict['modifier']}  dx={linked_dx}")
+        logger.info(
+            f"E/M assigned: {em_code_dict['code']}  "
+            f"modifier={em_code_dict['modifier']}  dx={linked_dx}"
+        )
 
         apply_cpt_modifiers()
         logger.info("E/M and modifier enforcement complete")

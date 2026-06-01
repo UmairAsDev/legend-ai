@@ -112,11 +112,28 @@ def _attach_reasoning(
 
     for cpt in cpt_codes:
         code = str(cpt.get("code", ""))
-        cpt["reasoning"] = reasoning_by_code.get(code, {})
+        r = reasoning_by_code.get(code, {})
+        # Enforce required field defaults — reasoning LLM must not emit empty strings
+        cpt["reasoning"] = {
+            "justification":         r.get("justification") or "Not reviewed.",
+            "supporting_evidence":   r.get("supporting_evidence") or [],
+            "modifier_justification": r.get("modifier_justification"),
+            "dx_justification":       r.get("dx_justification"),
+            "confidence_assessment":  r.get("confidence_assessment") or "partially_supported",
+            "flag":                   r.get("flag"),
+        }
 
     if em_code and em_code.get("code"):
         em_r = reasoning_output.get("em_reasoning")
-        em_code["reasoning"] = em_r if isinstance(em_r, dict) else (em_r.dict() if em_r else {})
+        raw_r = em_r if isinstance(em_r, dict) else (em_r.dict() if em_r else {})
+        em_code["reasoning"] = {
+            "justification":        raw_r.get("justification") or "Not reviewed.",
+            "supporting_evidence":  raw_r.get("supporting_evidence") or [],
+            "modifier_justification": raw_r.get("modifier_justification"),
+            "dx_justification":      raw_r.get("dx_justification"),
+            "confidence_assessment": raw_r.get("confidence_assessment") or "partially_supported",
+            "flag":                  raw_r.get("flag"),
+        }
 
     return cpt_codes, em_code
 
@@ -174,6 +191,20 @@ async def generate_reasoning(
             raw = raw.dict() if hasattr(raw, "dict") else {}
 
         updated_cpt, updated_em = _attach_reasoning(cpt_codes, em_code, raw)
+
+        # Remove codes the reasoning engine explicitly marked as unsupported.
+        # Only LLM-selected codes (not selector-confirmed) are subject to removal —
+        # deterministic selector codes are always kept.
+        before = len(updated_cpt)
+        updated_cpt = [
+            c for c in updated_cpt
+            if c.get("confidence") == "confirmed"
+            or c.get("reasoning", {}).get("confidence_assessment") != "unsupported"
+        ]
+        removed = before - len(updated_cpt)
+        if removed:
+            logger.info(f"Reasoning engine removed {removed} unsupported code(s)")
+
         llm_output["codes"]["cpt_codes"] = updated_cpt
         llm_output["codes"]["em_code"] = updated_em or em_code
         llm_output["overall_assessment"] = raw.get("overall_assessment", "")

@@ -86,13 +86,15 @@ class MedicalCodingService:
             ]
             em = _format_em(codes.get("em_code", {}))
 
-            # Unresolved procedures — structured list surfaced separately from
-            # audit_flags so the caller can take specific action per item.
+            # Unresolved procedures — surfaced with suggested_resolution when
+            # the deterministic engine can still select a code in the boundary zone.
             unresolved = parsed.get("unresolved_procedures") or []
             unresolved_out = [
                 {
                     "description": u.get("description", ""),
                     "reason": u.get("reason", "unknown"),
+                    # Suggested code when available — billing team approves rather than recodes
+                    "suggested_resolution": u.get("suggested_resolution"),
                 }
                 for u in unresolved
             ]

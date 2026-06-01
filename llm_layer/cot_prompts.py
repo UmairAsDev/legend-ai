@@ -98,7 +98,11 @@ Now extract structured billing parameters for every procedure identified.
 
 ## EXTRACTION RULES — READ CAREFULLY
 
-1. ONLY extract values EXPLICITLY documented in the note.
+1. ONLY extract procedures that are EXPLICITLY DOCUMENTED AS PERFORMED.
+   - `biopsyNotes` and `mohsNotes` fields contain performed procedures.
+   - `assesment` field often lists management options that were DISCUSSED BUT NOT DONE.
+     Examples: "Management options discussed: ED&C, cryosurgery, PDT, 5-FU" — do NOT extract these.
+     Only extract from `assesment` when it says "done today", "performed", "patient opted to proceed with".
 2. Set any field to null if the value is not directly stated — NEVER estimate or calculate.
 3. For sizes: always use the MAXIMUM dimension from any X×Y measurements.
 4. Size priority for excision: Excision Size → Wound Size → Closure Size. NEVER lesion size.
@@ -106,15 +110,11 @@ Now extract structured billing parameters for every procedure identified.
 6. For closure type: "complex" = complex repair / full-thickness, "intermediate" = layered/intermediate, "adjacent" = adjacent tissue transfer.
 7. For destruction type: "db" = benign lesions, "dpm" = actinic keratosis/premalignant, "dm" = malignant lesions.
 8. For shave removal location_group: "face" = face/ears/eyelids/nose/lips/mucous membrane, "trunk" = trunk/arms/legs, "special" = scalp/neck/hands/feet/genitalia.
-9. If a procedure is mentioned but required billing fields (size, quantity, location) are absent → add to unresolved_procedures with reason.
-10. Flag BOUNDARY CASES (size within ±0.3cm of a code boundary) in unresolved_procedures with reason "boundary_case" — still include in the relevant section too.
+9. Always extract the "Location:" field from each procedure section. Location is required for correct CPT code range selection (e.g., excision at neck = different code range than trunk).
+10. If a procedure is mentioned but required billing fields (size, quantity, location) are absent → add to unresolved_procedures with reason.
+11. For ATT (adjacent tissue transfer): record size as the post-operative defect area in cm². Accept "final closure size X cm²" or dimensions "X × Y cm" (area = X × Y) as valid.
 
-## KNOWN CPT SIZE BOUNDARIES (flag if within ±0.3cm)
-- Excision benign: 0.5, 1.0, 2.0, 3.0, 4.0 cm
-- Excision malignant: 0.5, 1.0, 1.5, 2.0, 3.0, 4.0 cm
-- Shave removal: 0.5, 1.0, 2.0 cm
-- Closure (complex): 2.5, 7.5, 20.0 cm
-- Closure (intermediate): 2.5, 7.5, 12.5, 20.0 cm
+Note: boundary-case detection is handled deterministically by the system — do NOT add boundary_case flags yourself.
 
 ## OUTPUT FORMAT
 {format_instructions}"""

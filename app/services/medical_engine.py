@@ -29,6 +29,9 @@ from services.code_selectors import (
     XtracSelector,
 )
 from services.retriever import CodeRetriever
+from services.site_builder import build_sites, ProcedureSite
+from services.procedure_normalizer import normalize_procedures
+from services.boundary_checker import detect_boundary_cases
 from src.data_layer.progressnote import notes
 from utils.engine_utils import (
     aggregate_chemical_peels,
@@ -41,6 +44,7 @@ from utils.engine_utils import (
     enforce_em_and_modifiers,
     enforce_excision_quantity,
     enrich_with_charges,
+    enrich_with_site_ids,
     merge_parsed_results,
     normalize_llm_output,
     serialize_data,
@@ -134,11 +138,30 @@ class CodingNodes:
                 state["parsed"], llm_extraction
             )
 
-            # Surface unresolved procedures as initial audit flags
+            # Deterministic boundary detection (replaces LLM boundary flags).
+            # Checks each size against minSize/maxSize for its OWN procedure family —
+            # never cross-applies excision boundaries to closure sizes.
+            boundary_issues = detect_boundary_cases(merged)
+            if boundary_issues:
+                existing = merged.setdefault("unresolved_procedures", [])
+                # Avoid duplicating what the LLM may have already flagged
+                existing_descs = {u.get("reason") for u in existing}
+                for issue in boundary_issues:
+                    if issue.get("reason") not in existing_descs:
+                        existing.append(issue)
+                logger.info(f"BoundaryChecker added {len(boundary_issues)} unresolved item(s)")
+
+            # Remove LLM-generated boundary_case entries — they're replaced above
+            merged["unresolved_procedures"] = [
+                u for u in merged.get("unresolved_procedures", [])
+                if not (u.get("reason") == "boundary_case" and "suggested_resolution" not in u)
+            ]
+
+            # Surface unresolved procedures
             unresolved = merged.get("unresolved_procedures", [])
             if unresolved:
                 logger.warning(
-                    f"Unresolved procedures: "
+                    "Unresolved procedures: "
                     + ", ".join(u.get("description", "") for u in unresolved)
                 )
 
@@ -148,6 +171,28 @@ class CodingNodes:
             # Non-fatal — keep regex-only parsed output
             logger.warning(f"Billing params extraction failed (non-fatal): {e}")
             return {"parse_source": {}}
+
+    # ------------------------------------------------------------------
+    # SITE BUILDER — Phase 1
+    # Groups parsed sections into ProcedureSite objects and back-annotates
+    # every section with its site_id so selectors can tag produced codes.
+    # ------------------------------------------------------------------
+
+    async def build_sites_node(self, state):
+        try:
+            # 1. Normalize parsed sections into standardized ProcedureInstance objects
+            procedure_instances = normalize_procedures(state["parsed"])
+
+            # 2. Group instances into ProcedureSite objects (annotates sections with site_id)
+            sites: list[ProcedureSite] = build_sites(state["parsed"])
+
+            return {
+                "procedures": [p.to_dict() for p in procedure_instances],
+                "sites":      [s.to_dict() for s in sites],
+            }
+        except Exception as e:
+            logger.warning(f"Site builder failed (non-fatal): {e}")
+            return {"procedures": [], "sites": []}
 
     # ------------------------------------------------------------------
     # WEB LOOKUP — CONDITIONAL
@@ -291,7 +336,7 @@ class CodingNodes:
             )
             result = await self._llm_call_fallback(state)
 
-        # Deterministic enforcement passes — unchanged from original pipeline
+        # Deterministic enforcement passes
         result = enforce_confirmed_codes(
             state["candidates"], result, note=state.get("cleaned_note")
         )
@@ -302,6 +347,10 @@ class CodingNodes:
             retrieved_candidates=state["candidates"],
             llm_output=result,
         )
+
+        # Stamp site_id onto every output code that doesn't already carry one.
+        # Must run after all enforcement so every code is present in the output.
+        result = enrich_with_site_ids(result, state["candidates"])
 
         # Inject unresolved procedures into audit flags
         unresolved = state["parsed"].get("unresolved_procedures", [])
@@ -358,6 +407,7 @@ class CodingNodes:
                 parsed=state["parsed"],
                 llm_output=state["llm_output"],
                 note=state.get("cleaned_note"),
+                sites=state.get("sites") or [],   # Phase 8: site-aware modifier
             )
             result = enrich_with_charges(result)
             return {"llm_output": result}
@@ -392,12 +442,23 @@ class CodingNodes:
     # PRIVATE RETRIEVE HELPERS
     # Each method tries the deterministic selector first.
     # Falls back to DB filter when selector returns empty (missing data).
+    #
+    # Every produced code is tagged with site_id from the section that
+    # produced it.  The site_builder annotated each section in-place with
+    # its site_id before this node runs.
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _tag(codes: List[dict], site_id: str) -> None:
+        """Attach site_id to every code in the list (mutates in place)."""
+        for c in codes:
+            c["site_id"] = site_id
 
     async def _retrieve_excision(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("excision_sections", []):
-            size = sec.get("size")
+            site_id  = sec.get("site_id", "")
+            size     = sec.get("size")
             location = sec.get("location") or ""
             lesion_type = (
                 "malignant"
@@ -407,10 +468,10 @@ class CodingNodes:
 
             selected = ExcisionSelector.select(size, location, lesion_type)
             if selected:
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
-            # Fallback: DB filter
             if not size:
                 logger.warning("Excision: size missing and selector failed — skipping")
                 continue
@@ -419,47 +480,52 @@ class CodingNodes:
             res = await self.retriever.excision_filter(size, loc)
             for r in res:
                 r["confidence"] = "candidate"
-                r["source"] = "excision"
+                r["source"]     = "excision"
+            self._tag(res, site_id)
             results.extend(res)
         return results
 
     async def _retrieve_destruction(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("destruction_sections", []):
-            dtype = sec.get("destruction_type")
-            qty = sec.get("quantity") or 1
-            size = sec.get("size")
+            site_id  = sec.get("site_id", "")
+            dtype    = sec.get("destruction_type")
+            qty      = sec.get("quantity") or 1
+            size     = sec.get("size")
             location = sec.get("location")
 
             selected = DestructionSelector.select(dtype, int(qty or 1), size, location)
             if selected:
                 for r in selected:
-                    r["destruction_label"] = sec.get("label")
+                    r["destruction_label"]    = sec.get("label")
                     r["destruction_location"] = location
                     r["destruction_quantity"] = qty
-                    r["destruction_size"] = size
+                    r["destruction_size"]     = size
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
-            # Fallback: DB filter
             res = await self.retriever.destruction_filter(
                 destruction_type=dtype, quantity=qty, size=size, location=location
             )
             for r in res:
-                r["confidence"] = "candidate"
-                r["source"] = f"destruction_{dtype}"
-                r["destruction_label"] = sec.get("label")
+                r["confidence"]           = "candidate"
+                r["source"]               = f"destruction_{dtype}"
+                r["destruction_label"]    = sec.get("label")
                 r["destruction_location"] = location
                 r["destruction_quantity"] = qty
-                r["destruction_size"] = size
+                r["destruction_size"]     = size
+            self._tag(res, site_id)
             results.extend(res)
         return results
 
     async def _retrieve_biopsy(self, parsed: dict) -> List[dict]:
         biopsy_sections = parsed.get("biopsy_sections", [])
         total_count = len(biopsy_sections)
+        # Use the first section's site_id as a representative tag.
+        # Multi-site biopsy refinement is tracked for a future per-section pass.
+        first_site_id = biopsy_sections[0].get("site_id", "") if biopsy_sections else ""
 
-        # Determine method from first section (most notes use one method)
         method = None
         for sec in biopsy_sections:
             text = (sec.get("text") or "").lower()
@@ -475,17 +541,22 @@ class CodingNodes:
 
         selected = BiopsySelector.select(method, total_count)
         if selected:
+            self._tag(selected, first_site_id)
             return selected
 
-        # Fallback: DB filter
         res = await self.retriever.biopsy_filter()
         for r in res:
             r["confidence"] = "candidate"
+        self._tag(res, first_site_id)
         return res
 
     async def _retrieve_shave_removal(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("shave_removal_aggregated", []):
+            # shave_removal_aggregated doesn't carry site_id directly; derive from
+            # the first raw section whose location_group + size match this group.
+            site_id = self._shave_site_id(parsed, sec)
+
             selected = ShaveRemovalSelector.select(
                 size=sec.get("size"),
                 location_group=sec.get("location_group"),
@@ -493,6 +564,7 @@ class CodingNodes:
             if selected:
                 for r in selected:
                     r["shave_quantity"] = sec.get("quantity")
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
@@ -501,27 +573,43 @@ class CodingNodes:
                 size=sec.get("size"),
             )
             for r in res:
-                r["confidence"] = "candidate"
-                r["source"] = "shave_removal"
+                r["confidence"]    = "candidate"
+                r["source"]        = "shave_removal"
                 r["shave_quantity"] = sec.get("quantity")
+            self._tag(res, site_id)
             results.extend(res)
         return results
+
+    @staticmethod
+    def _shave_site_id(parsed: dict, aggregated_sec: dict) -> str:
+        """
+        Find the site_id from the first raw shave_removal_section that matches
+        this aggregated group (same location_group and size).
+        """
+        for raw in parsed.get("shave_removal_sections", []):
+            if (raw.get("location_group") == aggregated_sec.get("location_group")
+                    and raw.get("size") == aggregated_sec.get("size")):
+                return raw.get("site_id", "")
+        return ""
 
     async def _retrieve_mohs(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("mohs_sections", []):
+            site_id  = sec.get("site_id", "")
             location = sec.get("location", "")
-            stages = int(sec.get("stages") or 1)
+            stages   = int(sec.get("stages") or 1)
 
             selected = MohsSelector.select(location, stages)
             if selected:
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
             res = await self.retriever.mohs_filter(location) or []
             for r in res:
                 r["confidence"] = "candidate"
-                r["source"] = "mohs"
+                r["source"]     = "mohs"
+            self._tag(res, site_id)
             results.extend(res)
         return results
 
@@ -529,9 +617,19 @@ class CodingNodes:
         results = []
         for group in parsed.get("closure_aggregated", []):
             total_size = group.get("total_size")
-            ctype = group.get("type")
-            group_key = group.get("group_key", "")
-            location_group = group_key.split("_")[-1] if group_key else None
+            ctype      = group.get("type")
+            group_key  = group.get("group_key", "")
+
+            # Extract location_group by stripping the closure type prefix.
+            # group_key format: "{type}_{location_group}", e.g. "adjacent_high_risk".
+            # Using split("_")[-1] would return "risk" for "high_risk" — wrong.
+            # Using split("_", 1)[1] returns the full location suffix correctly.
+            if group_key and "_" in group_key:
+                location_group = group_key.split("_", 1)[1]
+            else:
+                location_group = group_key or None
+            # Derive site_id from the first raw closure section in this group
+            site_id = self._closure_site_id(parsed, group_key)
 
             if not total_size:
                 logger.warning("Closure: missing size — skipped")
@@ -541,39 +639,52 @@ class CodingNodes:
             if selected:
                 for r in selected:
                     r["closure_group"] = group_key
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
             res = await self.retriever.closure_filter(total_size, location_group, ctype)
             for r in res:
-                r["confidence"] = "candidate"
-                r["source"] = "closure"
+                r["confidence"]    = "candidate"
+                r["source"]        = "closure"
                 r["closure_group"] = group_key
+            self._tag(res, site_id)
             results.extend(res)
         return results
+
+    @staticmethod
+    def _closure_site_id(parsed: dict, group_key: str) -> str:
+        for raw in parsed.get("closure_sections", []):
+            if raw.get("group_key") == group_key:
+                return raw.get("site_id", "")
+        return ""
 
     async def _retrieve_srt(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("srt_sections", []):
+            site_id  = sec.get("site_id", "")
             selected = SrtSelector.select(
                 kv=sec.get("kv"),
                 ultrasound=bool(sec.get("ultrasound")),
                 images_present=bool(sec.get("images_present")),
             )
             if selected:
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
             res = await self.retriever.srt_filter(sec)
             for r in res:
                 r["confidence"] = "candidate"
-                r["source"] = "srt"
+                r["source"]     = "srt"
+            self._tag(res, site_id)
             results.extend(res)
         return results
 
     async def _retrieve_debridement(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("debridement_sections", []):
+            site_id  = sec.get("site_id", "")
             selected = DebridementSelector.select(
                 nail=bool(sec.get("nail")),
                 dermatologic=bool(sec.get("dermatologic")),
@@ -582,30 +693,35 @@ class CodingNodes:
                 quantity=int(sec.get("quantity") or 1),
             )
             if selected:
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
             res = await self.retriever.debridement_filter(sec)
             for r in res:
                 r["confidence"] = "candidate"
-                r["source"] = "debridement"
+                r["source"]     = "debridement"
+            self._tag(res, site_id)
             results.extend(res)
         return results
 
     async def _retrieve_xtrac(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("xtrac_sections", []):
+            site_id  = sec.get("site_id", "")
             selected = XtracSelector.select(total_area=sec.get("total_area"))
             if selected:
                 for r in selected:
                     r["xtrac_area"] = sec.get("total_area")
+                self._tag(selected, site_id)
                 results.extend(selected)
                 continue
 
             res = await self.retriever.xtrac_filter(total_area=sec.get("total_area"))
             for r in res:
                 r["confidence"] = "candidate"
-                r["source"] = "xtrac"
+                r["source"]     = "xtrac"
+            self._tag(res, site_id)
             results.extend(res)
         return results
 
@@ -615,13 +731,15 @@ class CodingNodes:
         results = []
         procedure_text = cleaned.get("procedure", "")
         for sec in parsed.get("laser_treatment_sections", []):
+            site_id = sec.get("site_id", "")
             try:
                 res = await self.retriever.laser_treatment_filter(
                     section=sec, full_procedure_text=procedure_text
                 )
                 for r in res:
                     r["confidence"] = "candidate"
-                    r["source"] = "laser_treatment"
+                    r["source"]     = "laser_treatment"
+                self._tag(res, site_id)
                 results.extend(res)
             except Exception as e:
                 logger.exception(f"Laser retrieval failed: {e}")
@@ -630,11 +748,13 @@ class CodingNodes:
     async def _retrieve_ipl(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("ipl_sections", []):
+            site_id = sec.get("site_id", "")
             try:
                 res = await self.retriever.ipl_filter(section=sec)
                 for r in res:
                     r["confidence"] = "candidate"
-                    r["source"] = "ipl"
+                    r["source"]     = "ipl"
+                self._tag(res, site_id)
                 results.extend(res)
             except Exception as e:
                 logger.exception(f"IPL retrieval failed: {e}")
@@ -643,11 +763,13 @@ class CodingNodes:
     async def _retrieve_filler_material(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("filler_material_sections", []):
+            site_id = sec.get("site_id", "")
             try:
                 res = await self.retriever.filler_material_filter(section=sec)
                 for r in res:
                     r["confidence"] = "candidate"
-                    r["source"] = "fm"
+                    r["source"]     = "fm"
+                self._tag(res, site_id)
                 results.extend(res)
             except Exception as e:
                 logger.exception(f"Filler material retrieval failed: {e}")
@@ -656,11 +778,13 @@ class CodingNodes:
     async def _retrieve_filler(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("filler_sections", []):
+            site_id = sec.get("site_id", "")
             try:
                 res = await self.retriever.filler_filter(section=sec)
                 for r in res:
                     r["confidence"] = "candidate"
-                    r["source"] = "filler"
+                    r["source"]     = "filler"
+                self._tag(res, site_id)
                 results.extend(res)
             except Exception as e:
                 logger.exception(f"Filler retrieval failed: {e}")
@@ -669,11 +793,13 @@ class CodingNodes:
     async def _retrieve_chemical_peel(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("chemical_peel_sections", []):
+            site_id = sec.get("site_id", "")
             try:
                 res = await self.retriever.chemical_peel_filter(section=sec)
                 for r in res:
                     r["confidence"] = "candidate"
-                    r["source"] = "chemical_peel"
+                    r["source"]     = "chemical_peel"
+                self._tag(res, site_id)
                 results.extend(res)
             except Exception as e:
                 logger.exception(f"Chemical peel retrieval failed: {e}")

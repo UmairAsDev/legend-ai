@@ -34,12 +34,18 @@ class ClinicalParser:
 
         results = []
         for match in matches:
-            logger.info(f"🔍 Processing biopsy section: {match.group(1)}")
+            label = match.group(1)
+            section_text = match.group(0).strip()
+            logger.info(f"🔍 Processing biopsy section: {label}")
+
+            loc_match = re.search(r"Location:\s*([^\n\r]+)", section_text, re.IGNORECASE)
+            location = loc_match.group(1).strip() if loc_match else ""
 
             results.append({
-                "label": match.group(1),
-                "text": match.group(0).strip(),
-                "quantity": 1
+                "label": label,
+                "text": section_text,
+                "quantity": 1,
+                "location": location,
             })
 
         logger.info(f"📊 Total biopsy sections: {len(results)}")
@@ -102,6 +108,11 @@ class ClinicalParser:
 
             lesion_count = self.utils.extract_lesion_count(section_text)
 
+            # Extract location — required for correct CPT code range selection
+            # (excision at neck/scalp/hands/feet = 11620-11626, not 11600-11606)
+            loc_match = re.search(r"Location:\s*([^\n\r]+)", section_text, re.IGNORECASE)
+            location = loc_match.group(1).strip() if loc_match else ""
+
             cleaned_text = re.sub(
                 r"Repair:.*", "",
                 section_text,
@@ -112,7 +123,8 @@ class ClinicalParser:
                 "label": label,
                 "text": cleaned_text.strip(),
                 "size": size,
-                "quantity": lesion_count
+                "quantity": lesion_count,
+                "location": location,
             })
 
         logger.info(f"📊 Total excision sections: {len(results)}")
@@ -1599,14 +1611,30 @@ class ClinicalParser:
     def parse(self, note: Dict[str, Any]) -> Dict[str, Any]:
 
         procedure_text = note.get("procedure") or ""
-        biopsy_text = note.get("biopsyNotes") or ""
-        mohs_text = note.get("mohsNotes") or ""
+        biopsy_text    = note.get("biopsyNotes") or ""
+        mohs_text      = note.get("mohsNotes") or ""
+
+        # Combined text for procedure families that may appear in any field.
+        # Some practices document destruction, peels, laser, injections etc.
+        # in the biopsyNotes field rather than procedure when the procedure
+        # field is empty.  Reading all three prevents silent misses.
+        combined_text = "\n".join(filter(None, [procedure_text, biopsy_text, mohs_text]))
 
         closure_data = []
-
         closure_data += self.extract_closure_sections(procedure_text)
         closure_data += self.extract_closure_sections(biopsy_text)
         closure_data += self.extract_closure_sections(mohs_text)
+
+        # Deduplicate closures by size + type to avoid double-counting when
+        # the same closure note appears in multiple fields
+        seen_closures: set = set()
+        deduped_closures = []
+        for cs in closure_data:
+            key = (cs.get("type"), cs.get("size"), cs.get("location"))
+            if key not in seen_closures:
+                seen_closures.add(key)
+                deduped_closures.append(cs)
+        closure_data = deduped_closures
 
         biopsy_data = self.extract_biopsy_sections(biopsy_text) \
             if self.utils.detect_keyword(biopsy_text, BIOPSY_KEYWORDS) else []
@@ -1616,17 +1644,18 @@ class ClinicalParser:
 
         mohs_data = self.extract_mohs_sections(mohs_text) \
             if self.utils.detect_keyword(mohs_text, MOHS_KEYWORDS) else []
-        
-        filler_material_sections = self.extract_filler_material_sections(procedure_text)
-        destruction_sections = self.extract_destruction_sections(procedure_text)
-        chemical_sections = self.extract_chemical_peel_sections(procedure_text)
-        laser_sections = self.extract_laser_treatment_sections(procedure_text)
-        debridement_data = self.extract_debridement_sections(procedure_text)
-        shave_sections = self.extract_shave_removal_sections(biopsy_text)
-        filler_sections = self.extract_filler_sections(procedure_text)
-        xtrac_sections = self.extract_xtrac_sections(procedure_text)
-        srt_data = self.extract_srt_sections(procedure_text, note)
-        ipl_sections = self.extract_ipl_sections(procedure_text)
+
+        # Procedure families that may appear in any field — read combined text
+        filler_material_sections = self.extract_filler_material_sections(combined_text)
+        destruction_sections     = self.extract_destruction_sections(combined_text)
+        chemical_sections        = self.extract_chemical_peel_sections(combined_text)
+        laser_sections           = self.extract_laser_treatment_sections(combined_text)
+        debridement_data         = self.extract_debridement_sections(combined_text)
+        shave_sections           = self.extract_shave_removal_sections(combined_text)
+        filler_sections          = self.extract_filler_sections(combined_text)
+        xtrac_sections           = self.extract_xtrac_sections(combined_text)
+        srt_data                 = self.extract_srt_sections(combined_text, note)
+        ipl_sections             = self.extract_ipl_sections(combined_text)
 
         return {
             "has_filler_material": len(filler_material_sections) > 0,

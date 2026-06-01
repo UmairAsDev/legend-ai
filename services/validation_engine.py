@@ -14,16 +14,14 @@ Rules:
   3. Duplicate: same CPT + same DX + same location billed more than once (hard reject)
   4. Modifier -59 applied to a procedure with no distinct site evidence (soft flag)
   5. CPT code with no linked ICD-10 diagnosis (soft flag)
-
-Note: CCI bundling pair enforcement (e.g., shave removal + biopsy same lesion)
-is Phase 3 work and will load from the quarterly CMS NCCI table rather than
-hardcoding code pairs here.
+  6. NCCI bundled pairs: secondary code bundled with a co-billed primary (hard reject unless -59)
 """
 
 from typing import Any, Dict, List, Optional
 from loguru import logger
 
 from config.constants import CLOSURE_CODE_PREFIXES
+from services.lesion_validator import validate_lesion_conflicts
 
 
 # ─────────────────────────────────────────────────────────────
@@ -246,6 +244,51 @@ def _check_dx_linkage(
 
 
 # ─────────────────────────────────────────────────────────────
+# RULE 0 — HALLUCINATED CODES
+# ─────────────────────────────────────────────────────────────
+
+def _check_hallucinated_codes(
+    cpt_codes: List[Dict],
+    candidates: List[Dict],
+    llm_output: Dict,
+) -> List[Dict]:
+    """
+    Reject any CPT code not present in the retrieved candidates list.
+
+    The retriever fetches codes from proCodeList.csv filtered to this note's
+    detected procedure families.  A code the LLM assigns that was never
+    retrieved has no knowledge-base backing — it is hallucinated.
+
+    Confirmed selector codes (confidence='confirmed') are exempt because
+    they come directly from the CSV via deterministic selectors.
+    """
+    known_codes: set = {
+        str(c.get("code", "")).strip()
+        for c in candidates
+        if c.get("code")
+    }
+
+    rejected: set = set()
+
+    for cpt in cpt_codes:
+        code = str(cpt.get("code", "")).strip()
+        if not code:
+            continue
+        if cpt.get("confidence") == "confirmed":
+            continue   # selector-confirmed — always valid
+        if code not in known_codes:
+            rejected.add(code)
+            _add_flag(
+                llm_output,
+                f"REJECTED {code}: not in retrieved candidate list — "
+                f"not a supported procedure for this note.",
+            )
+            logger.warning(f"Hallucination guard: rejected {code}")
+
+    return [c for c in cpt_codes if str(c.get("code", "")).strip() not in rejected]
+
+
+# ─────────────────────────────────────────────────────────────
 # MAIN ENTRY POINT
 # ─────────────────────────────────────────────────────────────
 
@@ -270,9 +313,15 @@ def validate_codes(
         original_count = len(cpt_codes)
 
         # Hard reject rules
+        cpt_codes = _check_hallucinated_codes(cpt_codes, candidates, llm_output)
         cpt_codes = _check_addon_without_primary(cpt_codes, candidates, llm_output)
         cpt_codes = _check_quantity_ranges(cpt_codes, candidates, llm_output)
         cpt_codes = _check_duplicates(cpt_codes, llm_output)
+
+        # Phase 5: same-site lesion conflict validation (NCCI + dermatology rules)
+        llm_output["codes"]["cpt_codes"] = cpt_codes
+        llm_output = validate_lesion_conflicts(llm_output, candidates)
+        cpt_codes = list(llm_output.get("codes", {}).get("cpt_codes", []))
 
         # Soft flag rules
         _check_modifier_59(cpt_codes, parsed, llm_output)
