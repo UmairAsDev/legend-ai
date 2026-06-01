@@ -34254,3 +34254,7 @@ NoneType: None
 2026-06-01 11:57:59.945 | INFO     | services.reasoning_engine:generate_reasoning:170 - Calling reasoning LLM for 0 CPT + EM=True
 2026-06-01 11:58:04.347 | WARNING  | services.reasoning_engine:generate_reasoning:191 - Audit flags raised: ['Unresolved procedure — Acne extractions were discussed as a possible management option, but no extraction procedure is documented as performed. (reason: ambiguous_type)', 'Unresolved procedure — No billable dermatologic procedure is explicitly documented in the note; only medical management (azelaic acid, tretinoin, doxycycline) and counseling are recorded. (reason: unknown)', '99203 level is not fully supported by explicit MDM/time documentation.', 'No separately billable procedure is documented.']
 2026-06-01 11:58:04.353 | INFO     | app.api.route:process_note_endpoint:23 - Completed: note_id=729222, procedures=0
+2026-06-01 12:13:01.539 | INFO     | services.modifier_engine:_load_modifier_list:45 - ✅ Modifier list loaded: 56 modifiers
+2026-06-01 12:13:04.776 | INFO     | services.web_lookup:__init__:99 - WebLookupService initialised — backend=tavily
+2026-06-01 12:13:04.959 | INFO     | main:lifespan:22 - Starting Medical Coding API
+2026-06-01 12:14:57.710 | INFO     | main:lifespan:26 - Shutting down Medical Coding API
