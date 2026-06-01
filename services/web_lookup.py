@@ -17,20 +17,25 @@ Search backend priority:
 
 import asyncio
 import os
+import re as _re
 from typing import Any, Dict, List, Optional
 from loguru import logger
 
+_SEARCH_TIMEOUT = int(os.getenv("WEB_SEARCH_TIMEOUT_SECONDS", "10"))
 
-# ─────────────────────────────────────────────────────────────
-# TRIGGER CONDITIONS
-# ─────────────────────────────────────────────────────────────
 
-# Excision CPT size boundaries in cm — flag if within ±BOUNDARY_TOLERANCE
-_EXCISION_BOUNDARIES = [0.5, 1.0, 2.0, 3.0, 4.0]
-_BOUNDARY_TOLERANCE = 0.3
+def _sanitize(text: str) -> str:
+    """Strip HTML tags and normalize whitespace from web search results."""
+    text = _re.sub(r"<[^>]+>", " ", text)
+    return _re.sub(r"\s+", " ", text).strip()
 
-# Procedure types always searched (LCD-governed or payer-variable)
-_ALWAYS_SEARCH = {"srt", "ipl"}
+from config.constants import (
+    CPT_BOUNDARY_TOLERANCE as _BOUNDARY_TOLERANCE,
+    EXCISION_BOUNDARIES as _EXCISION_BOUNDARIES,
+    MAX_WEB_SEARCHES_PER_NOTE,
+    WEB_SEARCH_MAX_CHARS,
+    MIN_METHOD_TOKEN_LENGTH,
+)
 
 
 def _is_boundary_case(size: Optional[float], boundaries: List[float]) -> bool:
@@ -85,8 +90,8 @@ def _build_query(trigger_type: str, params: Dict[str, Any]) -> str:
 
 class WebLookupService:
 
-    MAX_SEARCHES_PER_NOTE = 2
-    MAX_RESULT_CHARS = 600  # trim each result to bound token usage
+    MAX_SEARCHES_PER_NOTE = MAX_WEB_SEARCHES_PER_NOTE
+    MAX_RESULT_CHARS      = WEB_SEARCH_MAX_CHARS  # trim each result to bound token usage
 
     def __init__(self):
         self._tavily_key = os.getenv("TAVILY_API_KEY")
@@ -221,15 +226,17 @@ class WebLookupService:
                 max_results=2,
                 include_answer=True,
             )
-            # Prefer the Tavily direct answer, then first result content
             if response.get("answer"):
-                return response["answer"][:self.MAX_RESULT_CHARS]
+                return _sanitize(response["answer"])[:self.MAX_RESULT_CHARS]
             results = response.get("results", [])
             if results:
-                return results[0].get("content", "")[:self.MAX_RESULT_CHARS]
+                return _sanitize(results[0].get("content", ""))[:self.MAX_RESULT_CHARS]
             return ""
 
-        return await loop.run_in_executor(None, _sync_search)
+        return await asyncio.wait_for(
+            loop.run_in_executor(None, _sync_search),
+            timeout=_SEARCH_TIMEOUT,
+        )
 
     async def _duckduckgo_search(self, query: str) -> str:
         try:
@@ -245,9 +252,11 @@ class WebLookupService:
                 results = list(ddgs.text(query, max_results=2))
             if not results:
                 return ""
-            # Combine title + body of first result
             r = results[0]
             text = f"{r.get('title', '')}: {r.get('body', '')}"
-            return text[:self.MAX_RESULT_CHARS]
+            return _sanitize(text)[:self.MAX_RESULT_CHARS]
 
-        return await loop.run_in_executor(None, _sync_search)
+        return await asyncio.wait_for(
+            loop.run_in_executor(None, _sync_search),
+            timeout=_SEARCH_TIMEOUT,
+        )

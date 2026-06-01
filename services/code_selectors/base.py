@@ -74,11 +74,18 @@ def _i(val) -> int:
 # LOCATION CLASSIFICATION
 # ------------------------------------------------------------------
 
+# ─────────────────────────────────────────────────────────────
+# LOCATION CLASSIFICATION
+#
+# Single source of truth for all anatomical grouping logic.
+# Used by selectors, retriever, engine_utils, and clinical_parser.
+# Import from here — never redefine in another file.
+# ─────────────────────────────────────────────────────────────
+
+# Procedure location groups (excision, shave removal, destruction)
 _FACE_TOKENS = {
-    # Nouns
     "face", "ear", "ears", "eyelid", "eyelids", "nose", "lip", "lips",
     "mucous", "cheek", "forehead", "temple", "chin", "jaw",
-    # Anatomical adjectives (common in clinical notes)
     "nasal", "perinasal", "perioral", "periorbital", "orbital",
     "auricular", "periauricular", "brow", "eyebrow", "malar",
     "mandibular", "labial", "buccal", "temporal", "zygomatic",
@@ -87,15 +94,42 @@ _FACE_TOKENS = {
 _SPECIAL_TOKENS = {
     "scalp", "neck", "hand", "hands", "foot", "feet", "genitalia",
     "genital", "genitals", "axilla", "axillae",
-    # Anatomical adjectives
     "palmar", "plantar", "digital", "finger", "toe", "inguinal",
     "cervical", "nuchal",
+}
+
+# Closure/repair location groups (different grouping system)
+_CLOSURE_GROUPS = {
+    "critical":    {"nose", "lip", "lips", "ear", "ears", "eyelid", "eyelids"},
+    "high_risk":   {"face", "cheek", "forehead", "chin", "jaw", "temple",
+                    "hand", "hands", "foot", "feet", "neck", "genitalia",
+                    "axilla", "axillae", "mouth"},
+    "extremities": {"scalp", "arm", "forearm", "leg", "foreleg"},
+    # trunk is the default — any unmatched location
+}
+
+# Mohs risk classification (2-group)
+_MOHS_HIGH_RISK_TOKENS = {
+    "head", "neck", "temple", "face", "jaw", "scalp", "ear", "ears",
+    "eyelid", "eyelids", "nose", "lip", "lips", "hand", "hands",
+    "foot", "feet", "genitalia", "genital", "auricle",
+}
+
+# Keywords used to match CPT code DESCRIPTIONS for location filtering
+LOCATION_DESC_KEYWORDS: dict[str, list[str]] = {
+    "face":        ["face", "ear", "eyelid", "nose", "lip", "mucous membrane"],
+    "special":     ["scalp", "neck", "hand", "foot", "feet", "genitalia"],
+    "trunk":       ["trunk", "arm", "leg"],
+    "critical":    ["nose", "lip", "ear", "eyelid"],
+    "high_risk":   ["face", "axillae", "hand", "foot", "feet", "genitalia",
+                    "neck", "chin", "cheek", "forehead", "mouth"],
+    "extremities": ["scalp", "arm", "leg"],
 }
 
 
 def classify_location(location_text: str) -> str:
     """
-    Map a free-text anatomical location to one of three groups:
+    Map a free-text anatomical location to one of three procedure groups:
       'face'    — face / ears / eyelids / nose / lips / mucous membrane
       'special' — scalp / neck / hands / feet / genitalia
       'trunk'   — trunk / arms / legs (default)
@@ -108,6 +142,53 @@ def classify_location(location_text: str) -> str:
     if tokens & _SPECIAL_TOKENS:
         return "special"
     return "trunk"
+
+
+def classify_closure_location(location_text: str) -> str:
+    """
+    Map a free-text location to a closure/repair location group:
+      'critical'    — nose / lips / ears / eyelids
+      'high_risk'   — face / hands / feet / neck / genitalia
+      'extremities' — scalp / arms / legs
+      'trunk'       — trunk / back / chest / abdomen (default)
+    """
+    if not location_text:
+        return "trunk"
+    loc = location_text.lower()
+    for group, keywords in _CLOSURE_GROUPS.items():
+        if any(kw in loc for kw in keywords):
+            return group
+    return "trunk"
+
+
+def classify_mohs_risk(location_text: str) -> str:
+    """
+    Map a location to Mohs risk tier:
+      'high_risk'        — head / neck / face / ears / eyelids / nose / lips / hands / feet / genitalia
+      'trunk_extremity'  — trunk / extremities (default)
+    """
+    if not location_text:
+        return "trunk_extremity"
+    tokens = set(location_text.lower().split())
+    if tokens & _MOHS_HIGH_RISK_TOKENS:
+        return "high_risk"
+    return "trunk_extremity"
+
+
+def match_desc_by_location(candidates: List[dict], location_group: str) -> List[dict]:
+    """
+    Filter candidates by matching location keywords against their CPT descriptions.
+    Uses LOCATION_DESC_KEYWORDS — the same keyword sets used across all selectors.
+    Falls back to all candidates if no match.
+    """
+    keywords = LOCATION_DESC_KEYWORDS.get(location_group, [])
+    if not keywords:
+        return candidates
+    filtered = [
+        r for r in candidates
+        if any(k in (r.get("description") or "").lower() for k in keywords)
+    ]
+    return filtered if filtered else candidates
 
 
 # ------------------------------------------------------------------
@@ -143,19 +224,7 @@ def match_by_size(
 
 
 def _filter_by_location(candidates: List[dict], location_group: str) -> List[dict]:
-    _DESC_KEYWORDS = {
-        "face": {"face", "ear", "eyelid", "nose", "lip", "mucous"},
-        "special": {"scalp", "neck", "hand", "foot", "feet", "genitalia"},
-        "trunk": {"trunk", "arm", "leg"},
-    }
-    keywords = _DESC_KEYWORDS.get(location_group, set())
-    if not keywords:
-        return candidates
-    filtered = [
-        r for r in candidates
-        if any(k in r["description"].lower() for k in keywords)
-    ]
-    return filtered if filtered else candidates
+    return match_desc_by_location(candidates, location_group)
 
 
 # ------------------------------------------------------------------

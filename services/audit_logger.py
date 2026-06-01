@@ -107,6 +107,8 @@ def log_coding_decision(
         with open(_LOG_PATH, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
     except Exception as e:
-        # Audit logging must never crash the pipeline
+        # HIPAA 164.312(b): audit trail failures must be surfaced loudly.
+        # Pipeline continues so the patient visit is not blocked, but this
+        # must be investigated — a missing audit record is a compliance gap.
         from loguru import logger
-        logger.warning(f"Audit log write failed for note {note_id}: {e}")
+        logger.error(f"AUDIT LOG WRITE FAILED for note {note_id}: {e} — compliance gap, investigate immediately")

@@ -6,6 +6,23 @@ from database.pgdb.conn import get_db_session
 from sqlalchemy import text
 from loguru import logger
 
+from config.constants import (
+    SRT_KV_BOUNDARY,
+    CLOSURE_CODE_PREFIXES,
+    EXCISION_CODE_PREFIXES,
+    MIN_METHOD_TOKEN_LENGTH,
+    BUNDLED_PAIRS,
+)
+from services.code_selectors.base import (
+    classify_location,
+    classify_closure_location,
+    classify_mohs_risk,
+    match_desc_by_location,
+    LOCATION_DESC_KEYWORDS,
+)
+
+_UNKNOWN_MAX_SIZE = 9999.0   # sentinel for null maxSize in DB rows
+
 
 class CodeRetriever:
 
@@ -86,7 +103,7 @@ class CodeRetriever:
 
             for r in rows:
                 min_q = r.get("minQty") or 0
-                max_q = r.get("maxQty") or 999
+                max_q = r.get("maxQty") or _UNKNOWN_MAX_SIZE
 
                 if min_q <= quantity <= max_q:
                     filtered.append(r)
@@ -144,15 +161,15 @@ class CodeRetriever:
             # -------------------------
             for r in base_codes:
                 min_q = r.get("minQty") or 0
-                max_q = r.get("maxQty") or 999
+                max_q = r.get("maxQty") or _UNKNOWN_MAX_SIZE
 
                 if min_q <= quantity <= max_q:
                     filtered.append(r)
 
-            # -------------------------
-            # 🔴 ADD-ON
-            # -------------------------
-            if quantity > 14:
+            # Include add-on codes when quantity exceeds any primary code's maxQty.
+            # The exact threshold comes from the primary code's maxQty in the CSV.
+            primary_max = max((r.get("maxQty") or 0 for r in filtered), default=0)
+            if filtered and quantity > primary_max:
                 filtered.extend(addon_codes)
 
             logger.info(f"✅ DPM filtered candidates: {len(filtered)}")
@@ -195,75 +212,15 @@ class CodeRetriever:
 
             logger.info(f"📦 Raw DM candidates: {len(rows)}")
 
-            location = (location or "").lower()
+            anatomical_group = classify_location(location or "")
+            logger.info(f"🧠 DM anatomical group={anatomical_group}")
 
-            # -------------------------------------------------
-            # 🔴 DETERMINE ANATOMICAL GROUP
-            # -------------------------------------------------
-            face_keywords = [
-                "face", "cheek", "nose", "lip",
-                "eyelid", "ear", "forehead",
-                "temple", "chin", "mucous"
-            ]
-
-            special_keywords = [
-                "scalp", "neck", "hand",
-                "foot", "feet", "genital"
-            ]
-
-            anatomical_group = "trunk"
-
-            if any(k in location for k in face_keywords):
-                anatomical_group = "face"
-
-            elif any(k in location for k in special_keywords):
-                anatomical_group = "special"
-
-            logger.info(
-                f"🧠 DM anatomical group="
-                f"{anatomical_group}"
-            )
+            # Apply location filter using centralized keyword sets from base.py
+            location_filtered = match_desc_by_location(rows, anatomical_group)
 
             filtered = []
 
-            for r in rows:
-
-                desc = (r.get("description", "") or "").lower()
-
-                # -------------------------------------------------
-                # 🔴 ANATOMICAL FILTER
-                # -------------------------------------------------
-                if anatomical_group == "face":
-
-                    if (
-                        "face" not in desc
-                        and "ears" not in desc
-                        and "eyelids" not in desc
-                        and "nose" not in desc
-                        and "lips" not in desc
-                        and "mucous membrane" not in desc
-                    ):
-                        continue
-
-                elif anatomical_group == "special":
-
-                    if (
-                        "scalp" not in desc
-                        and "neck" not in desc
-                        and "hands" not in desc
-                        and "feet" not in desc
-                        and "genitalia" not in desc
-                    ):
-                        continue
-
-                else:
-
-                    if (
-                        "trunk" not in desc
-                        and "arms" not in desc
-                        and "legs" not in desc
-                    ):
-                        continue
+            for r in location_filtered:
 
                 # -------------------------------------------------
                 # 🔴 SIZE FILTER
@@ -271,7 +228,7 @@ class CodeRetriever:
                 try:
 
                     min_s = float(r.get("minSize") or 0)
-                    max_s = float(r.get("maxSize") or 999)
+                    max_s = float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
 
                     if size is None:
                         continue
@@ -371,51 +328,34 @@ class CodeRetriever:
 
             logger.info(f"📦 Raw Mohs candidates: {len(rows)}")
 
-            filtered = []
+            risk_group = classify_mohs_risk(location)
+            is_high_risk = risk_group == "high_risk"
+            logger.info(f"🧠 Mohs classification → {risk_group}")
 
-            # -------------------------
-            # 🔴 LOCATION FILTER
-            # -------------------------
-            high_risk = [
-                "head", "neck", "temple", "face", "jaw",
-                "scalp", "ear", "eyelid", "nose", "lip",
-                "hand", "foot", "genitalia", "auricle"
-            ]
-
-            is_high_risk = any(k in location for k in high_risk)
-
-            logger.info(f"🧠 Mohs classification → high_risk={is_high_risk}")
-
-            for r in rows:
-                code = str(r.get("code", ""))
-
-                # High-risk → 17311/17312
-                if is_high_risk and code in ["17311", "17312"]:
-                    filtered.append(r)
-
-                # Trunk → 17313/17314
-                elif not is_high_risk and code in ["17313", "17314"]:
-                    filtered.append(r)
-
-            logger.info(f"🎯 Mohs filtered candidates: {len(filtered)}")
-
-            # SAFETY: missing location — default to trunk/extremity codes.
-            # Returning high-risk codes (17311/17312) for an unknown location
-            # would cause overbilling; trunk codes are the safer default.
+            # Filter candidates using risk group — high-risk codes have higher
+            # reimbursement and are only valid for head/neck/face/hands/feet etc.
+            # Trunk/extremity codes are the conservative safe default.
             if not location:
-                logger.warning("Mohs location missing — defaulting to trunk codes (17313/17314)")
-                filtered = [r for r in rows if str(r.get("code", "")) in ("17313", "17314")]
+                logger.warning("Mohs location missing — defaulting to trunk codes")
+                filtered = [r for r in rows if not is_high_risk]
                 return filtered if filtered else rows
 
-            # SAFETY: no match after location filtering — same conservative default.
+            # Use associatedWithProCode to identify add-ons vs primaries,
+            # then match risk group via code description keywords
+            if is_high_risk:
+                filtered = [r for r in rows
+                            if any(k in (r.get("description") or "").lower()
+                                   for k in ["head", "neck", "face", "scalp", "ear",
+                                             "eyelid", "nose", "lip", "hand", "foot", "genitalia"])]
+            else:
+                filtered = [r for r in rows
+                            if any(k in (r.get("description") or "").lower()
+                                   for k in ["trunk", "extremit", "arm", "leg"])]
+
             if not filtered:
-                logger.warning("No Mohs location match — defaulting to trunk codes (17313/17314)")
-                filtered = [r for r in rows if str(r.get("code", "")) in ("17313", "17314")]
-                return filtered if filtered else rows
+                logger.warning("No Mohs description match — returning all candidates")
+                filtered = rows
 
-            # -------------------------
-            # ✅ FINAL RETURN (CRITICAL FIX)
-            # -------------------------
             logger.info(f"✅ Returning {len(filtered)} filtered Mohs candidates")
             return filtered
         
@@ -424,26 +364,7 @@ class CodeRetriever:
     async def excision_filter(self, size: float, location: str):
         async with get_db_session() as db:
 
-            location = (location or "").lower()
-
-            # -------------------------
-            # 🔴 TOKENIZE (word-safe)
-            # -------------------------
-            tokens = set(re.findall(r"\b[a-z]+\b", location))
-
-            # -------------------------
-            # 🔴 AREA CLASSIFICATION (DETERMINISTIC)
-            # -------------------------
-            FACE = {"face", "nose", "lip", "ear", "eyelid", "mucous membrane"}
-            SPECIAL = {"hand", "foot", "feet", "neck", "scalp", "finger", "toe"}
-
-            if tokens & FACE:
-                area = "face"
-            elif tokens & SPECIAL:
-                area = "special"
-            else:
-                area = "trunk"
-
+            area = classify_location(location or "")
             logger.info(f"📍 Excision filter | size={size} | location={location} | area={area}")
 
             # -------------------------
@@ -478,77 +399,39 @@ class CodeRetriever:
             # -------------------------
             # 🔴 STRICT FILTERING
             # -------------------------
-            for r in rows:
-                try:
-                    code = str(r.get("code", ""))
-                    desc = (r.get("description") or "").lower()
-                    pro_name = (r.get("proName") or "").lower()
+            _EXCLUDE_NAMES = {"soft tissue", "nail", "matrix", "chalazion", "non skin"}
 
-                    # -------------------------
-                    # 1. KEEP ONLY SKIN EXCISION (114xx, 116xx)
-                    # -------------------------
-                    if not (code.startswith("114") or code.startswith("116")):
-                        continue
+            def _is_skin_excision(r):
+                code     = str(r.get("code", ""))
+                pro_name = (r.get("proName") or "").lower()
+                return (
+                    any(code.startswith(p) for p in EXCISION_CODE_PREFIXES)
+                    and not any(x in pro_name for x in _EXCLUDE_NAMES)
+                )
 
-                    # -------------------------
-                    # 2. REMOVE IRRELEVANT TYPES
-                    # -------------------------
-                    if any(x in pro_name for x in [
-                        "soft tissue",
-                        "nail",
-                        "matrix",
-                        "chalazion",
-                        "non skin"
-                    ]):
-                        continue
+            skin_rows = [r for r in rows if _is_skin_excision(r)]
 
-                    # -------------------------
-                    # 3. SIZE FILTER (STRICT)
-                    # -------------------------
-                    min_s = float(r.get("minSize") or 0)
-                    max_s = float(r.get("maxSize") or 999)
-
-                    if not size or not (min_s <= size <= max_s):
-                        continue
-
-                    # -------------------------
-                    # 4. LOCATION FILTER (STRICT)
-                    # -------------------------
-                    if area == "face":
-                        if not any(k in desc for k in ["face", "ear", "eyelid", "nose", "lip", "mucous membrane"]):
-                            continue
-
-                    elif area == "special":
-                        if not any(k in desc for k in ["scalp", "neck", "hand", "foot", "feet", "genitalia"]):
-                            continue
-
-                    elif area == "trunk":
-                        if not any(k in desc for k in ["trunk", "arm", "forearm", "leg", "foreleg", "forelimb", "back", "chest"]):
-                            continue
-
-                    filtered.append(r)
-
-                except Exception as e:
-                    logger.warning(f"⚠️ Filter skip: {e}")
-                    continue
+            # Size + location strict filter
+            loc_rows = match_desc_by_location(skin_rows, area)
+            filtered = [
+                r for r in loc_rows
+                if size and float(r.get("minSize") or 0) <= size <= float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
+            ]
 
             logger.info(f"🎯 Candidates after strict filtering: {len(filtered)}")
 
-            # -------------------------
-            # 🔴 SAFETY FALLBACK (if too strict)
-            # -------------------------
             if not filtered:
                 logger.warning("⚠️ No strict matches → relaxing location constraint")
 
-                for r in rows:
+                for r in skin_rows:
                     try:
                         code = str(r.get("code", ""))
 
-                        if not (code.startswith("114") or code.startswith("116")):
+                        if not any(code.startswith(p) for p in EXCISION_CODE_PREFIXES):
                             continue
 
                         min_s = float(r.get("minSize") or 0)
-                        max_s = float(r.get("maxSize") or 999)
+                        max_s = float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
 
                         if size and (min_s <= size <= max_s):
                             filtered.append(r)
@@ -658,7 +541,7 @@ class CodeRetriever:
                     # 🔴 SIZE FILTER (STRICT)
                     # -------------------------
                     min_size = float(r.get("minSize") or 0)
-                    max_size = float(r.get("maxSize") or 999)
+                    max_size = float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
 
                     if size and (min_size <= size <= max_size):
                         filtered.append(r)
@@ -685,7 +568,7 @@ class CodeRetriever:
                             continue
 
                         min_size = float(r.get("minSize") or 0)
-                        max_size = float(r.get("maxSize") or 999)
+                        max_size = float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
 
                         if size and (min_size <= size <= max_size):
                             filtered.append(r)
@@ -704,7 +587,7 @@ class CodeRetriever:
                 for r in rows:
                     try:
                         min_size = float(r.get("minSize") or 0)
-                        max_size = float(r.get("maxSize") or 999)
+                        max_size = float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
 
                         if size and (min_size <= size <= max_size):
                             filtered.append(r)
@@ -768,9 +651,9 @@ class CodeRetriever:
             selected.extend([r for r in rows if r["code"] == "77436"])
 
             # 🔴 DELIVERY
-            if kv and kv <= 150:
+            if kv and kv <= SRT_KV_BOUNDARY:
                 selected.extend([r for r in rows if r["code"] == "77437"])
-            elif kv and kv > 150:
+            elif kv and kv > SRT_KV_BOUNDARY:
                 selected.extend([r for r in rows if r["code"] == "77438"])
 
             # 🔴 ADD-ON (STRICT)
@@ -958,7 +841,7 @@ class CodeRetriever:
                     if size is not None:
 
                         min_s = float(r.get("minSize") or 0)
-                        max_s = float(r.get("maxSize") or 999)
+                        max_s = float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
 
                         if not (min_s <= size <= max_s):
                             continue
@@ -1083,7 +966,7 @@ class CodeRetriever:
                 keywords = [
                     k.strip()
                     for k in desc_clean.split()
-                    if len(k.strip()) > 3
+                    if len(k.strip()) > MIN_METHOD_TOKEN_LENGTH
                 ]
 
                 if any(k in procedure_text for k in keywords):
@@ -1174,7 +1057,7 @@ class CodeRetriever:
                 try:
 
                     min_s = float(r.get("minSize") or 0)
-                    max_s = float(r.get("maxSize") or 999999)
+                    max_s = float(r.get("maxSize") or _UNKNOWN_MAX_SIZE)
 
                     if min_s <= total_area <= max_s:
 
@@ -1279,7 +1162,7 @@ class CodeRetriever:
                     method_tokens = [
                         t.strip()
                         for t in method.split()
-                        if len(t.strip()) > 2
+                        if len(t.strip()) > MIN_METHOD_TOKEN_LENGTH
                     ]
 
                     logger.info(f"🔤 IPL method tokens={method_tokens}")
@@ -1315,7 +1198,7 @@ class CodeRetriever:
 
                         try:
                             min_s = (float(r.get("minSize") or 0))
-                            max_s = (float(r.get("maxSize") or 999999))
+                            max_s = (float(r.get("maxSize") or _UNKNOWN_MAX_SIZE))
 
                             if min_s <= treatment_area <= max_s:
                                 filtered.append(r)
@@ -1416,7 +1299,7 @@ class CodeRetriever:
 
                         try:
                             min_s = (float(r.get("minSize") or 0))
-                            max_s = (float(r.get("maxSize") or 999999))
+                            max_s = (float(r.get("maxSize") or _UNKNOWN_MAX_SIZE))
 
                             if min_s <= quantity_used <= max_s:
                                 filtered.append(r)
@@ -1513,7 +1396,7 @@ class CodeRetriever:
                     method_tokens = [
                         t.strip()
                         for t in method.split()
-                        if len(t.strip()) > 2
+                        if len(t.strip()) > MIN_METHOD_TOKEN_LENGTH
                     ]
 
                     logger.info(f"🔤 Filler method tokens={method_tokens}")

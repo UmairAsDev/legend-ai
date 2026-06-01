@@ -18,17 +18,19 @@ load_dotenv()
 # ─────────────────────────────────────────────────────────────
 try:
     from config.config import setting as _cfg
-    _DEFAULT_MODEL       = os.getenv("OPENAI_MODEL",       str(getattr(_cfg, "OPENAI_MODEL",  "gpt-5.4-mini")))
+    _DEFAULT_MODEL       = os.getenv("OPENAI_MODEL",       str(getattr(_cfg, "OPENAI_MODEL",  "gpt-4o")))
     _DEFAULT_TEMPERATURE = float(os.getenv("OPENAI_TEMPERATURE", str(getattr(_cfg, "TEMPERATURE",   0))))
     _DEFAULT_MAX_TOKENS  = int(os.getenv("OPENAI_MAX_TOKENS",    str(getattr(_cfg, "MAX_TOKENS", 4096))))
 except Exception:
     # Fallback when running outside the full app context (tests, scripts)
-    _DEFAULT_MODEL       = os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
+    _DEFAULT_MODEL       = os.getenv("OPENAI_MODEL", "gpt-4o")
     _DEFAULT_TEMPERATURE = float(os.getenv("OPENAI_TEMPERATURE", "0"))
     _DEFAULT_MAX_TOKENS  = int(os.getenv("OPENAI_MAX_TOKENS", "4096"))
 
 _MAX_RETRIES        = int(os.getenv("LLM_MAX_RETRIES", "3"))
 _RETRY_BACKOFF_BASE = int(os.getenv("LLM_BACKOFF_BASE", "2"))
+_MAX_BACKOFF        = int(os.getenv("LLM_MAX_BACKOFF_SECONDS", "30"))
+_LLM_TIMEOUT        = int(os.getenv("LLM_TIMEOUT_SECONDS", "90"))
 
 
 class LLMClient:
@@ -73,7 +75,10 @@ class LLMClient:
                     HumanMessage(content=prompt),
                 ]
 
-                response = await self.llm.ainvoke(messages)
+                response = await asyncio.wait_for(
+                    self.llm.ainvoke(messages),
+                    timeout=_LLM_TIMEOUT,
+                )
 
                 if not response.content:
                     raise RuntimeError("Empty LLM response")
@@ -83,17 +88,19 @@ class LLMClient:
 
                 return response.content
 
+            except asyncio.CancelledError:
+                raise  # never suppress task cancellation
             except Exception as e:
                 last_exc = e
                 is_last = attempt == _MAX_RETRIES - 1
                 if is_last:
                     break
-                delay = _RETRY_BACKOFF_BASE ** (attempt + 1)
+                delay = min(_RETRY_BACKOFF_BASE ** (attempt + 1), _MAX_BACKOFF)
                 logger.warning(
                     f"LLM call failed (attempt {attempt + 1}/{_MAX_RETRIES}): {e} "
                     f"— retrying in {delay}s"
                 )
                 await asyncio.sleep(delay)
 
-        logger.exception(f"LLM call failed after {_MAX_RETRIES} attempts: {last_exc}")
+        logger.error(f"LLM call failed after {_MAX_RETRIES} attempts: {last_exc}")
         raise RuntimeError(f"LLM generation failed: {last_exc}")

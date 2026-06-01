@@ -1,43 +1,29 @@
 # services/validation_engine.py
 """
-Validation Engine — runs after LLM code assignment, before modifier enforcement.
+Billing Integrity Validation Engine.
 
-Validates the code list against five billing integrity rules:
-  1. Duplicate procedure on same lesion     → reject secondary code
-  2. Add-on code without its primary        → reject add-on
-  3. Closure add-on without closure primary → reject add-on
-  4. Modifier -59 without distinct lesion   → flag (cannot auto-reject)
-  5. Diagnosis not linked to procedure      → flag
+Runs after LLM code assignment, before modifier enforcement.
 
-Rules 1–3 produce hard rejects (code removed, audit flag added).
-Rules 4–5 produce soft flags (code kept, audit flag added for human review).
+All rules are PROCEDURE-AGNOSTIC — they work from the data already attached
+to each code (minQty, maxQty, minSize, maxSize, associatedWithProCode) rather
+than hardcoding specific CPT numbers or procedure types.
 
-All decisions are logged in audit_flags so the reasoning engine and API
-response surface them. The output llm_output dict is returned with the
-same schema — only cpt_codes list and audit_flags are modified.
+Rules:
+  1. Add-on code without its primary (hard reject)
+  2. Quantity out of the code's documented range from proCodeList (hard reject)
+  3. Duplicate: same CPT + same DX + same location billed more than once (hard reject)
+  4. Modifier -59 applied to a procedure with no distinct site evidence (soft flag)
+  5. CPT code with no linked ICD-10 diagnosis (soft flag)
+
+Note: CCI bundling pair enforcement (e.g., shave removal + biopsy same lesion)
+is Phase 3 work and will load from the quarterly CMS NCCI table rather than
+hardcoding code pairs here.
 """
 
 from typing import Any, Dict, List, Optional
 from loguru import logger
 
-
-# ─────────────────────────────────────────────────────────────
-# KNOWN BUNDLING PAIRS
-# Pairs that represent the same clinical event — billing both
-# on the same lesion is a CCI bundling violation.
-# Key   = secondary code (typically the lower-value one)
-# Value = set of primary codes it bundles with
-# ─────────────────────────────────────────────────────────────
-_BUNDLED_PAIRS: Dict[str, set] = {
-    "11310": {"11100", "11101", "11102", "11103", "11104", "11105", "11106", "11107"},  # shave + biopsy same lesion
-    "11311": {"11100", "11101", "11102", "11103", "11104", "11105", "11106", "11107"},
-    "11312": {"11100", "11101", "11102", "11103", "11104", "11105", "11106", "11107"},
-    "11313": {"11100", "11101", "11102", "11103", "11104", "11105", "11106", "11107"},
-}
-
-# Closure primary codes and their valid add-on pairs
-_CLOSURE_PRIMARY_PREFIXES  = ("120", "131", "140")
-_CLOSURE_ADDON_PREFIXES    = ("120", "131", "140")
+from config.constants import CLOSURE_CODE_PREFIXES
 
 
 # ─────────────────────────────────────────────────────────────
@@ -49,7 +35,7 @@ def _codes_in_output(cpt_codes: List[Dict]) -> set:
 
 
 def _is_closure_code(code: str) -> bool:
-    return any(code.startswith(p) for p in _CLOSURE_PRIMARY_PREFIXES)
+    return any(code.startswith(p) for p in CLOSURE_CODE_PREFIXES)
 
 
 def _add_flag(llm_output: Dict, message: str) -> None:
@@ -59,61 +45,8 @@ def _add_flag(llm_output: Dict, message: str) -> None:
 
 
 # ─────────────────────────────────────────────────────────────
-# RULE 1 — DUPLICATE PROCEDURE ON SAME LESION
-# ─────────────────────────────────────────────────────────────
-
-def _check_bundled_pairs(
-    cpt_codes: List[Dict],
-    parsed: Dict,
-    llm_output: Dict,
-) -> List[Dict]:
-    """
-    If a known bundled secondary code is present alongside its primary code,
-    AND the note documents only one lesion/site for those procedures, reject
-    the secondary code and flag it.
-
-    Only rejects when single-lesion evidence exists in parsed sections.
-    When multiple lesions are documented, the pair can be legitimately billed.
-    """
-    present = _codes_in_output(cpt_codes)
-    rejected: set = set()
-
-    for secondary, primaries in _BUNDLED_PAIRS.items():
-        if secondary not in present:
-            continue
-        overlap = primaries & present
-        if not overlap:
-            continue
-
-        # Check whether multiple distinct lesion sites are documented
-        biopsy_count   = len(parsed.get("biopsy_sections", []))
-        shave_count    = len(parsed.get("shave_removal_sections", []))
-        total_lesions  = max(biopsy_count, shave_count, 1)
-
-        if total_lesions > 1:
-            # Multiple lesions — distinct billing is plausible, soft flag only
-            primary_code = next(iter(overlap))
-            _add_flag(
-                llm_output,
-                f"Verify {secondary} and {primary_code} are on distinct lesions — "
-                f"modifier -59 required if same site.",
-            )
-        else:
-            # Single lesion — reject the secondary as a duplicate
-            primary_code = next(iter(overlap))
-            rejected.add(secondary)
-            _add_flag(
-                llm_output,
-                f"REJECTED {secondary}: bundled with {primary_code} on the same lesion. "
-                f"A biopsy and shave removal on a single lesion cannot both be billed.",
-            )
-            logger.warning(f"Validation: rejected {secondary} (bundled with {primary_code})")
-
-    return [c for c in cpt_codes if str(c.get("code", "")).strip() not in rejected]
-
-
-# ─────────────────────────────────────────────────────────────
-# RULE 2 — ADD-ON WITHOUT PRIMARY
+# RULE 1 — ADD-ON WITHOUT ITS PRIMARY
+# Procedure-agnostic: uses associatedWithProCode from CSV data.
 # ─────────────────────────────────────────────────────────────
 
 def _check_addon_without_primary(
@@ -122,11 +55,11 @@ def _check_addon_without_primary(
     llm_output: Dict,
 ) -> List[Dict]:
     """
-    Every add-on code (associatedWithProCode != null in the candidate list)
-    must have its parent primary code present in the output.
-    Remove the add-on and flag if the primary is missing.
+    Every add-on code must have its parent primary code in the output.
+    The parent is identified by associatedWithProCode — no code numbers hardcoded.
+    Applies to closure add-ons, biopsy add-ons, destruction add-ons, and any other
+    add-on defined in proCodeList.csv.
     """
-    # Build parent map from candidates
     parent_map: Dict[str, str] = {}
     for c in candidates:
         addon  = str(c.get("code", "")).strip()
@@ -142,47 +75,104 @@ def _check_addon_without_primary(
             rejected.add(code)
             _add_flag(
                 llm_output,
-                f"REJECTED {code}: add-on code requires primary {parent} which is not in the output.",
+                f"REJECTED {code}: add-on requires primary {parent} which is not in the output.",
             )
-            logger.warning(f"Validation: rejected add-on {code} (primary {parent} missing)")
+            logger.warning(f"Validation rule 1: rejected add-on {code} (primary {parent} missing)")
 
     return [c for c in cpt_codes if str(c.get("code", "")).strip() not in rejected]
 
 
 # ─────────────────────────────────────────────────────────────
-# RULE 3 — CLOSURE ADD-ON WITHOUT CLOSURE PRIMARY
+# RULE 2 — QUANTITY OUT OF RANGE
+# Procedure-agnostic: uses minQty/maxQty from CSV data.
 # ─────────────────────────────────────────────────────────────
 
-def _check_closure_addon_orphan(
+def _check_quantity_ranges(
+    cpt_codes: List[Dict],
+    candidates: List[Dict],
+    llm_output: Dict,
+) -> List[Dict]:
+    """
+    Each code's quantity must fall within the [minQty, maxQty] range documented
+    in proCodeList.csv.  Codes assigned with an out-of-range quantity are rejected.
+    Applies to ALL procedure types — nail debridement, destruction, biopsy, etc.
+    """
+    candidate_map: Dict[str, Dict] = {
+        str(c.get("code", "")).strip(): c
+        for c in candidates if c.get("code")
+    }
+
+    rejected: set = set()
+
+    for cpt in cpt_codes:
+        code = str(cpt.get("code", "")).strip()
+        candidate = candidate_map.get(code)
+        if not candidate:
+            continue
+
+        min_q = candidate.get("minQty") or 0
+        max_q = candidate.get("maxQty")
+        if max_q is None:
+            continue  # no range defined — skip
+
+        try:
+            qty = int(float(cpt.get("quantity") or 1))
+        except (ValueError, TypeError):
+            continue
+
+        if not (min_q <= qty <= max_q):
+            rejected.add(code)
+            _add_flag(
+                llm_output,
+                f"REJECTED {code}: quantity {qty} is outside the valid range "
+                f"[{min_q}–{max_q}] for this code.",
+            )
+            logger.warning(f"Validation rule 2: rejected {code} qty={qty} range=[{min_q},{max_q}]")
+
+    return [c for c in cpt_codes if str(c.get("code", "")).strip() not in rejected]
+
+
+# ─────────────────────────────────────────────────────────────
+# RULE 3 — DUPLICATE: SAME CODE + DX + LOCATION
+# Procedure-agnostic: uses the grouping key (CPT + DX + location).
+# ─────────────────────────────────────────────────────────────
+
+def _check_duplicates(
     cpt_codes: List[Dict],
     llm_output: Dict,
 ) -> List[Dict]:
     """
-    Closure add-on codes (e.g. 13122, 12002, 13133) are only valid when a
-    closure primary code is also present.  If a closure add-on appears without
-    any closure primary, reject it.
-
-    Rule 2 already handles the general add-on case. This rule catches closure
-    add-ons whose parent isn't in the candidate list (e.g. edge cases in
-    enforcement where add-ons are injected without their primary).
+    Same CPT + same ICD-10 code(s) + same location may not appear more than once.
+    This enforces the core grouping rule that should have been applied by the LLM
+    coder but occasionally is violated on complex multi-procedure notes.
     """
-    present  = _codes_in_output(cpt_codes)
-    has_primary = any(_is_closure_code(c) for c in present)
+    seen: Dict[tuple, Dict] = {}
     rejected: set = set()
 
-    for c in cpt_codes:
-        code   = str(c.get("code", "")).strip()
-        source = str(c.get("source") or "").lower()
-        if "closure" in source and not has_primary and _is_closure_code(code):
-            # If this is the only closure code and it looks like an add-on
-            # (no matching primary), flag it — Rule 2 will reject if parent is known
-            pass  # Handled by Rule 2 via candidate parent_map
+    for cpt in cpt_codes:
+        code     = str(cpt.get("code", "")).strip()
+        dx_key   = tuple(sorted(cpt.get("linked_dx") or []))
+        loc_key  = str(cpt.get("location") or "")  # may be absent on simple codes
+        group_key = (code, dx_key, loc_key)
 
-    return cpt_codes  # Rule 2 is the primary enforcer; this is a belt-and-suspenders check
+        if group_key in seen:
+            rejected.add(id(cpt))
+            existing = seen[group_key]
+            _add_flag(
+                llm_output,
+                f"REJECTED duplicate {code}: same code, DX {list(dx_key)!r}, "
+                f"and location '{loc_key}' appears more than once. "
+                f"Merge quantities into a single entry.",
+            )
+            logger.warning(f"Validation rule 3: duplicate {code} {group_key}")
+        else:
+            seen[group_key] = cpt
+
+    return [c for c in cpt_codes if id(c) not in rejected]
 
 
 # ─────────────────────────────────────────────────────────────
-# RULE 4 — MODIFIER -59 WITHOUT DISTINCT LESION EVIDENCE
+# RULE 4 — MODIFIER -59 WITHOUT DISTINCT SITE EVIDENCE
 # ─────────────────────────────────────────────────────────────
 
 def _check_modifier_59(
@@ -191,36 +181,41 @@ def _check_modifier_59(
     llm_output: Dict,
 ) -> None:
     """
-    Soft flag only — modifier -59 requires explicit documentation of a distinct
-    procedure (different site, lesion, or session).  When only one lesion is
-    documented across all sections, flag each -59 code for human review.
+    Modifier -59 requires explicit documentation of a distinct procedure —
+    different anatomical site, lesion, or session.
 
-    The reasoning engine performs the definitive audit against the note text.
-    This is an early structural check against the parsed data.
+    Flags any -59 code when the total number of documented procedure sections
+    is ≤ 1, since a single-section note cannot support a distinct service claim.
+
+    This is a structural pre-check. The reasoning engine performs the definitive
+    audit against the note text. Codes are not rejected here — only flagged.
     """
-    total_sections = sum([
-        len(parsed.get("biopsy_sections", [])),
-        len(parsed.get("excision_sections", [])),
-        len(parsed.get("shave_removal_sections", [])),
-        len(parsed.get("destruction_sections", [])),
-        len(parsed.get("mohs_sections", [])),
-    ])
+    # Count all documented procedure sections across all types
+    section_keys = [
+        "biopsy_sections", "excision_sections", "shave_removal_sections",
+        "destruction_sections", "mohs_sections", "closure_sections",
+        "srt_sections", "debridement_sections", "xtrac_sections",
+        "ipl_sections", "laser_treatment_sections", "filler_sections",
+        "filler_material_sections", "chemical_peel_sections",
+    ]
+    total_sections = sum(len(parsed.get(k, [])) for k in section_keys)
 
-    for c in cpt_codes:
-        if str(c.get("modifier", "")).strip() == "59":
-            code = c.get("code", "")
-            if total_sections <= 1:
-                _add_flag(
-                    llm_output,
-                    f"REVIEW {code}-59: modifier -59 requires a distinct site or lesion. "
-                    f"Only {total_sections} procedure section(s) documented — verify distinct "
-                    f"lesion evidence before submitting.",
-                )
-                logger.info(f"Validation: -59 on {code} flagged (single-section note)")
+    for cpt in cpt_codes:
+        if str(cpt.get("modifier", "")).strip() != "59":
+            continue
+        code = cpt.get("code", "")
+        if total_sections <= 1:
+            _add_flag(
+                llm_output,
+                f"REVIEW {code}-59: modifier -59 requires a distinct site or lesion. "
+                f"Only {total_sections} procedure section(s) documented. "
+                f"Verify distinct documentation before submitting.",
+            )
+            logger.info(f"Validation rule 4: -59 on {code} flagged (total_sections={total_sections})")
 
 
 # ─────────────────────────────────────────────────────────────
-# RULE 5 — DIAGNOSIS NOT LINKED TO PROCEDURE
+# RULE 5 — DX NOT LINKED TO PROCEDURE
 # ─────────────────────────────────────────────────────────────
 
 def _check_dx_linkage(
@@ -230,25 +225,24 @@ def _check_dx_linkage(
 ) -> None:
     """
     Every CPT and E/M code must have at least one linked ICD-10 diagnosis.
-    Codes with empty linked_dx are flagged — they cannot be submitted on a claim.
+    Codes with empty linked_dx will be denied by any payer.
     """
-    for c in cpt_codes:
-        code   = c.get("code", "")
-        linked = c.get("linked_dx") or []
+    for cpt in cpt_codes:
+        code   = cpt.get("code", "")
+        linked = cpt.get("linked_dx") or []
         if not linked:
             _add_flag(
                 llm_output,
                 f"REVIEW {code}: no diagnosis (ICD-10) linked. "
                 f"A procedure code without a diagnosis will be denied.",
             )
-            logger.warning(f"Validation: {code} has no linked_dx")
+            logger.warning(f"Validation rule 5: {code} has no linked_dx")
 
-    if em_code and em_code.get("code"):
-        if not (em_code.get("linked_dx") or []):
-            _add_flag(
-                llm_output,
-                f"REVIEW {em_code['code']}: E/M code has no linked diagnosis.",
-            )
+    if em_code and em_code.get("code") and not (em_code.get("linked_dx") or []):
+        _add_flag(
+            llm_output,
+            f"REVIEW {em_code['code']}: E/M code has no linked diagnosis.",
+        )
 
 
 # ─────────────────────────────────────────────────────────────
@@ -261,11 +255,12 @@ def validate_codes(
     candidates: List[Dict],
 ) -> Dict[str, Any]:
     """
-    Run all five validation rules against the LLM-assigned code list.
+    Run all validation rules against the assigned code list.
 
-    Returns the modified llm_output with:
-    - cpt_codes: rejected codes removed (Rules 1–3)
-    - audit_flags: rejection reasons and soft flags appended (Rules 1–5)
+    Hard rejects (Rules 1–3): remove the offending code, add audit flag.
+    Soft flags (Rules 4–5):   keep the code, add audit flag for human review.
+
+    Returns modified llm_output — same schema, only cpt_codes and audit_flags changed.
     """
     try:
         codes     = llm_output.get("codes", {})
@@ -274,12 +269,12 @@ def validate_codes(
 
         original_count = len(cpt_codes)
 
-        # Hard reject rules (modify cpt_codes list)
-        cpt_codes = _check_bundled_pairs(cpt_codes, parsed, llm_output)
+        # Hard reject rules
         cpt_codes = _check_addon_without_primary(cpt_codes, candidates, llm_output)
-        cpt_codes = _check_closure_addon_orphan(cpt_codes, llm_output)
+        cpt_codes = _check_quantity_ranges(cpt_codes, candidates, llm_output)
+        cpt_codes = _check_duplicates(cpt_codes, llm_output)
 
-        # Soft flag rules (add to audit_flags only)
+        # Soft flag rules
         _check_modifier_59(cpt_codes, parsed, llm_output)
         _check_dx_linkage(cpt_codes, em_code, llm_output)
 

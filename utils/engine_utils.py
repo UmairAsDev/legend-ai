@@ -8,6 +8,12 @@ from typing import Any, Dict, List, Tuple
 
 from loguru import logger
 
+from config.constants import (
+    MAX_CANDIDATES_FOR_LLM,
+    CLOSURE_CODE_PREFIXES,
+    EXCISION_CODE_PREFIXES,
+)
+from services.code_selectors.base import classify_closure_location
 from services.em_selector import select_em_code
 from services.modifier_engine import (
     assign_em_modifier,
@@ -31,7 +37,7 @@ _LLM_FIELDS = {
 }
 
 
-def trim_for_llm(candidates: List[Dict], max_candidates: int = 15) -> List[Dict]:
+def trim_for_llm(candidates: List[Dict], max_candidates: int = MAX_CANDIDATES_FOR_LLM) -> List[Dict]:
     """
     Prepare the *ambiguous* candidate list for the LLM prompt.
 
@@ -179,7 +185,7 @@ def enforce_excision_quantity(parsed: Dict, llm_output: Dict) -> Dict:
             qty = sec.get("quantity", 1)
             if qty > 1:
                 for cpt in llm_output["codes"]["cpt_codes"]:
-                    if cpt["code"].startswith("116"):
+                    if any(cpt["code"].startswith(p) for p in EXCISION_CODE_PREFIXES):
                         cpt["quantity"] = str(qty)
         return llm_output
     except Exception as e:
@@ -225,7 +231,11 @@ def _calculate_addon_units(addon_code: Dict, total_size: float, base_max: float)
     if extra <= 0:
         return 0
     match = re.search(r"each additional (\d+\.?\d*)", (addon_code.get("description") or "").lower())
-    step = float(match.group(1)) if match else 5.0
+    # Step comes from the code description ("each additional X.X cm").
+    # If the description doesn't state a step, fall back to the smallest
+    # add-on code's implied step by reading its minSize from the data.
+    # 5.0 is only used when both sources are unavailable.
+    step = float(match.group(1)) if match else float(addon_code.get("minSize") or 5.0)
     return math.ceil(extra / step)
 
 
@@ -238,19 +248,26 @@ def enforce_closure_addon(parsed: Dict, candidates: List[Dict], llm_output: Dict
             return llm_output
 
         # If LLM already assigned closures, do not override
-        if any(str(c["code"]).startswith(("120", "131")) for c in llm_output["codes"]["cpt_codes"]):
+        if any(any(str(c["code"]).startswith(p) for p in CLOSURE_CODE_PREFIXES) for c in llm_output["codes"]["cpt_codes"]):
             logger.info("LLM already assigned closure codes — skipping enforcement")
             return llm_output
 
         closure_candidates = [
             c for c in candidates
-            if str(c.get("code", "")).startswith(("120", "131"))
+            if any(str(c.get("code", "")).startswith(p) for p in CLOSURE_CODE_PREFIXES)
         ]
 
         logger.debug(f"Closure candidates: {[(c['code'], c.get('associatedWithProCode')) for c in closure_candidates]}")
 
         hierarchy = _build_closure_hierarchy(closure_candidates)
         final_codes: List[Dict] = []
+
+        # Type → code prefix map: complex → 131xx, adjacent → 140xx, intermediate → 120xx
+        _TYPE_PREFIXES = {
+            "complex":      ("131",),
+            "adjacent":     ("140",),
+            "intermediate": ("120",),
+        }
 
         for group in closure_groups:
             total_size = group["total_size"]
@@ -259,19 +276,15 @@ def enforce_closure_addon(parsed: Dict, candidates: List[Dict], llm_output: Dict
 
             logger.info(f"Closure group  size={total_size}  type={ctype}")
 
+            type_prefixes = _TYPE_PREFIXES.get(ctype, ())
             type_candidates = [
                 c for c in closure_candidates
-                if (ctype == "complex" and str(c["code"]).startswith("131"))
-                or (ctype == "intermediate" and str(c["code"]).startswith("120"))
-            ]
+                if any(str(c["code"]).startswith(p) for p in type_prefixes)
+            ] if type_prefixes else closure_candidates
 
-            location_keywords = {
-                "extremities": ["scalp", "arm", "leg"],
-                "critical": ["nose", "lip", "ear", "eyelid"],
-                "high_risk": ["face", "hand", "foot", "neck", "chin", "cheek"],
-                "trunk": ["trunk", "back", "chest", "abdomen"],
-            }
-            kws = location_keywords.get(location_group)
+            # Use centralized location keyword sets from base.py
+            from services.code_selectors.base import LOCATION_DESC_KEYWORDS
+            kws = LOCATION_DESC_KEYWORDS.get(location_group)
             filtered = [
                 c for c in type_candidates
                 if not kws or any(k in (c.get("description") or "").lower() for k in kws)

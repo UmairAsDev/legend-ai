@@ -1,61 +1,47 @@
 # database/sqldb/conn.py
 
-import os
-import sys
-import pathlib
 import asyncio
-sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import MetaData, URL
-from config.config import setting
-from loguru import logger
-from dotenv import load_dotenv
+import pathlib
+import sys
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
-from sqlalchemy import text
+
+sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
+
+from loguru import logger
+from sqlalchemy import MetaData, URL, text
 from sqlalchemy.exc import OperationalError
-import logging
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 
-file_path = pathlib.Path(__file__).resolve() / "logs"
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler("logs/postgres.log")
-file_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-load_dotenv()
-
-
-
+from config.config import setting
 
 Base = DeclarativeBase()
 
 database_url = URL.create(
     "mysql+aiomysql",
     username=setting.DB_USERNAME,
-    password=setting.DB_PASSWORD, 
+    password=setting.DB_PASSWORD.get_secret_value(),
     database=setting.DB_NAME,
     host=setting.DB_HOST,
     port=int(setting.DB_PORT),
 )
-
-
 
 conn = create_async_engine(
     url=database_url,
     pool_pre_ping=True,
 )
 
-
-asyncSessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=conn, expire_on_commit=False)
+asyncSessionLocal = async_sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=conn,
+    expire_on_commit=False,
+)
 
 
 @asynccontextmanager
 async def get_db_session() -> AsyncIterator[AsyncSession]:
-    """Provides a transactional scope around a series of operations."""
     asyncsession = asyncSessionLocal()
     try:
         yield asyncsession
@@ -68,30 +54,27 @@ async def get_db_session() -> AsyncIterator[AsyncSession]:
         await asyncsession.close()
 
 
-
 async def test_connection():
-    logger.info("MySQL connection module executed directly.")
+    logger.info("Testing MySQL connection...")
     try:
         async with get_db_session() as db:
             result = await db.execute(text("SELECT 1"))
-            logger.info(f"Connection Successful: {result.scalar()}")
+            logger.info(f"MySQL connection OK: {result.scalar()}")
     except TimeoutError:
-        logger.error(
-            "Database connection timed out. Check network access, and SSL settings."
-        )
+        logger.error("MySQL connection timed out.")
     except OperationalError as e:
-        logger.error(f"Database connection failed: {e}")
+        logger.error(f"MySQL connection failed: {e}")
 
 
-async def main():
+async def _main():
     try:
         await test_connection()
     finally:
         await conn.dispose()
-    
+
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        asyncio.run(_main())
     except KeyboardInterrupt:
         pass
