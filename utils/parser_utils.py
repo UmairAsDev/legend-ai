@@ -190,34 +190,32 @@ class ParserUtils:
     # =========================================================
     # 🔹 MOHS LOCATION EXTRACTION (FIXED + FALLBACK) & STAGES
     # =========================================================
-    def extract_mohs_location(self, text: str) -> str:
+    def _clean_mohs_text(self, text: str) -> str:
+        return (text or "").replace("\xa0", " ").replace("\r\n", "\n").replace("\r", "\n").strip()
 
-        # -------------------------
-        # 🔴 PRIMARY: Explicit "Location:"
-        # -------------------------
-        match = re.search(r"Location:\s*([^\n\r]+)", text, re.IGNORECASE)
+
+    def extract_mohs_location(self, text: str) -> str:
+        text = self._clean_mohs_text(text)
+
+        # Primary: explicit "Location:"
+        match = re.search(r"(?im)^\s*Location:\s*([^\n\r]+)", text)
         if match:
             location = match.group(1).strip()
             logger.info(f"📍 Mohs location detected (explicit): {location}")
             return location
 
-        # -------------------------
-        # 🔴 SECONDARY: complaint-style pattern
-        # e.g. "- Location: Left Temple"
-        # -------------------------
-        match = re.search(r"-\s*Location:\s*([^\n\r]+)", text, re.IGNORECASE)
+        # Secondary: bullet format
+        match = re.search(r"(?im)^\s*-\s*Location:\s*([^\n\r]+)", text)
         if match:
             location = match.group(1).strip()
             logger.info(f"📍 Mohs location detected (bullet): {location}")
             return location
 
-        # -------------------------
-        # 🔴 FALLBACK: keyword inference
-        # -------------------------
+        # Fallback: keyword inference
         logger.warning("⚠️ Primary location not found → fallback detection")
 
         fallback_match = re.search(
-            r"(temple|face|nose|lip|ear|scalp|neck|hand|foot|genital)",
+            r"(temple|face|nose|lip|ear|scalp|neck|hand|hands|foot|feet|genital|chest|back|abdomen|arm|leg|shoulder|thigh)",
             text.lower()
         )
 
@@ -230,34 +228,149 @@ class ParserUtils:
         return ""
 
 
-    def extract_mohs_stages(self, text: str) -> int:
+    def extract_mohs_site_blocks(self, text: str) -> List[Dict[str, Any]]:
+        """
+        Split a Mohs note into site-aware blocks.
+        Captures repeated headings such as:
+        Site A
+        ...
+        Site A
+        1st Stage: ...
+        2nd Stage: ...
+        Site B
+        ...
+        """
+        text = self._clean_mohs_text(text)
+        if not text:
+            return []
 
-        # -------------------------
-        # 🔴 Pattern: "1st Stage", "2nd Stage"
-        # -------------------------
-        matches = re.findall(
-            r"(\d+)(?:st|nd|rd|th)?\s*Stage",
-            text,
-            re.IGNORECASE
-        )
+        site_pattern = re.compile(r"(?im)^\s*Site\s+([A-Z])\b")
+        matches = list(site_pattern.finditer(text))
+
+        blocks = []
 
         if matches:
-            stages = max(map(int, matches))
-            logger.info(f"🔢 Mohs stages detected (explicit): {stages}")
+            for idx, match in enumerate(matches):
+                start = match.start()
+                end = matches[idx + 1].start() if idx + 1 < len(matches) else len(text)
+                site_label = match.group(1).upper()
+                block_text = text[start:end].strip()
+
+                if block_text:
+                    blocks.append({
+                        "site_label": site_label,
+                        "label": f"site_{site_label}",
+                        "text": block_text,
+                    })
+
+            logger.info(f"📦 Mohs site blocks detected: {len(blocks)}")
+            return blocks
+
+        # Fallback: split by Location if there is no Site marker
+        location_pattern = re.compile(r"(?im)^\s*Location:\s*")
+        loc_matches = list(location_pattern.finditer(text))
+
+        if loc_matches:
+            for idx, match in enumerate(loc_matches):
+                start = match.start()
+                end = loc_matches[idx + 1].start() if idx + 1 < len(loc_matches) else len(text)
+                block_text = text[start:end].strip()
+
+                if block_text:
+                    blocks.append({
+                        "site_label": str(idx + 1),
+                        "label": f"site_{idx + 1}",
+                        "text": block_text,
+                    })
+
+            logger.info(f"📦 Mohs location blocks detected: {len(blocks)}")
+            return blocks
+
+        # Final fallback: one block
+        logger.warning("⚠️ No Mohs site markers found → single-block fallback")
+        return [{
+            "site_label": "1",
+            "label": "site_1",
+            "text": text
+        }]
+
+
+    def extract_mohs_stage_details(self, text: str) -> List[Dict[str, Any]]:
+        """
+        Returns structured stage rows:
+        1st Stage: 2 Sections, Positive
+        2nd Stage: 1 Sections, Negative
+        """
+        text = self._clean_mohs_text(text)
+        if not text:
+            return []
+
+        stage_pattern = re.compile(
+            r"(?im)^\s*(\d+)(?:st|nd|rd|th)?\s*Stage\s*:\s*([^\n\r]*)"
+        )
+
+        details = []
+
+        for match in stage_pattern.finditer(text):
+            stage_num = int(match.group(1))
+            remainder = (match.group(2) or "").strip()
+
+            sections = None
+            sec_match = re.search(r"(\d+)\s*Sections?\b", remainder, re.IGNORECASE)
+            if sec_match:
+                try:
+                    sections = int(sec_match.group(1))
+                except Exception:
+                    sections = None
+
+            status = None
+            if re.search(r"\bpositive\b", remainder, re.IGNORECASE):
+                status = "positive"
+            elif re.search(r"\bnegative\b", remainder, re.IGNORECASE):
+                status = "negative"
+
+            details.append({
+                "stage": stage_num,
+                "sections": sections,
+                "status": status,
+                "raw": match.group(0).strip(),
+            })
+
+        if details:
+            logger.info(f"🔢 Mohs stage details detected: {details}")
+            return details
+
+        # fallback: count stage lines
+        stage_lines = [
+            line.strip()
+            for line in text.splitlines()
+            if re.search(r"\bStage\b", line, re.IGNORECASE)
+        ]
+
+        if stage_lines:
+            logger.info(f"🔢 Mohs stage lines inferred: {len(stage_lines)}")
+            return [
+                {
+                    "stage": i + 1,
+                    "sections": None,
+                    "status": None,
+                    "raw": line
+                }
+                for i, line in enumerate(stage_lines)
+            ]
+
+        logger.info("🔢 No stage explicitly found → default = 1")
+        return []
+
+
+    def extract_mohs_stages(self, text: str) -> int:
+        details = self.extract_mohs_stage_details(text)
+
+        if details:
+            stages = len(details)
+            logger.info(f"🔢 Mohs stages detected: {stages}")
             return stages
 
-        # -------------------------
-        # 🔴 Pattern: multiple "Stage:" mentions
-        # -------------------------
-        stage_mentions = len(re.findall(r"Stage:", text, re.IGNORECASE))
-        if stage_mentions > 0:
-            logger.info(f"🔢 Mohs stages inferred (count): {stage_mentions}")
-            return stage_mentions
-
-        # -------------------------
-        # 🔴 DEFAULT
-        # -------------------------
-        logger.info("🔢 No stage explicitly found → default = 1")
         return 1
     
     # =========================================================

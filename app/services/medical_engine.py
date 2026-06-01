@@ -473,7 +473,7 @@ class CodingNodes:
                         logger.exception(f"❌ Chemical Peel retrieval failed: {e}")
 
             # -------------------------
-            # 🔴 MOHS (FINAL SAFE VERSION)
+            # 🔴 MOHS
             # -------------------------
             if parsed.get("has_mohs"):
                 logger.info("🔴 MOHS DETECTED")
@@ -481,17 +481,26 @@ class CodingNodes:
 
                 for sec in parsed.get("mohs_sections", []):
                     location = sec.get("location", "")
+                    site_label = sec.get("site_label") or sec.get("label") or "SITE_1"
+                    stages = int(sec.get("stages") or 1)
 
                     if not location:
                         logger.error("❌ Mohs location missing → fallback mode")
 
-                    logger.info(f"📌 Mohs → location={location}")
+                    logger.info(
+                        f"📌 Mohs → site={site_label} | location={location} | stages={stages}"
+                    )
+
                     res = await self.retriever.mohs_filter(location) or []
                     logger.info(f"   ↳ Mohs candidates: {len(res)}")
 
-                    # tag source
                     for r in res:
                         r["source"] = "mohs"
+                        r["mohs_site"] = site_label
+                        r["mohs_location"] = location
+                        r["mohs_stages"] = stages
+                        r["mohs_stage_details"] = sec.get("stage_details", [])
+                        r["mohs_section_label"] = sec.get("label")
 
                     all_candidates.extend(res)
 
@@ -576,17 +585,30 @@ class CodingNodes:
             # 🔴 IF ANY PROCEDURAL CODES FOUND → RETURN
             # -------------------------
             if all_candidates:
-                # 🔹 Deduplicate (important)
                 unique = {}
                 for c in all_candidates:
-                    key = (c.get("code"), c.get("type"), c.get("source"), c.get("location"))
+                    if c.get("source") == "mohs":
+                        key = (
+                            c.get("code"),
+                            c.get("type"),
+                            c.get("source"),
+                            c.get("mohs_site"),
+                            c.get("location"),
+                        )
+                    else:
+                        key = (
+                            c.get("code"),
+                            c.get("type"),
+                            c.get("source"),
+                            c.get("location"),
+                        )
+
                     if key not in unique:
                         unique[key] = c
 
                 final_candidates = list(unique.values())
 
                 logger.info(f"✅ Total combined candidates (deduped): {len(final_candidates)}")
-
                 return {"candidates": final_candidates}
 
             # -------------------------

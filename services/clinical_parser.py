@@ -125,29 +125,48 @@ class ClinicalParser:
         if not text:
             return []
 
-        logger.info("🔍 Extracting Mohs sections (multi-site mode)...")
+        logger.info("🔍 Extracting Mohs sections (site-aware mode)...")
+
+        raw_blocks = self.utils.extract_mohs_site_blocks(text)
+        if not raw_blocks:
+            return []
+
+        grouped = {}
+        order = []
+
+        for blk in raw_blocks:
+            site_label = (blk.get("site_label") or blk.get("label") or "").strip().upper()
+            if not site_label:
+                site_label = f"SITE_{len(order) + 1}"
+
+            if site_label not in grouped:
+                grouped[site_label] = []
+                order.append(site_label)
+
+            grouped[site_label].append(blk.get("text", ""))
 
         sections = []
 
-        # 🔴 Split by multiple "Location:"
-        parts = re.split(r"(?=Location:\s*)", text, flags=re.IGNORECASE)
-
-        for i, part in enumerate(parts):
-            part = part.strip()
-
-            if not part or "Location:" not in part:
+        for site_label in order:
+            combined = "\n".join(grouped[site_label]).strip()
+            if not combined:
                 continue
 
-            logger.info(f"🔍 Processing Mohs segment {i+1}")
+            location = self.utils.extract_mohs_location(combined)
+            stage_details = self.utils.extract_mohs_stage_details(combined)
+            stages = len(stage_details) if stage_details else self.utils.extract_mohs_stages(combined)
 
-            location = self.utils.extract_mohs_location(part)
-            stages = self.utils.extract_mohs_stages(part)
+            logger.info(
+                f"🔍 Processing Mohs site={site_label} | location={location} | stages={stages}"
+            )
 
             sections.append({
-                "label": f"site_{i+1}",
-                "text": part,
+                "label": f"site_{site_label}",
+                "site_label": site_label,
+                "text": combined,
                 "location": location,
-                "stages": stages
+                "stages": stages,
+                "stage_details": stage_details,
             })
 
         logger.info(f"📊 Total Mohs sections: {len(sections)}")

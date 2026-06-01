@@ -224,56 +224,47 @@ If:
 - separate identical shave removals unnecessarily
 
 --------------------------------------------------
-🔴 MOHS LOGIC (STRICT – OVERRIDES GENERAL RULES)
+🔴 MOHS LOGIC (STRICT – SITE-AWARE OVERRIDE)
 
 If mohsNotes present:
 
-1. Identify EACH Mohs site (from parsed_data)
-
-2. For EACH site:
-   → determine:
-      - location
-      - Dx
-      - stages
-
-3. LOCATION CLASSIFICATION:
-   HIGH RISK:
-   head, neck, temple, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet, genitalia
-      → 17311 (first stage)
-      → 17312 (additional stages)
-
-   TRUNK / EXTREMITIES:
-      → 17313 (first stage)
-      → 17314 (additional stages)
-
-4. CRITICAL RULE (MOST IMPORTANT):
-
-   - EACH SITE = SEPARATE CPT ENTRY
-
-Even if:
-   - CPT code is SAME
-   - stages are SAME
-
-   DO NOT MERGE SITES
-
-5. STAGE LOGIC:
+1. Use parsed["mohs_sections"] only.
+2. Treat each entry in mohs_sections as one independent site.
+3. Never merge sites even when the location text is identical.
+4. Each site can have its own stage count.
 
 For EACH site:
-   first_stage = 1
-   additional = stages - 1
 
-6. OUTPUT:
+- Read site_label
+- Read location
+- Read stages
+- Map Dx for that specific site
+- Assign Mohs CPTs for that specific site only
 
-   - Create separate CPT entry per site:
-      → quantity = 1
+LOCATION CLASSIFICATION:
+HIGH RISK:
+head, neck, temple, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet, genitalia
+→ 17311 (first stage)
+→ 17312 (additional stages)
 
-   - Additional stage codes:
-      → include ONLY if stages > 1
-      → quantity = additional
+TRUNK / EXTREMITIES:
+→ 17313 (first stage)
+→ 17314 (additional stages)
 
-7. VALIDATION:
-   - Location must match CPT description
-   - Dx must match that specific site
+STAGE RULE:
+For each site:
+- first stage quantity = 1
+- additional stage quantity = stages - 1
+
+OUTPUT RULE:
+- Keep each site as a separate CPT assignment path
+- Do not combine site A and site B into one Mohs result
+- If two sites share the same location, still keep them separate because the site label differs
+
+VALIDATION:
+- Location must match CPT description
+- Dx must match that specific site
+- Site label is authoritative for separation
 
 --------------------------------------------------
 🔴 EXCISION LOGIC
