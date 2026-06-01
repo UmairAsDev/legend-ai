@@ -1,7 +1,5 @@
 # utils/engine_utils.py
 
-import math
-import re
 from datetime import datetime
 from decimal import Decimal
 from typing import Any, Dict, List, Tuple
@@ -10,15 +8,12 @@ from loguru import logger
 
 from config.constants import (
     MAX_CANDIDATES_FOR_LLM,
-    CLOSURE_CODE_PREFIXES,
     EXCISION_CODE_PREFIXES,
 )
-from services.code_selectors.base import classify_closure_location
 from services.em_selector import select_em_code
 from services.modifier_engine import (
     assign_em_modifier,
     assign_laterality_modifiers,
-    assign_distinct_procedure_modifiers,
 )
 
 
@@ -197,137 +192,16 @@ def enforce_excision_quantity(parsed: Dict, llm_output: Dict) -> Dict:
 # ENFORCEMENT: CLOSURE ADD-ONS
 # =============================================================
 
-def _build_closure_hierarchy(candidates: List[Dict]) -> Dict:
-    hierarchy: Dict = {}
-    for c in candidates:
-        parent = c.get("associatedWithProCode")
-        if parent:
-            parent = str(parent).strip().removesuffix(".0")
-            if parent not in ("", "0", "None", "null"):
-                hierarchy.setdefault(parent, []).append(c)
-    logger.debug(f"Closure hierarchy: {hierarchy}")
-    return hierarchy
-
-
-def _select_primary_code(candidates: List[Dict], total_size: float):
-    base_codes = [
-        c for c in candidates
-        if str(c.get("associatedWithProCode") or "").strip() in ("", "None")
-    ]
-    base_codes.sort(key=lambda x: float(x.get("maxSize") or 0))
-
-    logger.debug(
-        f"Base candidates: {[(c['code'], c.get('minSize'), c.get('maxSize')) for c in base_codes]}"
-    )
-
-    for c in base_codes:
-        if total_size <= float(c.get("maxSize") or 0):
-            return c
-    return base_codes[-1] if base_codes else None
-
-
-def _calculate_addon_units(addon_code: Dict, total_size: float, base_max: float) -> int:
-    extra = total_size - base_max
-    if extra <= 0:
-        return 0
-    match = re.search(r"each additional (\d+\.?\d*)", (addon_code.get("description") or "").lower())
-    # Step comes from the code description ("each additional X.X cm").
-    # If the description doesn't state a step, fall back to the smallest
-    # add-on code's implied step by reading its minSize from the data.
-    # 5.0 is only used when both sources are unavailable.
-    step = float(match.group(1)) if match else float(addon_code.get("minSize") or 5.0)
-    return math.ceil(extra / step)
-
 
 def enforce_closure_addon(parsed: Dict, candidates: List[Dict], llm_output: Dict) -> Dict:
     try:
-        logger.info("Enforcing closure add-ons")
-
-        closure_groups = parsed.get("closure_aggregated", [])
-        if not closure_groups:
-            return llm_output
-
-        # If LLM already assigned closures, do not override
-        if any(any(str(c["code"]).startswith(p) for p in CLOSURE_CODE_PREFIXES) for c in llm_output["codes"]["cpt_codes"]):
-            logger.info("LLM already assigned closure codes — skipping enforcement")
-            return llm_output
-
-        closure_candidates = [
-            c for c in candidates
-            if any(str(c.get("code", "")).startswith(p) for p in CLOSURE_CODE_PREFIXES)
-        ]
-
-        logger.debug(f"Closure candidates: {[(c['code'], c.get('associatedWithProCode')) for c in closure_candidates]}")
-
-        hierarchy = _build_closure_hierarchy(closure_candidates)
-        final_codes: List[Dict] = []
-
-        # Type → code prefix map: complex → 131xx, adjacent → 140xx, intermediate → 120xx
-        _TYPE_PREFIXES = {
-            "complex":      ("131",),
-            "adjacent":     ("140",),
-            "intermediate": ("120",),
-        }
-
-        for group in closure_groups:
-            total_size = group["total_size"]
-            ctype = group["type"]
-            location_group = group.get("group_key", "").split("_")[-1]
-
-            logger.info(f"Closure group  size={total_size}  type={ctype}")
-
-            type_prefixes = _TYPE_PREFIXES.get(ctype, ())
-            type_candidates = [
-                c for c in closure_candidates
-                if any(str(c["code"]).startswith(p) for p in type_prefixes)
-            ] if type_prefixes else closure_candidates
-
-            # Use centralized location keyword sets from base.py
-            from services.code_selectors.base import LOCATION_DESC_KEYWORDS
-            kws = LOCATION_DESC_KEYWORDS.get(location_group)
-            filtered = [
-                c for c in type_candidates
-                if not kws or any(k in (c.get("description") or "").lower() for k in kws)
-            ]
-
-            logger.debug(f"Filtered closure candidates: {[c['code'] for c in filtered]}")
-
-            primary = _select_primary_code(filtered, total_size)
-            if not primary:
-                logger.warning("No primary closure match found")
-                continue
-
-            primary_code = str(primary["code"])
-            base_max = float(primary.get("maxSize") or 0)
-
-            logger.info(f"Primary closure  code={primary_code}  total={total_size}  base_max={base_max}")
-
-            final_codes.append({
-                "code": primary_code,
-                "description": primary["description"],
-                "modifier": None,
-                "linked_dx": [],
-                "quantity": "1",
-            })
-
-            for addon in hierarchy.get(primary_code, []):
-                units = _calculate_addon_units(addon, total_size, base_max)
-                if units > 0:
-                    logger.info(f"Closure add-on  code={addon['code']}  units={units}")
-                    final_codes.append({
-                        "code": addon["code"],
-                        "description": addon["description"],
-                        "modifier": None,
-                        "linked_dx": [],
-                        "quantity": str(units),
-                    })
-
-        llm_output["codes"]["cpt_codes"].extend(final_codes)
-        logger.info(f"Closure enforcement complete: {final_codes}")
+        # Closure selection is handled exclusively by ClosureSelector.
+        # enforce_confirmed_codes() ensures confirmed codes are in the output.
+        # Do not re-select closure codes here — that would duplicate or override
+        # the selector's deterministic decision.
         return llm_output
-
     except Exception as e:
-        logger.exception(f"Closure enforcement failed: {e}")
+        logger.exception(f"enforce_closure_addon: {e}")
         return llm_output
 
 
@@ -464,25 +338,34 @@ def enrich_with_site_ids(
     Must run after all enforcement passes (enforce_confirmed_codes, etc.) so
     every code that will be validated is already in llm_output.
     """
-    candidate_site: Dict[str, str] = {
-        str(c.get("code", "")).strip(): str(c.get("site_id", "")).strip()
-        for c in candidates
-        if c.get("code") and c.get("site_id")
-    }
+    # Index candidates by (code, source) to avoid confusing same CPT code at two sites.
+    by_code_source: Dict[tuple, str] = {}
+    by_code_only: Dict[str, str] = {}
+    for c in candidates:
+        code = str(c.get("code", "")).strip()
+        source = str(c.get("source", "")).strip()
+        site_id = str(c.get("site_id", "")).strip()
+        if code and site_id:
+            by_code_source[(code, source)] = site_id
+            if code not in by_code_only:
+                by_code_only[code] = site_id
 
     enriched = 0
     for cpt in llm_output.get("codes", {}).get("cpt_codes", []):
-        code = str(cpt.get("code", "")).strip()
-        if cpt.get("site_id") or not code:
+        if cpt.get("site_id"):
             continue
-        site_id = candidate_site.get(code, "")
+        code = str(cpt.get("code", "")).strip()
+        source = str(cpt.get("source", "")).strip()
+        site_id = (
+            by_code_source.get((code, source))
+            or by_code_only.get(code, "")
+        )
         if site_id:
             cpt["site_id"] = site_id
             enriched += 1
 
     if enriched:
-        logger.debug(f"enrich_with_site_ids: stamped {enriched} code(s) with site_id")
-
+        logger.debug(f"enrich_with_site_ids: stamped {enriched} code(s)")
     return llm_output
 
 
@@ -606,21 +489,29 @@ def enforce_em_and_modifiers(
                     llm_output["codes"]["cpt_codes"], sites
                 )
             else:
-                llm_output["codes"]["cpt_codes"] = assign_multiple_procedure_modifiers(
-                    llm_output["codes"]["cpt_codes"]
+                logger.warning(
+                    "No site data — -59 modifier not assigned. Manual review required."
                 )
 
-        # E/M code priority: explicit → time → level → MDM
+        # E/M code priority: explicit → MDM → time → level
         em_row = None
         if explicit_em_code:
             em_row = {"enmCode": explicit_em_code, "enmCodeDesc": "Office visit"}
             logger.info(f"E/M from note verbatim: {explicit_em_code}")
         elif patient_type:
-            em_row = select_em_code(patient_type, encounter_time, em_level)
-            if not em_row and mdm_level is not None:
+            # MDM first (most reliable for office visits), then time, then explicit level
+            if mdm_level is not None:
                 em_row = select_em_code(patient_type, em_level=mdm_level)
                 if em_row:
-                    logger.info(f"E/M selected via MDM level {mdm_level}: {em_row['enmCode']}")
+                    logger.info(f"E/M via MDM level {mdm_level}: {em_row['enmCode']}")
+            if not em_row and encounter_time is not None:
+                em_row = select_em_code(patient_type, encounter_time)
+                if em_row:
+                    logger.info(f"E/M via time {encounter_time}min: {em_row['enmCode']}")
+            if not em_row and em_level is not None:
+                em_row = select_em_code(patient_type, em_level=em_level)
+                if em_row:
+                    logger.info(f"E/M via explicit level {em_level}: {em_row['enmCode']}")
 
         if not em_row:
             logger.info("Insufficient E/M signals — keeping LLM em_code output")

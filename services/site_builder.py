@@ -256,3 +256,127 @@ def same_site(code_a: Dict, code_b: Dict, sites: List[ProcedureSite]) -> bool:
     if a_site is None or b_site is None:
         return False
     return a_site.site_id == b_site.site_id
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DIAGNOSIS ASSIGNMENT
+# ─────────────────────────────────────────────────────────────────────────────
+
+import re as _re
+
+
+def assign_site_diagnoses(
+    sites: List[ProcedureSite],
+    note: Dict[str, Any],
+) -> List[ProcedureSite]:
+    """
+    Assign diagnosis codes to each site based on the note's diagnoses field
+    and assessment text.
+
+    Each site should own only the diagnoses relevant to its procedure, not all
+    diagnoses from the note. This prevents codes like 11622 (melanoma excision)
+    from being linked to C44.42 (SCC) which belongs to the Mohs site.
+
+    Algorithm:
+    1. Parse diagnoses field: extract (icd_code, description) pairs.
+    2. For each diagnosis, find its location in the assessment text.
+    3. Match to the site whose location appears nearest in that context.
+    4. Fallback: assign all diagnoses to any site with no match.
+    """
+    diagnoses_raw = str(note.get("diagnoses") or "")
+    assessment    = str(note.get("assesment") or "").lower()
+    biopsy_notes  = str(note.get("biopsyNotes") or "").lower()
+    mohs_notes    = str(note.get("mohsNotes") or "").lower()
+
+    # Parse ICD-10 codes with their descriptions from the diagnoses field
+    icd_pairs: List[tuple] = []
+    for m in _re.finditer(r"([A-Z]\d{2}\.?\d*)\s+([^,\n]+)", diagnoses_raw):
+        code = m.group(1).strip()
+        desc = m.group(2).strip().lower()
+        icd_pairs.append((code, desc))
+
+    if not icd_pairs:
+        return sites  # nothing to assign
+
+    all_icd = [p[0] for p in icd_pairs]
+
+    # Combined text for proximity search
+    combined = " | ".join([assessment, biopsy_notes, mohs_notes])
+
+    def _site_proximity_score(site: ProcedureSite, context: str) -> int:
+        """Return position of site location keywords in context, or -1."""
+        loc_words = [w for w in site.location.lower().split() if len(w) > 2]
+        for word in loc_words:
+            idx = context.find(word)
+            if idx >= 0:
+                return idx
+        return -1
+
+    # For each diagnosis, find the closest matching site
+    assigned: Dict[str, List[str]] = {s.site_id: [] for s in sites}
+
+    for icd_code, desc in icd_pairs:
+        # Find where this diagnosis description appears in combined text
+        desc_idx = combined.find(desc[:20])  # use first 20 chars of description
+        if desc_idx < 0:
+            # Try individual keywords from description
+            for word in desc.split():
+                if len(word) > 4:
+                    desc_idx = combined.find(word)
+                    if desc_idx >= 0:
+                        break
+
+        if desc_idx < 0:
+            # Description not found — assign to all sites as fallback
+            for site in sites:
+                assigned[site.site_id].append(icd_code)
+            continue
+
+        # Surrounding context around this diagnosis
+        context_start = max(0, desc_idx - 300)
+        context_end   = min(len(combined), desc_idx + 300)
+        context       = combined[context_start:context_end]
+
+        # Find which site's location appears in this context
+        best_site: Optional[ProcedureSite] = None
+        best_dist = float("inf")
+
+        for site in sites:
+            if not site.location:
+                continue
+            loc_words = [w for w in site.location.lower().split() if len(w) > 2]
+            for word in loc_words:
+                idx = context.find(word)
+                if idx >= 0:
+                    dist = abs(idx - (desc_idx - context_start))
+                    if dist < best_dist:
+                        best_dist = dist
+                        best_site = site
+
+        if best_site:
+            assigned[best_site.site_id].append(icd_code)
+        else:
+            # No location match — assign to all sites
+            for site in sites:
+                assigned[site.site_id].append(icd_code)
+
+    # Apply assignments to sites
+    for site in sites:
+        site_dx = assigned.get(site.site_id, [])
+        if not site_dx:
+            site_dx = all_icd  # fallback: all diagnoses
+        # Deduplicate while preserving order
+        seen: set = set()
+        site.diagnosis_codes = [
+            d for d in site_dx if not (d in seen or seen.add(d))
+        ]
+
+    logger.info(
+        "assign_site_diagnoses: "
+        + ", ".join(
+            f"{s.site_id}={s.diagnosis_codes}"
+            for s in sites
+        )
+    )
+
+    return sites

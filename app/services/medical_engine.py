@@ -29,7 +29,7 @@ from services.code_selectors import (
     XtracSelector,
 )
 from services.retriever import CodeRetriever
-from services.site_builder import build_sites, ProcedureSite
+from services.site_builder import build_sites, assign_site_diagnoses, ProcedureSite
 from services.procedure_normalizer import normalize_procedures
 from services.boundary_checker import detect_boundary_cases
 from src.data_layer.progressnote import notes
@@ -185,6 +185,9 @@ class CodingNodes:
 
             # 2. Group instances into ProcedureSite objects (annotates sections with site_id)
             sites: list[ProcedureSite] = build_sites(state["parsed"])
+
+            # 3. Assign site-specific diagnoses from note assessment + diagnoses field
+            sites = assign_site_diagnoses(sites, state.get("cleaned_note") or {})
 
             return {
                 "procedures": [p.to_dict() for p in procedure_instances],
@@ -472,17 +475,11 @@ class CodingNodes:
                 results.extend(selected)
                 continue
 
-            if not size:
-                logger.warning("Excision: size missing and selector failed — skipping")
-                continue
-            loc_match = re.search(r"Location:\s*(.*)", sec.get("text", ""))
-            loc = loc_match.group(1).strip() if loc_match else location
-            res = await self.retriever.excision_filter(size, loc)
-            for r in res:
-                r["confidence"] = "candidate"
-                r["source"]     = "excision"
-            self._tag(res, site_id)
-            results.extend(res)
+            logger.warning(
+                "Excision selector failed — no retriever fallback for "
+                "deterministic procedures. Add to unresolved for manual review."
+            )
+            continue
         return results
 
     async def _retrieve_destruction(self, parsed: dict) -> List[dict]:
@@ -544,11 +541,11 @@ class CodingNodes:
             self._tag(selected, first_site_id)
             return selected
 
-        res = await self.retriever.biopsy_filter()
-        for r in res:
-            r["confidence"] = "candidate"
-        self._tag(res, first_site_id)
-        return res
+        logger.warning(
+            "BiopsySelector failed — no retriever fallback. "
+            "Biopsy will appear in unresolved procedures."
+        )
+        return []
 
     async def _retrieve_shave_removal(self, parsed: dict) -> List[dict]:
         results = []
@@ -568,16 +565,11 @@ class CodingNodes:
                 results.extend(selected)
                 continue
 
-            res = await self.retriever.shave_removal_filter(
-                location_group=sec.get("location_group"),
-                size=sec.get("size"),
+            logger.warning(
+                "ShaveRemoval selector failed — no retriever fallback for "
+                "deterministic procedures. Add to unresolved for manual review."
             )
-            for r in res:
-                r["confidence"]    = "candidate"
-                r["source"]        = "shave_removal"
-                r["shave_quantity"] = sec.get("quantity")
-            self._tag(res, site_id)
-            results.extend(res)
+            continue
         return results
 
     @staticmethod
@@ -605,12 +597,11 @@ class CodingNodes:
                 results.extend(selected)
                 continue
 
-            res = await self.retriever.mohs_filter(location) or []
-            for r in res:
-                r["confidence"] = "candidate"
-                r["source"]     = "mohs"
-            self._tag(res, site_id)
-            results.extend(res)
+            logger.warning(
+                "Mohs selector failed — no retriever fallback for "
+                "deterministic procedures. Add to unresolved for manual review."
+            )
+            continue
         return results
 
     async def _retrieve_closure(self, parsed: dict) -> List[dict]:
@@ -643,13 +634,11 @@ class CodingNodes:
                 results.extend(selected)
                 continue
 
-            res = await self.retriever.closure_filter(total_size, location_group, ctype)
-            for r in res:
-                r["confidence"]    = "candidate"
-                r["source"]        = "closure"
-                r["closure_group"] = group_key
-            self._tag(res, site_id)
-            results.extend(res)
+            logger.warning(
+                "Closure selector failed — no retriever fallback for "
+                "deterministic procedures. Add to unresolved for manual review."
+            )
+            continue
         return results
 
     @staticmethod
@@ -673,12 +662,11 @@ class CodingNodes:
                 results.extend(selected)
                 continue
 
-            res = await self.retriever.srt_filter(sec)
-            for r in res:
-                r["confidence"] = "candidate"
-                r["source"]     = "srt"
-            self._tag(res, site_id)
-            results.extend(res)
+            logger.warning(
+                "SRT selector failed — no retriever fallback for "
+                "deterministic procedures. Add to unresolved for manual review."
+            )
+            continue
         return results
 
     async def _retrieve_debridement(self, parsed: dict) -> List[dict]:
@@ -697,12 +685,11 @@ class CodingNodes:
                 results.extend(selected)
                 continue
 
-            res = await self.retriever.debridement_filter(sec)
-            for r in res:
-                r["confidence"] = "candidate"
-                r["source"]     = "debridement"
-            self._tag(res, site_id)
-            results.extend(res)
+            logger.warning(
+                "Debridement selector failed — no retriever fallback for "
+                "deterministic procedures. Add to unresolved for manual review."
+            )
+            continue
         return results
 
     async def _retrieve_xtrac(self, parsed: dict) -> List[dict]:
@@ -717,12 +704,11 @@ class CodingNodes:
                 results.extend(selected)
                 continue
 
-            res = await self.retriever.xtrac_filter(total_area=sec.get("total_area"))
-            for r in res:
-                r["confidence"] = "candidate"
-                r["source"]     = "xtrac"
-            self._tag(res, site_id)
-            results.extend(res)
+            logger.warning(
+                "Xtrac selector failed — no retriever fallback for "
+                "deterministic procedures. Add to unresolved for manual review."
+            )
+            continue
         return results
 
     # Procedures without deterministic rules — always DB filter

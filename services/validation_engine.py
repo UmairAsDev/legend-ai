@@ -21,6 +21,7 @@ from typing import Any, Dict, List, Optional
 from loguru import logger
 
 from config.constants import CLOSURE_CODE_PREFIXES
+from services.knowledge_base import kb
 from services.lesion_validator import validate_lesion_conflicts
 
 
@@ -289,6 +290,105 @@ def _check_hallucinated_codes(
 
 
 # ─────────────────────────────────────────────────────────────
+# RULE 6 — PROCEDURE-SPECIFIC SITE RULES (SOFT FLAGS)
+# Uses proName from the KnowledgeBase — no hardcoded CPT numbers.
+# ─────────────────────────────────────────────────────────────
+
+def _check_procedure_site_rules(
+    cpt_codes: List[Dict],
+    parsed: Dict,
+    llm_output: Dict,
+) -> List[Dict]:
+    """
+    Procedure-specific validation rules based on proName from the KnowledgeBase.
+    All rules are soft flags (audit_flags) — no hard rejections here.
+    """
+    try:
+        mohs_sections = parsed.get("mohs_sections", [])
+        total_mohs_stages = sum(int(s.get("stages") or 1) for s in mohs_sections)
+
+        for cpt in cpt_codes:
+            code = str(cpt.get("code", "")).strip()
+            cpt_meta = kb.get_cpt(code)
+            if not cpt_meta:
+                continue
+            pro_name = cpt_meta.pro_name
+
+            # ── Rule A: Mohs additional-stage code requires stages > 1 ─────────
+            if (
+                pro_name == "MOHS Micrographic Surgery"
+                and cpt_meta.parent_code is not None
+            ):
+                if total_mohs_stages <= 1:
+                    _add_flag(
+                        llm_output,
+                        f"REVIEW {code}: Mohs additional-stage code requires "
+                        f"documented stages > 1 but note shows {total_mohs_stages} stage(s).",
+                    )
+
+            # ── Rule B: Malignant excision requires a malignant diagnosis ───────
+            if pro_name == "Excision Malignant Lesion & Margins":
+                linked = [str(d).strip().upper() for d in (cpt.get("linked_dx") or [])]
+                # Malignant diagnoses: C00-C49 melanoma/carcinoma range, C43.x, C44.x
+                has_malignant_dx = any(
+                    d.startswith(("C43", "C44", "C00", "C01", "C02", "C03", "C04",
+                                  "C05", "C06", "C07", "C08", "C09", "C10", "C11",
+                                  "C14", "C15", "C16", "C17", "C18", "C19", "C20",
+                                  "C21", "C22", "C30", "C31", "C32", "C33", "C34",
+                                  "C40", "C41", "C43", "C44", "C45", "C46", "C47",
+                                  "C48", "C49"))
+                    for d in linked
+                )
+                if not has_malignant_dx:
+                    _add_flag(
+                        llm_output,
+                        f"REVIEW {code}: malignant excision code but no malignant "
+                        f"diagnosis (C43/C44 range) is linked. Verify diagnosis assignment.",
+                    )
+
+            # ── Rule C: Closure code must match documented closure type ─────────
+            if pro_name in ("Simple Closure", "Layered Closure", "Complex Closure"):
+                closure_sections = parsed.get("closure_sections", [])
+                doc_types = {(s.get("type") or "").lower() for s in closure_sections}
+                code_type_map = {
+                    "Simple Closure":    {"simple"},
+                    "Layered Closure":   {"intermediate", "layered"},
+                    "Complex Closure":   {"complex"},
+                }
+                expected = code_type_map.get(pro_name, set())
+                if doc_types and not (doc_types & expected):
+                    _add_flag(
+                        llm_output,
+                        f"REVIEW {code} ({pro_name}): code type does not match "
+                        f"documented closure type(s) {doc_types}. Verify closure documentation.",
+                    )
+
+            # ── Rule D: ATT code location must match note ───────────────────────
+            if pro_name == "Adjacent Tissue Transfer":
+                desc_lower = cpt_meta.description.lower()
+                site_id = cpt.get("site_id", "")
+                # If code description says "trunk" but site is neck — flag it
+                if "trunk" in desc_lower:
+                    mohs_secs = parsed.get("mohs_sections", [])
+                    has_neck_mohs = any(
+                        "neck" in (s.get("location") or "").lower()
+                        for s in mohs_secs
+                    )
+                    if has_neck_mohs:
+                        _add_flag(
+                            llm_output,
+                            f"REVIEW {code}: ATT trunk code selected but Mohs site "
+                            f"is neck — verify correct ATT location family.",
+                        )
+
+        return cpt_codes
+
+    except Exception as e:
+        logger.warning(f"_check_procedure_site_rules (non-fatal): {e}")
+        return cpt_codes
+
+
+# ─────────────────────────────────────────────────────────────
 # MAIN ENTRY POINT
 # ─────────────────────────────────────────────────────────────
 
@@ -326,6 +426,10 @@ def validate_codes(
         # Soft flag rules
         _check_modifier_59(cpt_codes, parsed, llm_output)
         _check_dx_linkage(cpt_codes, em_code, llm_output)
+
+        # Procedure-specific rules (soft flags only)
+        cpt_codes = _check_procedure_site_rules(cpt_codes, parsed, llm_output)
+        llm_output["codes"]["cpt_codes"] = cpt_codes
 
         rejected_count = original_count - len(cpt_codes)
         if rejected_count:
