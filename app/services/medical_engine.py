@@ -15,7 +15,7 @@ from utils.engine_utils import (
     aggregate_shave_removals, aggregate_chemical_peels,
     enforce_closure_addon, enforce_excision_quantity,
     aggregate_closures, enforce_destruction_quantity,
-    serialize_data, clean_note_data, 
+    serialize_data, clean_note_data, apply_modifiers
 )
 
 # =========================
@@ -697,6 +697,12 @@ class CodingNodes:
             result = enforce_destruction_quantity(
                 parsed=state["parsed"],
                 retrieved_candidates=state["candidates"],
+                llm_output=result
+            )
+
+            result = apply_modifiers(
+                parsed=state["parsed"],
+                cleaned_note=state["cleaned_note"],
                 llm_output=result
             )
 

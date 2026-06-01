@@ -37,6 +37,7 @@ class ModifierEmbedding(Base):
 
     id = Column(Integer, primary_key=True)
     modifier = Column(Text, unique=True, nullable=False)
+    enm_modifier = Column("enmmodifier", Integer, default=0)
     modifier_desc = Column("modifierdesc", Text)
     modifier_det_desc = Column("modifierdetdesc", Text)
     embedding = Column(Vector(1536))

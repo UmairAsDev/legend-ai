@@ -657,3 +657,148 @@ def aggregate_chemical_peels(parsed):
     )
 
     return parsed
+
+
+
+def _note_blob(cleaned_note: Dict[str, Any], parsed: Dict[str, Any], llm_output: Dict[str, Any]) -> str:
+    parts = []
+
+    for key in [
+        "complaints",
+        "assesment",
+        "procedure",
+        "biopsyNotes",
+        "mohsNotes",
+        "diagnoses",
+        "patientSummary",
+    ]:
+        value = cleaned_note.get(key)
+        if value:
+            parts.append(str(value))
+
+    if llm_output.get("patient_summary"):
+        parts.append(str(llm_output["patient_summary"]))
+
+    # parse flags matter for modifier logic
+    for flag in [
+        "has_mohs",
+        "has_biopsy",
+        "has_excision",
+        "has_destruction",
+        "has_shave_removal",
+        "has_debridement",
+        "has_laser_treatment",
+        "has_xtrac",
+        "has_chemical_peel",
+        "has_filler",
+    ]:
+        if parsed.get(flag):
+            parts.append(flag)
+
+    return " ".join(parts).lower()
+
+
+def _normalize_modifier_value(value):
+    if value is None:
+        return None
+    value = str(value).strip()
+    return value if value and value.lower() not in {"none", "null", "nan"} else None
+
+
+def _pick_em_modifier(note_blob: str, procedure_present: bool) -> str | None:
+    # E/M-only modifiers from your CSV
+    if re.search(r"\btelemedicine\b|\btelehealth\b|\bvideo visit\b|\bvirtual visit\b", note_blob):
+        if "resident" in note_blob:
+            return "GC"
+        if "real-time" in note_blob or "interactive audio and video" in note_blob:
+            return "95"
+        if "medicare" in note_blob:
+            return "TM"
+        return "TM"
+
+    if re.search(r"\bpost[- ]?op\b|\bpostoperative\b", note_blob) and re.search(r"\bunrelated\b", note_blob):
+        return "24"
+
+    if re.search(r"\bdecision for surgery\b", note_blob):
+        return "57"
+
+    if procedure_present:
+        return "25"
+
+    return None
+
+
+def _pick_cpt_modifier(cpt: Dict[str, Any], note_blob: str, cpt_codes: list[Dict[str, Any]]) -> str | None:
+    code = _normalize_code(cpt.get("code"))
+
+    # 22: unusually extensive / difficult / significantly greater than normal
+    if re.search(r"\b(unusual|extensive|significantly greater than usual|prolonged|difficult)\b", note_blob):
+        if code.startswith(("110", "114", "116", "120", "131", "140", "150", "152", "157", "173")):
+            return "22"
+
+    # 59: repeated same CPT with a distinct Dx on another line
+    this_dx = tuple(_normalize_dx_list(cpt.get("linked_dx")))
+
+    for prev in cpt_codes:
+        if prev is cpt:
+            break
+
+        if _normalize_code(prev.get("code")) != code:
+            continue
+
+        prev_dx = tuple(_normalize_dx_list(prev.get("linked_dx")))
+        if prev_dx and prev_dx != this_dx:
+            return "59"
+
+    return None
+
+
+def apply_modifiers(parsed: Dict[str, Any], cleaned_note: Dict[str, Any], llm_output: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        logger.info("🔧 Applying modifier rules...")
+
+        codes_block = llm_output.setdefault("codes", {})
+        cpt_codes = codes_block.setdefault("cpt_codes", [])
+        em_code = codes_block.get("em_code")
+
+        note_blob = _note_blob(cleaned_note, parsed, llm_output)
+        procedure_present = any(
+            parsed.get(flag) for flag in [
+                "has_mohs",
+                "has_biopsy",
+                "has_excision",
+                "has_destruction",
+                "has_shave_removal",
+                "has_debridement",
+                "has_laser_treatment",
+                "has_xtrac",
+                "has_chemical_peel",
+                "has_filler",
+            ]
+        )
+
+        # E/M modifier
+        if em_code:
+            existing = _normalize_modifier_value(em_code.get("modifier"))
+            if not existing:
+                em_code["modifier"] = _pick_em_modifier(note_blob, procedure_present)
+
+        # CPT modifiers
+        for cpt in cpt_codes:
+            existing = _normalize_modifier_value(cpt.get("modifier"))
+            if existing:
+                continue
+
+            code = _normalize_code(cpt.get("code"))
+
+            # do not force modifiers onto E/M lines here
+            if code.startswith("992"):
+                continue
+
+            cpt["modifier"] = _pick_cpt_modifier(cpt, note_blob, cpt_codes)
+
+        return llm_output
+
+    except Exception as e:
+        logger.exception(f"❌ Modifier application failed: {e}")
+        return llm_output

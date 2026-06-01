@@ -49,6 +49,9 @@ class CodeRetriever:
             elif k == "code":
                 cleaned[k] = str(v).strip() if v is not None else None
 
+            elif k == "enmModifier":
+                cleaned[k] = int(v) if v is not None else 0
+
             # -------------------------
             # 🔴 NUMERIC FIX
             # -------------------------
@@ -414,6 +417,7 @@ class CodeRetriever:
                         modifier AS code,
                         modifierDesc AS description,
                         modifierDetDesc,
+                        enmModifier,
                         embedding <-> CAST(:embedding AS vector) AS distance,
                         'modifier' AS type
                     FROM modifier_embeddings

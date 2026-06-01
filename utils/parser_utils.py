@@ -187,6 +187,17 @@ class ParserUtils:
     def normalize(self, text: str) -> str:
         return text.lower() if text else ""
     
+    
+    def extract_laterality(self, text: str) -> str | None:
+        txt = self.normalize(text)
+
+        if re.search(r"\bleft\b", txt):
+            return "LT"
+        if re.search(r"\bright\b", txt):
+            return "RT"
+
+        return None
+    
     # =========================================================
     # 🔹 MOHS LOCATION EXTRACTION (FIXED + FALLBACK) & STAGES
     # =========================================================

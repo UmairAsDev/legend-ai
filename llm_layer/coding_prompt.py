@@ -630,10 +630,48 @@ If debridement (DBR) is mentioned:
 ❌ NEVER:
    - assign multiple depth codes together
    - assign 11042 without subcutaneous evidence
+
+--------------------------------------------------
+🔴 MODIFIER LOGIC (STRICT)
+
+- Assign a modifier only when the note clearly supports it.
+- Do not invent modifiers.
+- Do not leave the modifier blank when a supported modifier is obvious.
+
+E/M codes:
+- Use 25 when a separately identifiable E/M service is performed on the same day as a procedure.
+- Use 24 only for an unrelated postoperative E/M visit.
+- Use 57 only when the note clearly documents a decision for surgery.
+- Use telemedicine modifiers only when the note explicitly supports telehealth / video / real-time visit.
+
+CPT codes:
+- Use 22 only for unusually extensive / difficult / significantly greater than usual services.
+- Use 59 only when there are distinct same-day procedural services with different Dx or distinct sites.
+- Keep modifier null when no valid modifier applies.
+
+IMPORTANT:
+- CPT and E/M modifiers must be chosen independently.
+- Never force a modifier just to fill the field.
 --------------------------------------------------
 🔴 E/M CODING
 
-- Assign E/M only if supported by office visit level in the note
+- Use only active E/M codes.
+- Ignore expired or deleted codes.
+- Code by encounter type first:
+  - New patient: 99202–99205
+  - Established patient: 99211–99215
+  - Consult: 99241–99245 only if a consult is explicitly documented
+  - Preventive: 99381–99397 only if a preventive/wellness visit is explicitly documented
+  - Telephone: 99441–99443 only for telephone-only E/M
+  - Home visit: 99341–99350 only if the note is clearly a home visit
+  - Other/special: 99024, 99050, 99056, 99058 only if explicitly supported
+
+- Select the level using the note-supported visit level, preferably by MDM or total time.
+- Do not use 99201 and 99211.
+- Do not assign an E/M code if the note does not support an E/M service.
+- If a procedure is performed on the same day, assign E/M only when separately supported.
+- Keep modifier null unless the note clearly supports an E/M modifier.
+
 --------------------------------------------------
 🔴 ICD10/DX CODING
 

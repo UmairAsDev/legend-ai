@@ -113,9 +113,7 @@ class CSVHandler:
             results = []
 
             for _, row in df.iterrows():
-
                 code = self._safe_str(row.get("modifier"))
-
                 if not code:
                     continue
 
@@ -123,6 +121,7 @@ class CSVHandler:
                     "modifier": code,
                     "modifierDesc": self._safe_str(row.get("modifierDesc")),
                     "modifierDetDesc": self._safe_str(row.get("modifierDetDesc")),
+                    "enmModifier": self._safe_int(row.get("enmModifier")),  # preserve E/M-only flag
                 })
 
             logger.info(f"✅ Modifiers loaded: {len(results)} records")

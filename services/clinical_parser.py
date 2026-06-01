@@ -165,6 +165,7 @@ class ClinicalParser:
                 "site_label": site_label,
                 "text": combined,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location or combined),
                 "stages": stages,
                 "stage_details": stage_details,
             })
@@ -279,6 +280,7 @@ class ClinicalParser:
                 "type": ctype,
                 "size": size,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "location_group": location_group, 
                 "group_key": f"{ctype}_{location_group}",
                 "text": snippet.strip()
@@ -454,6 +456,7 @@ class ClinicalParser:
                 "is_wound": is_wound,
                 "quantity": quantity,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "method": method,
                 "choice": choice,
                 "text": block
@@ -570,14 +573,20 @@ class ClinicalParser:
                         f"📏 DM single size detected → {size}"
                     )
 
+            # Normalize location value and ensure laterality receives a string
+            location = (
+                location_match.group(1).strip()
+                if location_match else None
+            )
+
+            laterality = self.utils.extract_laterality(location or "")
+
             data = {
                 "label": f"destruction_{i+1}",
                 "text": section_text,
                 "destruction_type": destruction_type,
-                "location": (
-                    location_match.group(1).strip()
-                    if location_match else None
-                ),
+                "location": location,
+                "laterality": laterality,
                 "quantity": (
                     int(quantity_match.group(1))
                     if quantity_match else None
@@ -736,6 +745,7 @@ class ClinicalParser:
                     "label": f"shave_{i+1}",
                     "text": block,
                     "location": location,
+                    "laterality": self.utils.extract_laterality(location),
                     "location_group": location_group,
                     "size": size,
                     "quantity": 1
@@ -833,6 +843,7 @@ class ClinicalParser:
                 "label": "laser_1",
                 "text": text,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "method": method,
                 "quantity": quantity
             })
@@ -925,6 +936,7 @@ class ClinicalParser:
                 "label": "xtrac_1",
                 "text": text,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "quantity": quantity,
                 "total_area": total_area
             })
@@ -1080,6 +1092,7 @@ class ClinicalParser:
                         "label": f"ipl_{i+1}",
                         "text": block,
                         "location": location,
+                        "laterality": self.utils.extract_laterality(location),
                         "quantity": quantity,
                         "method": normalized_method,
                         "treatment_area": treatment_area
@@ -1219,6 +1232,7 @@ class ClinicalParser:
                         "label": f"fm_{i+1}",
                         "text": block,
                         "location": location,
+                        "laterality": self.utils.extract_laterality(location),
                         "quantity": quantity,
                         "used_quantity": used_quantity
                     })
@@ -1352,6 +1366,7 @@ class ClinicalParser:
                         "label": f"filler_{i+1}",
                         "text": block,
                         "location": location,
+                        "laterality": self.utils.extract_laterality(location),
                         "quantity": quantity,
                         "method": method
                     })
@@ -1535,6 +1550,7 @@ class ClinicalParser:
             sections.append({
                 "type": peel_type,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "quantity": quantity,
                 "method": method,
                 "chemical": chemical,
