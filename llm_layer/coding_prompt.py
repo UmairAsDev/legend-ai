@@ -48,6 +48,7 @@ Your task is to:
 2. Generate structured patient summary
 3. Assign accurate:
    - Justifiable CPT code
+   - If selected CPT code has code mentioned in "associatedwithprocode" field, then ass
    - E/M code (if applicable)
    - Modifiers
    - ICD-10 code
@@ -314,50 +315,85 @@ IGNORE:
 - closure_sections
 
 DO NOT:
-❌ recompute size  
-❌ assign per site  
-❌ duplicate codes  
+❌ recompute size
+❌ assign per site
+❌ duplicate codes
+❌ emit an add-on without its primary
+❌ leave add-on linked_dx empty
 
 --------------------------------------------------
-
 FOR EACH closure_aggregated:
 
 1. Use:
    - total_size (already summed)
-   - type (complex / intermediate)
+   - type (complex / intermediate / adjacent)
 
 2. Assign:
    ✔ ONE primary code (base code only)
    - must match type:
-     complex → 131xx  
-     intermediate → 120xx  
+     complex → 131xx
+     intermediate → 120xx
+     adjacent → 140xx
 
-3. Add-on:
-   If total_size > primary.maxSize:
-   ✔ assign add-on (associatedWithProCode = primary)
-   ✔ quantity = ceil((total_size - maxSize) / step)
+3. Add-on rule:
+   - If total_size exceeds the primary code’s maxSize,
+     you MUST include the add-on code whose associatedWithProCode points to the primary.
+   - The add-on entry must copy the same linked_dx as the primary entry.
+   - quantity for the add-on = ceil((total_size - primary.maxSize) / step)
+
+4. Output expectations:
+   - Primary entry quantity = 1
+   - Add-on entry quantity = computed add-on units
+   - Both primary and add-on must have the same linked_dx list
+
+5. Justification:
+   Include closure details in justification:
+   - total_size
+   - type
+   - cpt_code (primary)
+   - cpt_primary
+   - cpt_addon
+   - addon_units
+   - linked_dx
+   - location_group
 
 --------------------------------------------------
 RULES:
 
-✔ EXACTLY one primary per group  
-✔ add-ons only if needed  
+✔ EXACTLY one primary per group
+✔ add-ons only if needed
+✔ add-on must inherit linked_dx from primary
+✔ justification must reflect both primary and add-on
 
 ❌ NEVER:
-- repeat primary  
-- assign multiple base codes  
-- skip add-on when required  
-- assign add-on without primary  
+- repeat primary
+- assign multiple base codes
+- skip add-on when required
+- assign add-on without primary
+- return add-on with empty linked_dx
 
 --------------------------------------------------
 EXAMPLE:
 
 total_size = 10.2 (complex extremities)
 
-✔ 13121 + 13122 x1  
-❌ 13121 + 13121  
-❌ 13122 only  
-❌ 13120 + 13122    
+✔ cpt_codes:
+  - 13121, linked_dx=[...], quantity=1
+  - 13122, linked_dx=[...], quantity=1
+
+✔ justification:
+  Example justification:
+
+   closure.total_size = 10.2
+   closure.type = complex
+   closure.location_group = extremities
+   closure.cpt_primary = 13121
+   closure.cpt_addon = 13122
+   closure.addon_units = 1
+
+❌ 13121 only
+❌ 13122 only
+❌ 13121 + 13122 with empty linked_dx
 
 --------------------------------------------------
 🔴 SRT LOGIC (STRICT)
