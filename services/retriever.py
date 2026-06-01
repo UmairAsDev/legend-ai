@@ -470,8 +470,7 @@ class CodeRetriever:
                 'cpt' AS type
             FROM cpt_embeddings
             WHERE 
-                LOWER(codeDesc) LIKE '%biopsy%'
-                OR LOWER(proName) LIKE '%biopsy%'
+                LOWER(proName) LIKE '%biopsy%'
             """
 
             result = await db.execute(text(query))

@@ -378,3 +378,5 @@ HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
 (Background on this error at: https://sqlalche.me/e/20/f405)
 2026-05-21 18:02:33,735 - ERROR - Session rollback: 'int' object has no attribute 'lower'
 2026-05-22 12:32:50,490 - ERROR - Session rollback: list indices must be integers or slices, not str
+2026-06-01 19:27:34,682 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+(Background on this error at: https://sqlalche.me/e/20/dbapi)

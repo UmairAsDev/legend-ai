@@ -636,7 +636,7 @@ class ClinicalParser:
         sections = []
 
         blocks = re.split(
-            r"(?=Clinical Diagnosis:)",
+            r"(?=Shave Removal)",
             text,
             flags=re.IGNORECASE
         )
@@ -648,7 +648,7 @@ class ClinicalParser:
             # -------------------------
             # BASIC VALIDATION
             # -------------------------
-            if "shave" not in block_lower:
+            if "shave removal" not in block_lower:
                 continue
 
             # -------------------------
