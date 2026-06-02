@@ -48,6 +48,7 @@ Your task is to:
 2. Generate structured patient summary
 3. Assign accurate:
    - Justifiable CPT code
+   - If selected CPT code has code mentioned in "associatedwithprocode" field, then ass
    - E/M code (if applicable)
    - Modifiers
    - ICD-10 code
@@ -223,56 +224,47 @@ If:
 - separate identical shave removals unnecessarily
 
 --------------------------------------------------
-🔴 MOHS LOGIC (STRICT – OVERRIDES GENERAL RULES)
+🔴 MOHS LOGIC (STRICT – SITE-AWARE OVERRIDE)
 
 If mohsNotes present:
 
-1. Identify EACH Mohs site (from parsed_data)
-
-2. For EACH site:
-   → determine:
-      - location
-      - Dx
-      - stages
-
-3. LOCATION CLASSIFICATION:
-   HIGH RISK:
-   head, neck, temple, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet, genitalia
-      → 17311 (first stage)
-      → 17312 (additional stages)
-
-   TRUNK / EXTREMITIES:
-      → 17313 (first stage)
-      → 17314 (additional stages)
-
-4. CRITICAL RULE (MOST IMPORTANT):
-
-   - EACH SITE = SEPARATE CPT ENTRY
-
-Even if:
-   - CPT code is SAME
-   - stages are SAME
-
-   DO NOT MERGE SITES
-
-5. STAGE LOGIC:
+1. Use parsed["mohs_sections"] only.
+2. Treat each entry in mohs_sections as one independent site.
+3. Never merge sites even when the location text is identical.
+4. Each site can have its own stage count.
 
 For EACH site:
-   first_stage = 1
-   additional = stages - 1
 
-6. OUTPUT:
+- Read site_label
+- Read location
+- Read stages
+- Map Dx for that specific site
+- Assign Mohs CPTs for that specific site only
 
-   - Create separate CPT entry per site:
-      → quantity = 1
+LOCATION CLASSIFICATION:
+HIGH RISK:
+head, neck, temple, face, jaw, scalp, ears, eyelids, nose, lips, hands, feet, genitalia
+→ 17311 (first stage)
+→ 17312 (additional stages)
 
-   - Additional stage codes:
-      → include ONLY if stages > 1
-      → quantity = additional
+TRUNK / EXTREMITIES:
+→ 17313 (first stage)
+→ 17314 (additional stages)
 
-7. VALIDATION:
-   - Location must match CPT description
-   - Dx must match that specific site
+STAGE RULE:
+For each site:
+- first stage quantity = 1
+- additional stage quantity = stages - 1
+
+OUTPUT RULE:
+- Keep each site as a separate CPT assignment path
+- Do not combine site A and site B into one Mohs result
+- If two sites share the same location, still keep them separate because the site label differs
+
+VALIDATION:
+- Location must match CPT description
+- Dx must match that specific site
+- Site label is authoritative for separation
 
 --------------------------------------------------
 🔴 EXCISION LOGIC
@@ -314,50 +306,85 @@ IGNORE:
 - closure_sections
 
 DO NOT:
-❌ recompute size  
-❌ assign per site  
-❌ duplicate codes  
+❌ recompute size
+❌ assign per site
+❌ duplicate codes
+❌ emit an add-on without its primary
+❌ leave add-on linked_dx empty
 
 --------------------------------------------------
-
 FOR EACH closure_aggregated:
 
 1. Use:
    - total_size (already summed)
-   - type (complex / intermediate)
+   - type (complex / intermediate / adjacent)
 
 2. Assign:
    ✔ ONE primary code (base code only)
    - must match type:
-     complex → 131xx  
-     intermediate → 120xx  
+     complex → 131xx
+     intermediate → 120xx
+     adjacent → 140xx
 
-3. Add-on:
-   If total_size > primary.maxSize:
-   ✔ assign add-on (associatedWithProCode = primary)
-   ✔ quantity = ceil((total_size - maxSize) / step)
+3. Add-on rule:
+   - If total_size exceeds the primary code’s maxSize,
+     you MUST include the add-on code whose associatedWithProCode points to the primary.
+   - The add-on entry must copy the same linked_dx as the primary entry.
+   - quantity for the add-on = ceil((total_size - primary.maxSize) / step)
+
+4. Output expectations:
+   - Primary entry quantity = 1
+   - Add-on entry quantity = computed add-on units
+   - Both primary and add-on must have the same linked_dx list
+
+5. Justification:
+   Include closure details in justification:
+   - total_size
+   - type
+   - cpt_code (primary)
+   - cpt_primary
+   - cpt_addon
+   - addon_units
+   - linked_dx
+   - location_group
 
 --------------------------------------------------
 RULES:
 
-✔ EXACTLY one primary per group  
-✔ add-ons only if needed  
+✔ EXACTLY one primary per group
+✔ add-ons only if needed
+✔ add-on must inherit linked_dx from primary
+✔ justification must reflect both primary and add-on
 
 ❌ NEVER:
-- repeat primary  
-- assign multiple base codes  
-- skip add-on when required  
-- assign add-on without primary  
+- repeat primary
+- assign multiple base codes
+- skip add-on when required
+- assign add-on without primary
+- return add-on with empty linked_dx
 
 --------------------------------------------------
 EXAMPLE:
 
 total_size = 10.2 (complex extremities)
 
-✔ 13121 + 13122 x1  
-❌ 13121 + 13121  
-❌ 13122 only  
-❌ 13120 + 13122    
+✔ cpt_codes:
+  - 13121, linked_dx=[...], quantity=1
+  - 13122, linked_dx=[...], quantity=1
+
+✔ justification:
+  Example justification:
+
+   closure.total_size = 10.2
+   closure.type = complex
+   closure.location_group = extremities
+   closure.cpt_primary = 13121
+   closure.cpt_addon = 13122
+   closure.addon_units = 1
+
+❌ 13121 only
+❌ 13122 only
+❌ 13121 + 13122 with empty linked_dx
 
 --------------------------------------------------
 🔴 SRT LOGIC (STRICT)
@@ -603,10 +630,48 @@ If debridement (DBR) is mentioned:
 ❌ NEVER:
    - assign multiple depth codes together
    - assign 11042 without subcutaneous evidence
+
+--------------------------------------------------
+🔴 MODIFIER LOGIC (STRICT)
+
+- Assign a modifier only when the note clearly supports it.
+- Do not invent modifiers.
+- Do not leave the modifier blank when a supported modifier is obvious.
+
+E/M codes:
+- Use 25 when a separately identifiable E/M service is performed on the same day as a procedure.
+- Use 24 only for an unrelated postoperative E/M visit.
+- Use 57 only when the note clearly documents a decision for surgery.
+- Use telemedicine modifiers only when the note explicitly supports telehealth / video / real-time visit.
+
+CPT codes:
+- Use 22 only for unusually extensive / difficult / significantly greater than usual services.
+- Use 59 only when there are distinct same-day procedural services with different Dx or distinct sites.
+- Keep modifier null when no valid modifier applies.
+
+IMPORTANT:
+- CPT and E/M modifiers must be chosen independently.
+- Never force a modifier just to fill the field.
 --------------------------------------------------
 🔴 E/M CODING
 
-- Assign E/M only if supported by office visit level in the note
+- Use only active E/M codes.
+- Ignore expired or deleted codes.
+- Code by encounter type first:
+  - New patient: 99202–99205
+  - Established patient: 99211–99215
+  - Consult: 99241–99245 only if a consult is explicitly documented
+  - Preventive: 99381–99397 only if a preventive/wellness visit is explicitly documented
+  - Telephone: 99441–99443 only for telephone-only E/M
+  - Home visit: 99341–99350 only if the note is clearly a home visit
+  - Other/special: 99024, 99050, 99056, 99058 only if explicitly supported
+
+- Select the level using the note-supported visit level, preferably by MDM or total time.
+- Do not use 99201 and 99211.
+- Do not assign an E/M code if the note does not support an E/M service.
+- If a procedure is performed on the same day, assign E/M only when separately supported.
+- Keep modifier null unless the note clearly supports an E/M modifier.
+
 --------------------------------------------------
 🔴 ICD10/DX CODING
 

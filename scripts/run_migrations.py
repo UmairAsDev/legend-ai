@@ -75,6 +75,7 @@ SQL_STATEMENTS = [
     """
     CREATE TABLE modifier_embeddings (
         id SERIAL PRIMARY KEY,
+        enmmodifier INT DEFAULT 0,
         modifier TEXT NOT NULL UNIQUE,
         modifierdesc TEXT,
         modifierdetdesc TEXT,

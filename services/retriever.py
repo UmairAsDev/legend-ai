@@ -49,6 +49,9 @@ class CodeRetriever:
             elif k == "code":
                 cleaned[k] = str(v).strip() if v is not None else None
 
+            elif k == "enmModifier":
+                cleaned[k] = int(v) if v is not None else 0
+
             # -------------------------
             # 🔴 NUMERIC FIX
             # -------------------------
@@ -59,6 +62,34 @@ class CodeRetriever:
                 cleaned[k] = v
 
         return cleaned
+    
+
+    def _append_parent_codes(self, filtered, rows):
+
+        parent_codes = set()
+
+        for r in filtered:
+            parent = (
+                r.get("associatedWithProCode")
+                or r.get("associatedwithprocode")
+            )
+
+            if parent:
+                parent = str(parent).replace(".0", "")
+                parent_codes.add(parent)
+
+        existing = {
+            str(r.get("code"))
+            for r in filtered
+        }
+
+        for r in rows:
+            code = str(r.get("code") or "")
+
+            if code in parent_codes and code not in existing:
+                filtered.append(r)
+
+        return filtered
 
     # -------------------------
     # 🔹 CPT VECTOR SEARCH
@@ -386,6 +417,7 @@ class CodeRetriever:
                         modifier AS code,
                         modifierDesc AS description,
                         modifierDetDesc,
+                        enmModifier,
                         embedding <-> CAST(:embedding AS vector) AS distance,
                         'modifier' AS type
                     FROM modifier_embeddings
@@ -442,8 +474,7 @@ class CodeRetriever:
                 'cpt' AS type
             FROM cpt_embeddings
             WHERE 
-                LOWER(codeDesc) LIKE '%biopsy%'
-                OR LOWER(proName) LIKE '%biopsy%'
+                LOWER(proName) LIKE '%biopsy%'
             """
 
             result = await db.execute(text(query))
@@ -696,7 +727,7 @@ class CodeRetriever:
                 proCode AS code,
                 codeDesc AS description,
                 proName,
-                associatedWithProCode,
+                associatedwithprocode,
                 CAST(minsize AS FLOAT) AS "minSize",
                 CAST(maxsize AS FLOAT) AS "maxSize",
                 chargePerUnit,
@@ -841,9 +872,10 @@ class CodeRetriever:
             for r in filtered:
                 logger.info(
                     f"✅ Candidate → code={r['code']} | desc={r['description']} | "
-                    f"size_range=({r.get('minSize')},{r.get('maxSize')}) | parent={r.get('associatedWithProCode')}"
+                    f"size_range=({r.get('minSize')},{r.get('maxSize')}) | parent={r.get('associatedwithprocode')}"
                 )
 
+            filtered = self._append_parent_codes(filtered, rows)
             return filtered
         
 

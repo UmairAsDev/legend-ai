@@ -194,6 +194,7 @@ class EmbeddingService:
                             "modifier": row["modifier"],
                             "modifier_desc": row.get("modifierDesc"),
                             "modifier_det_desc": row.get("modifierDetDesc"),
+                            "enm_modifier": row.get("enmModifier"),
                             "embedding": emb
                         })
 

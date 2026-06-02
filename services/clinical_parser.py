@@ -125,29 +125,49 @@ class ClinicalParser:
         if not text:
             return []
 
-        logger.info("🔍 Extracting Mohs sections (multi-site mode)...")
+        logger.info("🔍 Extracting Mohs sections (site-aware mode)...")
+
+        raw_blocks = self.utils.extract_mohs_site_blocks(text)
+        if not raw_blocks:
+            return []
+
+        grouped = {}
+        order = []
+
+        for blk in raw_blocks:
+            site_label = (blk.get("site_label") or blk.get("label") or "").strip().upper()
+            if not site_label:
+                site_label = f"SITE_{len(order) + 1}"
+
+            if site_label not in grouped:
+                grouped[site_label] = []
+                order.append(site_label)
+
+            grouped[site_label].append(blk.get("text", ""))
 
         sections = []
 
-        # 🔴 Split by multiple "Location:"
-        parts = re.split(r"(?=Location:\s*)", text, flags=re.IGNORECASE)
-
-        for i, part in enumerate(parts):
-            part = part.strip()
-
-            if not part or "Location:" not in part:
+        for site_label in order:
+            combined = "\n".join(grouped[site_label]).strip()
+            if not combined:
                 continue
 
-            logger.info(f"🔍 Processing Mohs segment {i+1}")
+            location = self.utils.extract_mohs_location(combined)
+            stage_details = self.utils.extract_mohs_stage_details(combined)
+            stages = len(stage_details) if stage_details else self.utils.extract_mohs_stages(combined)
 
-            location = self.utils.extract_mohs_location(part)
-            stages = self.utils.extract_mohs_stages(part)
+            logger.info(
+                f"🔍 Processing Mohs site={site_label} | location={location} | stages={stages}"
+            )
 
             sections.append({
-                "label": f"site_{i+1}",
-                "text": part,
+                "label": f"site_{site_label}",
+                "site_label": site_label,
+                "text": combined,
                 "location": location,
-                "stages": stages
+                "laterality": self.utils.extract_laterality(location or combined),
+                "stages": stages,
+                "stage_details": stage_details,
             })
 
         logger.info(f"📊 Total Mohs sections: {len(sections)}")
@@ -260,6 +280,7 @@ class ClinicalParser:
                 "type": ctype,
                 "size": size,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "location_group": location_group, 
                 "group_key": f"{ctype}_{location_group}",
                 "text": snippet.strip()
@@ -435,6 +456,7 @@ class ClinicalParser:
                 "is_wound": is_wound,
                 "quantity": quantity,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "method": method,
                 "choice": choice,
                 "text": block
@@ -551,14 +573,20 @@ class ClinicalParser:
                         f"📏 DM single size detected → {size}"
                     )
 
+            # Normalize location value and ensure laterality receives a string
+            location = (
+                location_match.group(1).strip()
+                if location_match else None
+            )
+
+            laterality = self.utils.extract_laterality(location or "")
+
             data = {
                 "label": f"destruction_{i+1}",
                 "text": section_text,
                 "destruction_type": destruction_type,
-                "location": (
-                    location_match.group(1).strip()
-                    if location_match else None
-                ),
+                "location": location,
+                "laterality": laterality,
                 "quantity": (
                     int(quantity_match.group(1))
                     if quantity_match else None
@@ -617,7 +645,7 @@ class ClinicalParser:
         sections = []
 
         blocks = re.split(
-            r"(?=Clinical Diagnosis:)",
+            r"(?=Shave Removal)",
             text,
             flags=re.IGNORECASE
         )
@@ -629,7 +657,7 @@ class ClinicalParser:
             # -------------------------
             # BASIC VALIDATION
             # -------------------------
-            if "shave" not in block_lower:
+            if "shave removal" not in block_lower:
                 continue
 
             # -------------------------
@@ -717,6 +745,7 @@ class ClinicalParser:
                     "label": f"shave_{i+1}",
                     "text": block,
                     "location": location,
+                    "laterality": self.utils.extract_laterality(location),
                     "location_group": location_group,
                     "size": size,
                     "quantity": 1
@@ -814,6 +843,7 @@ class ClinicalParser:
                 "label": "laser_1",
                 "text": text,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "method": method,
                 "quantity": quantity
             })
@@ -906,6 +936,7 @@ class ClinicalParser:
                 "label": "xtrac_1",
                 "text": text,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "quantity": quantity,
                 "total_area": total_area
             })
@@ -1061,6 +1092,7 @@ class ClinicalParser:
                         "label": f"ipl_{i+1}",
                         "text": block,
                         "location": location,
+                        "laterality": self.utils.extract_laterality(location),
                         "quantity": quantity,
                         "method": normalized_method,
                         "treatment_area": treatment_area
@@ -1200,6 +1232,7 @@ class ClinicalParser:
                         "label": f"fm_{i+1}",
                         "text": block,
                         "location": location,
+                        "laterality": self.utils.extract_laterality(location),
                         "quantity": quantity,
                         "used_quantity": used_quantity
                     })
@@ -1333,6 +1366,7 @@ class ClinicalParser:
                         "label": f"filler_{i+1}",
                         "text": block,
                         "location": location,
+                        "laterality": self.utils.extract_laterality(location),
                         "quantity": quantity,
                         "method": method
                     })
@@ -1516,6 +1550,7 @@ class ClinicalParser:
             sections.append({
                 "type": peel_type,
                 "location": location,
+                "laterality": self.utils.extract_laterality(location),
                 "quantity": quantity,
                 "method": method,
                 "chemical": chemical,

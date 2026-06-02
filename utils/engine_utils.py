@@ -113,37 +113,82 @@ def aggregate_closures(parsed):
 
 
 # =========================================================
-# 🔴 GENERIC ADD-ON ENGINE
+# 🔴 GENERIC ADD-ON / CLOSURE HELPERS
 # =========================================================
+def _normalize_code(value):
+    if value is None:
+        return ""
+    code = str(value).strip()
+    return code[:-2] if code.endswith(".0") else code
+
+
+def _dedupe_preserve_order(values):
+    seen = set()
+    out = []
+    for v in values:
+        if v not in seen:
+            seen.add(v)
+            out.append(v)
+    return out
+
+
+def _normalize_dx_list(dx_values):
+    if not dx_values:
+        return []
+    if isinstance(dx_values, str):
+        dx_values = [dx_values]
+    return _dedupe_preserve_order(
+        [str(dx).strip() for dx in dx_values if str(dx).strip()]
+    )
+
+
+def _extract_linked_dx(entry):
+    return _normalize_dx_list(entry.get("linked_dx") or [])
+
+
+def _upsert_cpt_entry(cpt_codes, entry):
+    """
+    Replace existing entry by code, otherwise append.
+    """
+    code = _normalize_code(entry.get("code"))
+    entry = {**entry, "code": code}
+
+    for i, existing in enumerate(cpt_codes):
+        if _normalize_code(existing.get("code")) == code:
+            cpt_codes[i] = entry
+            return
+
+    cpt_codes.append(entry)
+
+
 def build_closure_hierarchy(candidates):
+    """
+    Map parent code -> child add-on codes.
+    Example:
+      13121 -> [13122]
+    """
     hierarchy = {}
 
     for c in candidates:
-        parent = c.get("associatedWithProCode")
+        parent = c.get("associatedWithProCode") or c.get("associatedwithprocode")
 
         if parent:
-            parent = str(parent).strip()
-
-            if parent.endswith(".0"):
-                parent = parent[:-2]
-
+            parent = _normalize_code(parent)
             hierarchy.setdefault(parent, []).append(c)
 
     logger.info(f"🧬 Hierarchy built: {hierarchy}")
-
     return hierarchy
 
 
 def select_primary_code(candidates, total_size):
-
+    """
+    Pick the smallest base code that can hold the total size.
+    Base code = code with no parent.
+    """
     base_codes = [
         c for c in candidates
         if not c.get("associatedWithProCode")
-    ]
-
-    base_codes = [
-        c for c in base_codes
-        if str(c.get("associatedWithProCode") or "").strip() in ["", "None"]
+        and not c.get("associatedwithprocode")
     ]
 
     base_codes = sorted(
@@ -158,15 +203,12 @@ def select_primary_code(candidates, total_size):
 
     selected = None
 
-    # 🔴 pick smallest base that can HOLD total
     for c in base_codes:
         max_s = float(c.get("maxSize") or 0)
-
         if total_size <= max_s:
             selected = c
             break
 
-    # 🔴 if exceeds all → pick largest base (NOT addon)
     if not selected and base_codes:
         selected = base_codes[-1]
 
@@ -180,64 +222,92 @@ def calculate_addon_units(addon_code, total_size, base_max):
 
     desc = (addon_code.get("description") or "").lower()
     match = re.search(r"each additional (\d+\.?\d*)", desc)
-
     step = float(match.group(1)) if match else 5
 
     return math.ceil(extra / step)
 
 
 def enforce_closure_addon(parsed, candidates, llm_output):
+    """
+    Deterministically enforce closure primary + add-on codes.
+
+    Rules:
+    - Use closure_aggregated only
+    - If add-on exists, copy linked_dx from primary
+    - Patch justification["closure"] to reflect primary/add-on outcome
+    - Keep existing LLM output when valid, but normalize it
+    """
     try:
-        logger.info("🔧 Enforcing closure add-ons (SAFE MODE)...")
+        logger.info("🔧 Enforcing closure add-ons (DETERMINISTIC MODE)...")
 
         closure_groups = parsed.get("closure_aggregated", [])
         if not closure_groups:
             return llm_output
 
-        # 🔴 IF LLM already assigned closures → DO NOT override
-        llm_closures = [
-            c for c in llm_output["codes"]["cpt_codes"]
-            if str(c["code"]).startswith(("120", "131"))
-        ]
+        codes_block = llm_output.setdefault("codes", {})
+        cpt_codes = codes_block.setdefault("cpt_codes", [])
+        justification = llm_output.setdefault("justification", {})
 
-        if llm_closures:
-            logger.info("🧠 LLM already assigned closure codes → skipping enforcement")
-            return llm_output
-
+        # Only closure candidates
         closure_candidates = [
             c for c in candidates
-            if str(c.get("code", "")).startswith(("120", "131"))
+            if _normalize_code(c.get("code")).startswith(("120", "131"))
         ]
+
+        if not closure_candidates:
+            logger.warning("⚠️ No closure candidates found")
+            return llm_output
 
         logger.info(
             f"🧪 FINAL candidates → "
-            f"{[(c['code'], c.get('associatedWithProCode')) for c in closure_candidates]}"
+            f"{[(c['code'], c.get('associatedWithProCode') or c.get('associatedwithprocode')) for c in closure_candidates]}"
         )
 
         hierarchy = build_closure_hierarchy(closure_candidates)
+        existing_closure_entries = [
+            c for c in cpt_codes
+            if _normalize_code(c.get("code")).startswith(("120", "131"))
+        ]
 
-        final_codes = []
+        # Helper: get a dx set from any existing closure entry
+        def get_group_dx(primary_code, filtered_candidates):
+            primary_code = _normalize_code(primary_code)
 
-        for group in closure_groups:
-            total_size = group["total_size"]
-            ctype = group["type"]
+            # Prefer existing primary entry
+            for entry in existing_closure_entries:
+                if _normalize_code(entry.get("code")) == primary_code:
+                    dx = _extract_linked_dx(entry)
+                    if dx:
+                        return dx
 
-            logger.info(f"📏 Closure group → size={total_size}, type={ctype}")
+            # Then any existing closure entry
+            for entry in existing_closure_entries:
+                dx = _extract_linked_dx(entry)
+                if dx:
+                    return dx
 
-            location_group = group.get("group_key", "").split("_")[-1]
+            # Then any LLM code with closure prefix
+            for entry in cpt_codes:
+                if _normalize_code(entry.get("code")).startswith(("120", "131")):
+                    dx = _extract_linked_dx(entry)
+                    if dx:
+                        return dx
 
-            # 🔴 TYPE FILTER
+            # Final fallback: empty
+            return []
+
+        # Helper: filter candidates by type + anatomical group
+        def filter_group_candidates(ctype, location_group):
             type_candidates = [
                 c for c in closure_candidates
                 if (
-                    (ctype == "complex" and str(c["code"]).startswith("131")) or
-                    (ctype == "intermediate" and str(c["code"]).startswith("120"))
+                    (ctype == "complex" and _normalize_code(c["code"]).startswith("131")) or
+                    (ctype == "intermediate" and _normalize_code(c["code"]).startswith("120")) or
+                    (ctype == "adjacent" and _normalize_code(c["code"]).startswith("140"))
                 )
             ]
 
-            # 🔴 LOCATION FILTER
             filtered = []
-
             for c in type_candidates:
                 desc = (c.get("description") or "").lower()
 
@@ -250,7 +320,9 @@ def enforce_closure_addon(parsed, candidates, llm_output):
                         continue
 
                 elif location_group == "high_risk":
-                    if not any(k in desc for k in ["face", "hand", "foot", "neck", "chin", "cheek"]):
+                    if not any(k in desc for k in [
+                        "face", "hand", "foot", "neck", "chin", "cheek"
+                    ]):
                         continue
 
                 elif location_group == "trunk":
@@ -259,50 +331,96 @@ def enforce_closure_addon(parsed, candidates, llm_output):
 
                 filtered.append(c)
 
+            return filtered or type_candidates or closure_candidates
+
+        for group in closure_groups:
+            total_size = float(group.get("total_size") or 0)
+            ctype = (group.get("type") or "").lower().strip()
+            location_group = (group.get("group_key") or "").split("_")[-1].lower().strip()
+
+            logger.info(f"📏 Closure group → size={total_size}, type={ctype}, location_group={location_group}")
+
+            filtered = filter_group_candidates(ctype, location_group)
             logger.info(f"🎯 Filtered candidates: {[c['code'] for c in filtered]}")
 
             primary = select_primary_code(filtered, total_size)
-
             if not primary:
                 logger.warning("⚠️ No primary closure match")
                 continue
 
-            primary_code = str(primary["code"])
+            primary_code = _normalize_code(primary["code"])
             base_max = float(primary.get("maxSize") or 0)
+            group_dx = get_group_dx(primary_code, filtered)
 
             logger.info(
                 f"🧠 PRIMARY SELECTION → total={total_size}, "
-                f"selected={primary_code}, base_max={base_max}"
+                f"selected={primary_code}, base_max={base_max}, dx={group_dx}"
             )
 
-            final_codes.append({
+            # Upsert primary
+            _upsert_cpt_entry(cpt_codes, {
                 "code": primary_code,
                 "description": primary["description"],
                 "modifier": None,
-                "linked_dx": [],
+                "linked_dx": group_dx,
                 "quantity": "1"
             })
 
-            # 🔴 ADD-ONS
+            addon_results = []
+
+            # Add-ons from hierarchy
             for addon in hierarchy.get(primary_code, []):
+                addon_code = _normalize_code(addon["code"])
                 units = calculate_addon_units(addon, total_size, base_max)
 
                 if units > 0:
-                    logger.info(
-                        f"➕ ADDON → {addon['code']} units={units}"
-                    )
+                    logger.info(f"➕ ADDON → {addon_code} units={units}")
 
-                    final_codes.append({
-                        "code": addon["code"],
+                    addon_entry = {
+                        "code": addon_code,
                         "description": addon["description"],
                         "modifier": None,
-                        "linked_dx": [],
+                        "linked_dx": group_dx,
+                        "quantity": str(units)
+                    }
+                    _upsert_cpt_entry(cpt_codes, addon_entry)
+                    addon_results.append({
+                        "code": addon_code,
                         "quantity": str(units)
                     })
 
-        llm_output["codes"]["cpt_codes"].extend(final_codes)
+            # Patch closure justification
+            closure_just = justification.setdefault("closure", {})
+            closure_just["total_size"] = total_size
+            closure_just["type"] = ctype
+            closure_just["location_group"] = location_group
+            closure_just["cpt_code"] = primary_code  # backward compatibility
+            closure_just["cpt_primary"] = primary_code
+            closure_just["cpt_addon"] = addon_results[0]["code"] if addon_results else None
+            closure_just["addon_units"] = int(addon_results[0]["quantity"]) if addon_results else 0
+            closure_just["cpt_addons"] = addon_results
+            closure_just["linked_dx"] = group_dx
 
-        logger.info(f"✅ Final closure codes: {final_codes}")
+        # Final normalization: ensure all closure CPTs have linked_dx if possible
+        closure_dx = []
+        for c in cpt_codes:
+            code = _normalize_code(c.get("code"))
+            if code.startswith(("120", "131")):
+                dx = _extract_linked_dx(c)
+                if dx:
+                    closure_dx = dx
+                    break
+
+        if closure_dx:
+            for c in cpt_codes:
+                code = _normalize_code(c.get("code"))
+                if code.startswith(("120", "131")) and not _extract_linked_dx(c):
+                    c["linked_dx"] = closure_dx
+
+        logger.info(
+            f"✅ Final closure codes: "
+            f"{[(c['code'], c.get('linked_dx'), c.get('quantity')) for c in cpt_codes if _normalize_code(c.get('code')).startswith(('120','131'))]}"
+        )
 
         return llm_output
 
@@ -539,3 +657,148 @@ def aggregate_chemical_peels(parsed):
     )
 
     return parsed
+
+
+
+def _note_blob(cleaned_note: Dict[str, Any], parsed: Dict[str, Any], llm_output: Dict[str, Any]) -> str:
+    parts = []
+
+    for key in [
+        "complaints",
+        "assesment",
+        "procedure",
+        "biopsyNotes",
+        "mohsNotes",
+        "diagnoses",
+        "patientSummary",
+    ]:
+        value = cleaned_note.get(key)
+        if value:
+            parts.append(str(value))
+
+    if llm_output.get("patient_summary"):
+        parts.append(str(llm_output["patient_summary"]))
+
+    # parse flags matter for modifier logic
+    for flag in [
+        "has_mohs",
+        "has_biopsy",
+        "has_excision",
+        "has_destruction",
+        "has_shave_removal",
+        "has_debridement",
+        "has_laser_treatment",
+        "has_xtrac",
+        "has_chemical_peel",
+        "has_filler",
+    ]:
+        if parsed.get(flag):
+            parts.append(flag)
+
+    return " ".join(parts).lower()
+
+
+def _normalize_modifier_value(value):
+    if value is None:
+        return None
+    value = str(value).strip()
+    return value if value and value.lower() not in {"none", "null", "nan"} else None
+
+
+def _pick_em_modifier(note_blob: str, procedure_present: bool) -> str | None:
+    # E/M-only modifiers from your CSV
+    if re.search(r"\btelemedicine\b|\btelehealth\b|\bvideo visit\b|\bvirtual visit\b", note_blob):
+        if "resident" in note_blob:
+            return "GC"
+        if "real-time" in note_blob or "interactive audio and video" in note_blob:
+            return "95"
+        if "medicare" in note_blob:
+            return "TM"
+        return "TM"
+
+    if re.search(r"\bpost[- ]?op\b|\bpostoperative\b", note_blob) and re.search(r"\bunrelated\b", note_blob):
+        return "24"
+
+    if re.search(r"\bdecision for surgery\b", note_blob):
+        return "57"
+
+    if procedure_present:
+        return "25"
+
+    return None
+
+
+def _pick_cpt_modifier(cpt: Dict[str, Any], note_blob: str, cpt_codes: list[Dict[str, Any]]) -> str | None:
+    code = _normalize_code(cpt.get("code"))
+
+    # 22: unusually extensive / difficult / significantly greater than normal
+    if re.search(r"\b(unusual|extensive|significantly greater than usual|prolonged|difficult)\b", note_blob):
+        if code.startswith(("110", "114", "116", "120", "131", "140", "150", "152", "157", "173")):
+            return "22"
+
+    # 59: repeated same CPT with a distinct Dx on another line
+    this_dx = tuple(_normalize_dx_list(cpt.get("linked_dx")))
+
+    for prev in cpt_codes:
+        if prev is cpt:
+            break
+
+        if _normalize_code(prev.get("code")) != code:
+            continue
+
+        prev_dx = tuple(_normalize_dx_list(prev.get("linked_dx")))
+        if prev_dx and prev_dx != this_dx:
+            return "59"
+
+    return None
+
+
+def apply_modifiers(parsed: Dict[str, Any], cleaned_note: Dict[str, Any], llm_output: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        logger.info("🔧 Applying modifier rules...")
+
+        codes_block = llm_output.setdefault("codes", {})
+        cpt_codes = codes_block.setdefault("cpt_codes", [])
+        em_code = codes_block.get("em_code")
+
+        note_blob = _note_blob(cleaned_note, parsed, llm_output)
+        procedure_present = any(
+            parsed.get(flag) for flag in [
+                "has_mohs",
+                "has_biopsy",
+                "has_excision",
+                "has_destruction",
+                "has_shave_removal",
+                "has_debridement",
+                "has_laser_treatment",
+                "has_xtrac",
+                "has_chemical_peel",
+                "has_filler",
+            ]
+        )
+
+        # E/M modifier
+        if em_code:
+            existing = _normalize_modifier_value(em_code.get("modifier"))
+            if not existing:
+                em_code["modifier"] = _pick_em_modifier(note_blob, procedure_present)
+
+        # CPT modifiers
+        for cpt in cpt_codes:
+            existing = _normalize_modifier_value(cpt.get("modifier"))
+            if existing:
+                continue
+
+            code = _normalize_code(cpt.get("code"))
+
+            # do not force modifiers onto E/M lines here
+            if code.startswith("992"):
+                continue
+
+            cpt["modifier"] = _pick_cpt_modifier(cpt, note_blob, cpt_codes)
+
+        return llm_output
+
+    except Exception as e:
+        logger.exception(f"❌ Modifier application failed: {e}")
+        return llm_output
