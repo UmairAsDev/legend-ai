@@ -1,143 +1,111 @@
 # services/modifier_engine.py
 """
-All modifier logic is driven by two CSV files:
+Phase 8 — Modifier Engine (complete rewrite).
 
-  data/modifierList.csv  — defines every valid modifier, its description, and
-                           whether it applies to E/M codes (enmModifier=1) or
-                           procedure/CPT codes (enmModifier=0).
+Design rules from the plan:
+  - Modifier -59: only when two non-add-on procedures are at DIFFERENT sites.
+                  Never assigned by default.  Never assigned to add-on codes.
+  - Add-on codes: never receive any procedure modifier.
+  - LT / RT:      only when the procedure's own section explicitly documents
+                  left or right.  Not assigned when location is ambiguous.
+  - Modifier -25: assigned when a separately identifiable E/M is documented
+                  on the same day as a procedure (already handled in assign_em_modifier).
+  - Modifier -57: for the decision for surgery on the day of/before a major
+                  procedure (90-day global).
 
-  data/proCodeList.csv   — per-CPT billing rules (add-on flag, laterality flag,
-                           charge-per-unit, etc.).
-
-No modifier code is hardcoded as a bare string.  All codes are resolved from
-the modifier list at startup so a CSV change propagates automatically.
+All modifier codes are resolved from modifierList.csv via the KnowledgeBase.
+No modifier code string is hardcoded as a bare literal.
 """
 
-import csv
-from pathlib import Path
 from typing import Dict, List, Optional
+
 from loguru import logger
 
-
-# ─────────────────────────────────────────────────────────────
-# MODIFIER LIST  (modifierList.csv)
-# ─────────────────────────────────────────────────────────────
-
-_MODIFIER_LIST: Dict[str, Dict] = {}   # keyed by modifier code string
-_MODIFIER_LIST_PATH = Path(__file__).parent.parent / "data" / "modifierList.csv"
+from services.knowledge_base import kb
+from services.site_builder import ProcedureSite
 
 
-def _load_modifier_list():
-    global _MODIFIER_LIST
-    if _MODIFIER_LIST:
-        return
-    with open(_MODIFIER_LIST_PATH, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            code = str(row.get("modifier", "")).strip()
-            if not code or str(row.get("deleted", "0")).strip() == "1":
-                continue
-            _MODIFIER_LIST[code] = {
-                "desc":        str(row.get("modifierDesc", "")).strip(),
-                "det_desc":    str(row.get("modifierDetDesc", "")).strip(),
-                "enm_modifier": str(row.get("enmModifier", "0")).strip() == "1",
-            }
-    logger.info(f"✅ Modifier list loaded: {len(_MODIFIER_LIST)} modifiers")
-
-
-def get_modifier(code: str) -> Optional[Dict]:
-    """Return modifier metadata for a code, or None if not in the list."""
-    _load_modifier_list()
-    return _MODIFIER_LIST.get(str(code).strip())
-
-
-def is_em_modifier(code: str) -> bool:
-    """True when the modifier is designated for E/M codes (enmModifier=1)."""
-    _load_modifier_list()
-    entry = _MODIFIER_LIST.get(str(code).strip())
-    return entry["enm_modifier"] if entry else False
-
-
-def is_valid_modifier(code: str) -> bool:
-    """True when the modifier code exists in modifierList.csv."""
-    _load_modifier_list()
-    return str(code).strip() in _MODIFIER_LIST
-
-
-# ─────────────────────────────────────────────────────────────
-# NAMED MODIFIER REFERENCES  (resolved from CSV at first use)
-# Changing a code in the CSV is sufficient — no code edit needed.
-# ─────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# NAMED MODIFIER CONSTANTS
+# Resolved from modifierList.csv at import time.  If the code is missing,
+# log a warning and carry the raw string (graceful degradation).
+# ─────────────────────────────────────────────────────────────────────────────
 
 def _mod(code: str) -> str:
-    """
-    Return the modifier code after confirming it exists in the CSV.
-    Logs a warning and returns the raw code if it is missing (graceful degradation).
-    """
-    _load_modifier_list()
-    if code not in _MODIFIER_LIST:
+    kb.load()
+    if not kb.is_valid_modifier(code):
         logger.warning(f"Modifier '{code}' not found in modifierList.csv")
     return code
 
 
-# E/M modifiers  (enmModifier=1)
-MOD_EM_SAME_DAY       = _mod("25")   # Significant, separately identifiable E/M on same day as procedure
-MOD_DECISION_SURGERY  = _mod("57")   # Initial decision for surgery (90-day global)
-MOD_EM_POSTOP         = _mod("24")   # Unrelated E/M during post-operative period
-
-# Procedure modifiers  (enmModifier=0)
-MOD_DISTINCT          = _mod("59")   # Distinct procedural service (replaces -51 on claims)
-MOD_BILATERAL         = _mod("50")   # Bilateral procedure
-MOD_LEFT              = _mod("LT")   # Procedure on left side of body
-MOD_RIGHT             = _mod("RT")   # Procedure on right side of body
+MOD_25 = _mod("25")   # Significant, separately identifiable E/M — same day as procedure
+MOD_57 = _mod("57")   # Initial decision for surgery (90-day global period)
+MOD_24 = _mod("24")   # Unrelated E/M during post-operative period
+MOD_59 = _mod("59")   # Distinct procedural service — different site / lesion / incision
+MOD_LT = _mod("LT")   # Left side
+MOD_RT = _mod("RT")   # Right side
 
 
-# ─────────────────────────────────────────────────────────────
-# PRO-CODE RULES  (proCodeList.csv)
-# ─────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# LATERALITY DETECTION
+# ─────────────────────────────────────────────────────────────────────────────
 
-_PRO_CODE_RULES: Dict[str, Dict] = {}
-_PRO_CODE_PATH = Path(__file__).parent.parent / "data" / "proCodeList.csv"
+_LEFT_TOKENS  = {"left", " lt ", "(lt)", "l side"}
+_RIGHT_TOKENS = {"right", " rt ", "(rt)", "r side"}
 
-_DEFAULT_RULES = {
-    "billWithIntEM":    True,
-    "billWithFUEM":     True,
-    "billAlone":        False,
-    "leftRightSepration": False,
-    "addOn":            False,
-    "chargePerUnit":    False,
+# Maps a CPT source tag → (parsed section key, location field).
+# Used to scope laterality detection to the procedure that produced the code.
+_SOURCE_SECTION_MAP: Dict[str, tuple] = {
+    "excision":          ("excision_sections",       "location"),
+    "biopsy":            ("biopsy_sections",          "location"),
+    "destruction_db":    ("destruction_sections",     "destruction_location"),
+    "destruction_dpm":   ("destruction_sections",     "destruction_location"),
+    "destruction_dm":    ("destruction_sections",     "destruction_location"),
+    "mohs":              ("mohs_sections",            "location"),
+    "shave_removal":     ("shave_removal_sections",   "location"),
+    "closure":           ("closure_sections",         "location"),
+    "debridement":       ("debridement_sections",     "location"),
+    "srt":               ("srt_sections",             "location"),
 }
 
 
-def _load_rules():
-    global _PRO_CODE_RULES
-    if _PRO_CODE_RULES:
-        return
-    with open(_PRO_CODE_PATH, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            code = str(row.get("proCode", "")).strip()
-            if not code:
-                continue
-            _PRO_CODE_RULES[code] = {
-                "billWithIntEM":     str(row.get("billWithIntEM", "0")).strip() == "1",
-                "billWithFUEM":      str(row.get("billWithFUEM", "0")).strip() == "1",
-                "billAlone":         str(row.get("billAlone", "0")).strip() == "1",
-                "leftRightSepration": str(row.get("leftRightSepration", "0")).strip() == "1",
-                "addOn":             str(row.get("addOn", "0")).strip() == "1",
-                "chargePerUnit":     str(row.get("chargePerUnit", "0")).strip() == "1",
-            }
-    logger.info(f"✅ Pro-code billing rules loaded: {len(_PRO_CODE_RULES)} records")
+def _detect_side(text: str) -> Optional[str]:
+    """
+    Return MOD_LT, MOD_RT, or None.
+    Returns None when both sides appear (ambiguous) or text is empty.
+    """
+    if not text:
+        return None
+    t = f" {text.lower()} "
+    has_left  = any(tok in t for tok in _LEFT_TOKENS)
+    has_right = any(tok in t for tok in _RIGHT_TOKENS)
+    if has_left and not has_right:
+        return MOD_LT
+    if has_right and not has_left:
+        return MOD_RT
+    return None
 
 
-def get_code_rules(code: str) -> Dict:
-    _load_rules()
-    return _PRO_CODE_RULES.get(str(code).strip(), _DEFAULT_RULES)
+def _location_for_code(code_dict: Dict, parsed: Dict) -> str:
+    """
+    Return the location text for the sections that produced this code,
+    scoped to the procedure type so that mixed-side notes don't cancel out.
+    """
+    source = code_dict.get("source", "")
+    mapping = _SOURCE_SECTION_MAP.get(source)
+    if not mapping:
+        return ""
+    section_key, loc_field = mapping
+    return " ".join(
+        str(sec.get(loc_field) or "")
+        for sec in parsed.get(section_key, [])
+        if sec.get(loc_field)
+    )
 
 
-# ─────────────────────────────────────────────────────────────
-# E/M MODIFIER  (-25 / -57)
-# ─────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# E/M MODIFIER ASSIGNMENT
+# ─────────────────────────────────────────────────────────────────────────────
 
 def assign_em_modifier(
     em_code: Dict,
@@ -145,132 +113,187 @@ def assign_em_modifier(
     is_surgery_decision: bool = False,
 ) -> Dict:
     """
-    Assign the correct E/M modifier from modifierList.csv:
+    Assign the correct E/M modifier:
 
       -57  Initial decision for surgery (90-day global period).
-           Applied when the E/M visit is the day of or day before surgery.
+           Used when the E/M visit occurs on the day of or before surgery.
 
       -25  Significant, separately identifiable E/M on the same day as a
            procedure with a 0-10 day global period.  This is the standard
            modifier for dermatology same-day E/M + procedure visits.
+
+    Modifier is only assigned when there are same-day procedures.
     """
     if not has_same_day_procedures:
         return em_code
 
-    if is_surgery_decision:
-        mod = MOD_DECISION_SURGERY
-        desc = get_modifier(mod)["desc"] if get_modifier(mod) else "Decision for Surgery"
-        em_code["modifier"] = mod
-        logger.info(f"✅ Modifier -{mod} ({desc}) → {em_code['code']}")
-    else:
-        mod = MOD_EM_SAME_DAY
-        desc = get_modifier(mod)["desc"] if get_modifier(mod) else "Unrelated E/M Same Day"
-        em_code["modifier"] = mod
-        logger.info(f"✅ Modifier -{mod} ({desc}) → {em_code['code']}")
+    mod = MOD_57 if is_surgery_decision else MOD_25
+    em_code["modifier"] = mod
 
+    mod_info = kb.get_modifier(mod)
+    desc = mod_info.description if mod_info else ""
+    logger.info(f"Modifier -{mod} ({desc}) → {em_code.get('code', '')}")
     return em_code
 
 
-# ─────────────────────────────────────────────────────────────
-# LATERALITY MODIFIERS  (LT / RT)
-# ─────────────────────────────────────────────────────────────
-
-_LEFT_TOKENS  = {"left", " lt ", "(lt)", "l side"}
-_RIGHT_TOKENS = {"right", " rt ", "(rt)", "r side"}
-
-
-def _detect_side(text: str) -> Optional[str]:
-    if not text:
-        return None
-    t = f" {text.lower()} "
-    has_left  = any(tok in t for tok in _LEFT_TOKENS)
-    has_right = any(tok in t for tok in _RIGHT_TOKENS)
-    if has_left and not has_right:
-        return MOD_LEFT
-    if has_right and not has_left:
-        return MOD_RIGHT
-    return None
-
+# ─────────────────────────────────────────────────────────────────────────────
+# LATERALITY MODIFIER ASSIGNMENT
+# ─────────────────────────────────────────────────────────────────────────────
 
 def assign_laterality_modifiers(cpt_codes: List[Dict], parsed: Dict) -> List[Dict]:
     """
-    Add LT or RT modifier to CPT codes that have leftRightSepration=1 in
-    proCodeList.csv.  Side is inferred from location text in parsed sections.
-    LT / RT are defined in modifierList.csv (enmModifier=0).
+    LT/RT is not auto-assigned.
+    leftRightSepration is not in the approved CSV column set.
+    Laterality is applied by the billing team as needed.
     """
-    _load_rules()
+    return cpt_codes
 
-    location_texts: List[str] = []
-    for section_key in (
-        "excision_sections", "destruction_sections", "closure_sections",
-        "biopsy_sections", "shave_removal_sections", "debridement_sections",
-    ):
-        for sec in parsed.get(section_key, []):
-            loc = sec.get("location") or sec.get("destruction_location") or ""
-            if loc:
-                location_texts.append(str(loc))
 
-    combined_location = " ".join(location_texts)
+# ─────────────────────────────────────────────────────────────────────────────
+# ADD-ON DETECTION HELPER
+# Uses addOn flag AND associatedWithProCode — both sources are checked because
+# some codes have a parent (associatedWithProCode set) but addOn=0 in the CSV
+# (e.g., Mohs additional-stage codes 17312/17314).
+# ─────────────────────────────────────────────────────────────────────────────
 
-    for cpt in cpt_codes:
-        code = str(cpt.get("code", "")).strip()
-        if not get_code_rules(code)["leftRightSepration"]:
+def _is_addon(cpt: Dict) -> bool:
+    """True if this code is an add-on by either KB flag or parent code link."""
+    code = str(cpt.get("code", "")).strip()
+    return kb.is_addon(code)   # kb.is_addon checks both _addon_flag and parent_code
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DISTINCT PROCEDURE MODIFIER (-59) — SITE-AWARE
+# ─────────────────────────────────────────────────────────────────────────────
+
+def assign_distinct_procedure_modifiers(
+    cpt_codes: List[Dict],
+    sites: List[Dict],
+) -> List[Dict]:
+    """
+    Assign modifier -59 (Distinct Procedural Service) only to non-add-on
+    CPT codes that are at a DIFFERENT site from the primary procedure.
+
+    Rules:
+      1. Add-on codes never receive modifiers.
+      2. The primary (lowest-code-number non-add-on) gets no modifier.
+      3. Secondary non-add-on codes at a different site → -59.
+      4. Secondary non-add-on codes at the SAME site as the primary are NOT
+         given -59 here; same-site conflicts are handled by the lesion
+         validator (Phase 5).
+      5. When site_id is absent on a code (e.g. LLM-assigned code without
+         a section origin), -59 is not assigned — the case is flagged for
+         human review.
+
+    This replaces the old "multiple procedures = -59" blanket logic.
+    """
+    non_addons = [
+        cpt for cpt in cpt_codes
+        if not _is_addon(cpt)
+    ]
+
+    if len(non_addons) <= 1:
+        return cpt_codes
+
+    # Sort by CPT code number — lowest becomes primary (deterministic, auditable)
+    non_addons.sort(key=lambda c: str(c.get("code", "")).strip())
+
+    primary      = non_addons[0]
+    primary_site = primary.get("site_id", "")
+
+    mod_info = kb.get_modifier(MOD_59)
+    desc = mod_info.description if mod_info else "Distinct Procedural Service"
+
+    for cpt in non_addons[1:]:
+        if cpt.get("modifier"):
+            continue   # already carries LT / RT / -25 / -57
+
+        code_site = cpt.get("site_id", "")
+
+        if not primary_site or not code_site:
+            logger.warning(
+                f"Cannot determine site for CPT {cpt.get('code')} — "
+                f"-59 not assigned.  Flag for manual review."
+            )
             continue
-        if cpt.get("modifier") in (MOD_LEFT, MOD_RIGHT):
-            continue
 
-        side = _detect_side(combined_location)
-        if side:
-            cpt["modifier"] = side
-            desc = get_modifier(side)["desc"] if get_modifier(side) else side
-            logger.info(f"✅ Modifier -{side} ({desc}) → CPT {code}")
+        if code_site != primary_site:
+            cpt["modifier"] = MOD_59
+            logger.info(
+                f"Modifier -{MOD_59} ({desc}) → CPT {cpt.get('code')} "
+                f"(site {code_site} ≠ primary site {primary_site})"
+            )
+        else:
+            logger.debug(
+                f"Same-site codes: {primary.get('code')} and {cpt.get('code')} "
+                f"at site {code_site} — no -59 assigned (lesion validator handles)"
+            )
 
     return cpt_codes
 
 
-# ─────────────────────────────────────────────────────────────
-# DISTINCT PROCEDURE MODIFIER  (-59)
-# ─────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# BACKWARD-COMPAT ALIAS
+# engine_utils.py calls assign_multiple_procedure_modifiers; route through
+# the new site-unaware version so existing code keeps working until it is
+# updated to pass sites.
+# ─────────────────────────────────────────────────────────────────────────────
 
 def assign_multiple_procedure_modifiers(cpt_codes: List[Dict]) -> List[Dict]:
     """
-    Assign -59 (Distinct Procedural Service) to secondary CPT codes when
-    multiple non-add-on procedures are billed on the same day.
+    Legacy entry point — used by engine_utils.enforce_em_and_modifiers until
+    that function is updated to pass the sites list.
 
-    Source: modifierList.csv — modifier 59:
-      "Distinct procedural service — different session or patient encounter,
-       different procedure or surgery, different site, separate lesion, or
-       separate injury."
-
-    Note: modifier -51 (Multiple Procedures) is marked in modifierList.csv as
-    'for Internal use only by Carrier' and must NOT appear on submitted claims.
-    -59 is the correct claim modifier for distinct same-day procedures.
-
-    Rules:
-    - First (primary) CPT code → no modifier.
-    - Add-on codes → skipped (inherently linked to primary, no modifier needed).
-    - Codes already carrying a modifier (LT/RT/-25/-57) → skipped.
-    - All other secondary non-add-on codes → -59.
+    Falls back to a site-unaware version: -59 is assigned to secondary codes
+    with no modifier.  Prefer assign_distinct_procedure_modifiers(codes, sites)
+    when sites are available.
     """
-    _load_rules()
+    non_addons = [cpt for cpt in cpt_codes if not _is_addon(cpt)]
 
-    mod  = MOD_DISTINCT
-    desc = get_modifier(mod)["desc"] if get_modifier(mod) else "Distinct Procedural Service"
-
-    primary_codes = [
-        cpt for cpt in cpt_codes
-        if not get_code_rules(str(cpt.get("code", "")).strip())["addOn"]
-    ]
-
-    if len(primary_codes) <= 1:
+    if len(non_addons) <= 1:
         return cpt_codes
 
-    for i, cpt in enumerate(primary_codes):
+    non_addons.sort(key=lambda c: str(c.get("code", "")).strip())
+
+    mod_info = kb.get_modifier(MOD_59)
+    desc = mod_info.description if mod_info else "Distinct Procedural Service"
+
+    for i, cpt in enumerate(non_addons):
         if i == 0:
-            continue  # Primary — no modifier
+            continue
         if cpt.get("modifier"):
-            continue  # Already has LT/RT/25/57
-        cpt["modifier"] = mod
-        logger.info(f"✅ Modifier -{mod} ({desc}) → CPT {cpt['code']}")
+            continue
+        cpt["modifier"] = MOD_59
+        logger.info(f"Modifier -{MOD_59} ({desc}) → CPT {cpt.get('code')} (legacy path)")
 
     return cpt_codes
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BACKWARD-COMPAT SHIMS
+# ─────────────────────────────────────────────────────────────────────────────
+
+def get_modifier(code: str):
+    m = kb.get_modifier(code)
+    if not m:
+        return None
+    return {"desc": m.description, "det_desc": m.det_description, "enm_modifier": m.is_em_modifier}
+
+
+def is_em_modifier(code: str) -> bool:
+    return kb.is_em_modifier(code)
+
+
+def is_valid_modifier(code: str) -> bool:
+    return kb.is_valid_modifier(code)
+
+
+def get_code_rules(code: str) -> Dict:
+    """Backward compat — returns only approved-column fields."""
+    cpt = kb.get_cpt(code)
+    if not cpt:
+        return {"addOn": False, "chargePerUnit": False}
+    return {
+        "addOn":         cpt.is_addon,
+        "chargePerUnit": cpt.charge_per_unit,
+    }

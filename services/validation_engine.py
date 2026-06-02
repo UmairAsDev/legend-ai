@@ -14,16 +14,15 @@ Rules:
   3. Duplicate: same CPT + same DX + same location billed more than once (hard reject)
   4. Modifier -59 applied to a procedure with no distinct site evidence (soft flag)
   5. CPT code with no linked ICD-10 diagnosis (soft flag)
-
-Note: CCI bundling pair enforcement (e.g., shave removal + biopsy same lesion)
-is Phase 3 work and will load from the quarterly CMS NCCI table rather than
-hardcoding code pairs here.
+  6. NCCI bundled pairs: secondary code bundled with a co-billed primary (hard reject unless -59)
 """
 
 from typing import Any, Dict, List, Optional
 from loguru import logger
 
 from config.constants import CLOSURE_CODE_PREFIXES
+from services.knowledge_base import kb
+from services.lesion_validator import validate_lesion_conflicts
 
 
 # ─────────────────────────────────────────────────────────────
@@ -246,6 +245,150 @@ def _check_dx_linkage(
 
 
 # ─────────────────────────────────────────────────────────────
+# RULE 0 — HALLUCINATED CODES
+# ─────────────────────────────────────────────────────────────
+
+def _check_hallucinated_codes(
+    cpt_codes: List[Dict],
+    candidates: List[Dict],
+    llm_output: Dict,
+) -> List[Dict]:
+    """
+    Reject any CPT code not present in the retrieved candidates list.
+
+    The retriever fetches codes from proCodeList.csv filtered to this note's
+    detected procedure families.  A code the LLM assigns that was never
+    retrieved has no knowledge-base backing — it is hallucinated.
+
+    Confirmed selector codes (confidence='confirmed') are exempt because
+    they come directly from the CSV via deterministic selectors.
+    """
+    known_codes: set = {
+        str(c.get("code", "")).strip()
+        for c in candidates
+        if c.get("code")
+    }
+
+    rejected: set = set()
+
+    for cpt in cpt_codes:
+        code = str(cpt.get("code", "")).strip()
+        if not code:
+            continue
+        if cpt.get("confidence") == "confirmed":
+            continue   # selector-confirmed — always valid
+        if code not in known_codes:
+            rejected.add(code)
+            _add_flag(
+                llm_output,
+                f"REJECTED {code}: not in retrieved candidate list — "
+                f"not a supported procedure for this note.",
+            )
+            logger.warning(f"Hallucination guard: rejected {code}")
+
+    return [c for c in cpt_codes if str(c.get("code", "")).strip() not in rejected]
+
+
+# ─────────────────────────────────────────────────────────────
+# RULE 6 — PROCEDURE-SPECIFIC SITE RULES (SOFT FLAGS)
+# Uses proName from the KnowledgeBase — no hardcoded CPT numbers.
+# ─────────────────────────────────────────────────────────────
+
+def _check_procedure_site_rules(
+    cpt_codes: List[Dict],
+    parsed: Dict,
+    llm_output: Dict,
+) -> List[Dict]:
+    """
+    Procedure-specific validation rules based on proName from the KnowledgeBase.
+    All rules are soft flags (audit_flags) — no hard rejections here.
+    """
+    try:
+        mohs_sections = parsed.get("mohs_sections", [])
+        total_mohs_stages = sum(int(s.get("stages") or 1) for s in mohs_sections)
+
+        for cpt in cpt_codes:
+            code = str(cpt.get("code", "")).strip()
+            cpt_meta = kb.get_cpt(code)
+            if not cpt_meta:
+                continue
+            pro_name = cpt_meta.pro_name
+
+            # ── Rule A: Mohs additional-stage code requires stages > 1 ─────────
+            if (
+                pro_name == "MOHS Micrographic Surgery"
+                and cpt_meta.parent_code is not None
+            ):
+                if total_mohs_stages <= 1:
+                    _add_flag(
+                        llm_output,
+                        f"REVIEW {code}: Mohs additional-stage code requires "
+                        f"documented stages > 1 but note shows {total_mohs_stages} stage(s).",
+                    )
+
+            # ── Rule B: Malignant excision requires a malignant diagnosis ───────
+            if pro_name == "Excision Malignant Lesion & Margins":
+                linked = [str(d).strip().upper() for d in (cpt.get("linked_dx") or [])]
+                # Malignant diagnoses: C00-C49 melanoma/carcinoma range, C43.x, C44.x
+                has_malignant_dx = any(
+                    d.startswith(("C43", "C44", "C00", "C01", "C02", "C03", "C04",
+                                  "C05", "C06", "C07", "C08", "C09", "C10", "C11",
+                                  "C14", "C15", "C16", "C17", "C18", "C19", "C20",
+                                  "C21", "C22", "C30", "C31", "C32", "C33", "C34",
+                                  "C40", "C41", "C43", "C44", "C45", "C46", "C47",
+                                  "C48", "C49"))
+                    for d in linked
+                )
+                if not has_malignant_dx:
+                    _add_flag(
+                        llm_output,
+                        f"REVIEW {code}: malignant excision code but no malignant "
+                        f"diagnosis (C43/C44 range) is linked. Verify diagnosis assignment.",
+                    )
+
+            # ── Rule C: Closure code must match documented closure type ─────────
+            if pro_name in ("Simple Closure", "Layered Closure", "Complex Closure"):
+                closure_sections = parsed.get("closure_sections", [])
+                doc_types = {(s.get("type") or "").lower() for s in closure_sections}
+                code_type_map = {
+                    "Simple Closure":    {"simple"},
+                    "Layered Closure":   {"intermediate", "layered"},
+                    "Complex Closure":   {"complex"},
+                }
+                expected = code_type_map.get(pro_name, set())
+                if doc_types and not (doc_types & expected):
+                    _add_flag(
+                        llm_output,
+                        f"REVIEW {code} ({pro_name}): code type does not match "
+                        f"documented closure type(s) {doc_types}. Verify closure documentation.",
+                    )
+
+            # ── Rule D: ATT code location must match note ───────────────────────
+            if pro_name == "Adjacent Tissue Transfer":
+                desc_lower = cpt_meta.description.lower()
+                site_id = cpt.get("site_id", "")
+                # If code description says "trunk" but site is neck — flag it
+                if "trunk" in desc_lower:
+                    mohs_secs = parsed.get("mohs_sections", [])
+                    has_neck_mohs = any(
+                        "neck" in (s.get("location") or "").lower()
+                        for s in mohs_secs
+                    )
+                    if has_neck_mohs:
+                        _add_flag(
+                            llm_output,
+                            f"REVIEW {code}: ATT trunk code selected but Mohs site "
+                            f"is neck — verify correct ATT location family.",
+                        )
+
+        return cpt_codes
+
+    except Exception as e:
+        logger.warning(f"_check_procedure_site_rules (non-fatal): {e}")
+        return cpt_codes
+
+
+# ─────────────────────────────────────────────────────────────
 # MAIN ENTRY POINT
 # ─────────────────────────────────────────────────────────────
 
@@ -270,13 +413,23 @@ def validate_codes(
         original_count = len(cpt_codes)
 
         # Hard reject rules
+        cpt_codes = _check_hallucinated_codes(cpt_codes, candidates, llm_output)
         cpt_codes = _check_addon_without_primary(cpt_codes, candidates, llm_output)
         cpt_codes = _check_quantity_ranges(cpt_codes, candidates, llm_output)
         cpt_codes = _check_duplicates(cpt_codes, llm_output)
 
+        # Phase 5: same-site lesion conflict validation (NCCI + dermatology rules)
+        llm_output["codes"]["cpt_codes"] = cpt_codes
+        llm_output = validate_lesion_conflicts(llm_output, candidates)
+        cpt_codes = list(llm_output.get("codes", {}).get("cpt_codes", []))
+
         # Soft flag rules
         _check_modifier_59(cpt_codes, parsed, llm_output)
         _check_dx_linkage(cpt_codes, em_code, llm_output)
+
+        # Procedure-specific rules (soft flags only)
+        cpt_codes = _check_procedure_site_rules(cpt_codes, parsed, llm_output)
+        llm_output["codes"]["cpt_codes"] = cpt_codes
 
         rejected_count = original_count - len(cpt_codes)
         if rejected_count:

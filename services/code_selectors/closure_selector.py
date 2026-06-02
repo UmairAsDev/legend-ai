@@ -55,7 +55,17 @@ class ClosureSelector:
                 _COMPLEX_NAME, total_size, location_group, add_on_enabled=True
             )
 
-        logger.debug(f"ClosureSelector: unknown type '{closure_type}'")
+        if ctype == "adjacent":
+            # Adjacent tissue transfer is a distinct procedure family, not a closure.
+            # Route to the ATT selector.  Pass location_group directly to avoid
+            # re-classifying an already-classified group name.
+            from services.code_selectors.att_selector import AttSelector
+            return AttSelector.select(
+                defect_size_cm2=total_size,
+                location_group=location_group,
+            )
+
+        logger.warning(f"ClosureSelector: unknown closure type '{closure_type}'")
         return []
 
     @classmethod
@@ -74,6 +84,11 @@ class ClosureSelector:
 
         primary = match_by_size(base_candidates, total_size, location_group)
         if not primary:
+            logger.warning(
+                f"Closure fallback triggered: "
+                f"size={total_size}, "
+                f"location_group={location_group}"
+            )
             primary = match_by_size(base_candidates, total_size, None)
         if not primary:
             logger.debug(f"ClosureSelector: no primary match  size={total_size}  loc={location_group}")
