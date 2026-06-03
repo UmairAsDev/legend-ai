@@ -380,3 +380,22 @@ HINT:  Perhaps you meant to reference the column "cpt_embeddings.minsize".
 2026-05-22 12:32:50,490 - ERROR - Session rollback: list indices must be integers or slices, not str
 2026-06-01 19:27:34,682 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
 (Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-06-03 17:10:46,711 - ERROR - Session rollback: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column "Dermaplanning" does not exist
+[SQL: 
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proname,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE
+                    proname = "Dermaplanning"
+                ]
+(Background on this error at: https://sqlalche.me/e/20/f405)

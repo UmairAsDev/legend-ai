@@ -2977,3 +2977,13 @@ During task with name 'retrieve' and id '6da88c3c-d92b-98fe-2e76-b3ba2423574b'
 2026-06-02 12:22:39.734 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 536004
 2026-06-02 12:22:39.735 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 658862
 2026-06-02 12:22:40.367 | INFO     | __main__:append_to_json:106 - 6 records processed | Total stored: 6
+2026-06-03 16:09:07.214 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.InterfaceError) Cancelled during execution
+(Background on this error at: https://sqlalche.me/e/20/rvf5)
+2026-06-03 16:10:44.907 | INFO     | __main__:append_to_json:83 - 774 records processed | Total stored: 774
+2026-06-03 16:15:07.246 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 537899
+2026-06-03 16:15:07.256 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 551261
+2026-06-03 16:15:07.272 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 625562
+2026-06-03 16:15:07.293 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 670804
+2026-06-03 16:15:07.304 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 700331
+2026-06-03 16:15:07.311 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 718817
+2026-06-03 16:15:07.934 | INFO     | __main__:append_to_json:106 - 6 records processed | Total stored: 6

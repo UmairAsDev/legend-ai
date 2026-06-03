@@ -426,17 +426,40 @@ class CodingNodes:
                         all_candidates.extend(res)
 
                     except Exception as e:
+                        logger.exception(f"❌ Filler retrieval failed: {e}")
 
-                        logger.exception(
-                            f"❌ Filler retrieval failed: {e}"
-                        )
+
+            # -------------------------
+            # 🔴 DERMAPLANNING
+            # -------------------------
+            if parsed.get("has_dermaplanning"):
+                logger.info("🔴 Dermaplanning DETECTED")
+
+                for sec in parsed.get(
+                    "dermaplanning_sections",
+                    []
+                ):
+
+                    try:
+                        res = await self.retriever.dermaplanning_filter(section=sec)
+                        logger.info(f"🎯 Dermaplanning deterministic candidates={len(res)}")
+
+                        for r in res:
+
+                            r["source"] = f"dermaplanning"
+                            r["dermaplanning_location"] = sec.get("location")
+                            r["dermaplanning_quantity"] = sec.get("quantity")
+                            
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+                        logger.exception(f"❌ Dermaplanning retrieval failed: {e}")
 
 
             # -------------------------
             # 🔴 CHEMICAL PEEL
             # -------------------------
             if parsed.get("has_chemical_peel"):
-
                 logger.info("🔴 CHEMICAL PEEL DETECTED")
 
                 for sec in parsed.get(
