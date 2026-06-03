@@ -32513,3 +32513,66 @@ Pressure was applied to achieve hemostasis. Vaseline was applied at the wound si
 2026-06-01 20:56:28.103 | INFO     | utils.engine_utils:enforce_destruction_quantity:448 - ℹ️ No destruction sections found
 2026-06-01 20:56:28.103 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
 2026-06-01 20:56:28.103 | SUCCESS  | app.services.medical_engine:llm_call:709 - ✅ All deterministic enforcement rules applied
+2026-06-03 12:20:54.596 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 539250
+2026-06-03 12:20:54.647 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 539250
+2026-06-03 12:20:58.449 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 539250
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_closure_sections:184 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_closure_sections:202 - 📏 Total closure size matches: 0
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_closure_sections:297 - 📊 FINAL CLOSURES: []
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_filler_material_sections:1143 - ℹ️ No filler material detected
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_destruction_sections:478 - 🔍 Extracting destruction sections...
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_destruction_sections:497 - 🔍 Processing destruction section 1
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_destruction_sections:620 - ✅ Destruction parsed | type=dpm | qty=1 | location=Chest | size=None
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_destruction_sections:497 - 🔍 Processing destruction section 2
+2026-06-03 12:20:59.062 | INFO     | services.clinical_parser:extract_destruction_sections:555 - 📏 DM size range detected → 2.0 x 2.0 | using MAX=2.0
+2026-06-03 12:20:59.078 | INFO     | services.clinical_parser:extract_destruction_sections:620 - ✅ Destruction parsed | type=dm | qty=1 | location=RIGHT UPPER BACK | size=2.0
+2026-06-03 12:20:59.078 | INFO     | services.clinical_parser:extract_destruction_sections:497 - 🔍 Processing destruction section 3
+2026-06-03 12:20:59.078 | INFO     | services.clinical_parser:extract_destruction_sections:555 - 📏 DM size range detected → 2.0 x 2.0 | using MAX=2.0
+2026-06-03 12:20:59.079 | INFO     | services.clinical_parser:extract_destruction_sections:620 - ✅ Destruction parsed | type=dm | qty=1 | location=MID UPPER BACK | size=2.0
+2026-06-03 12:20:59.079 | INFO     | services.clinical_parser:extract_destruction_sections:630 - 📊 Total destruction sections: 3
+2026-06-03 12:20:59.079 | INFO     | services.clinical_parser:extract_filler_sections:1281 - ℹ️ No filler detected
+2026-06-03 12:20:59.079 | INFO     | services.clinical_parser:extract_ipl_sections:971 - ℹ️ No IPL keywords detected
+2026-06-03 12:20:59.080 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-06-03 12:20:59.080 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-06-03 12:20:59.080 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-06-03 12:20:59.080 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-06-03 12:20:59.080 | INFO     | utils.engine_utils:aggregate_shave_removals:608 - 🪒 Aggregated shave removals: []
+2026-06-03 12:20:59.080 | INFO     | utils.engine_utils:aggregate_chemical_peels:621 - 🔧 Aggregating chemical peels...
+2026-06-03 12:20:59.081 | INFO     | utils.engine_utils:aggregate_chemical_peels:654 - 📊 Aggregated chemical peels=0
+2026-06-03 12:21:01.734 | INFO     | app.services.medical_engine:retrieve:118 - 🧠 Retrieval Decision | Parsed: {'has_filler_material': False, 'filler_material_sections': [], 'has_destruction': True, 'destruction_sections': [{'label': 'destruction_1', 'text': "Destruction Premalignant Lesion (DPM)\nLocation: Chest\nQuantity: 1\nMethod: Cryosurgery\nDiscussed diagnosis, treatments options e.g. shave excision, simple scissor excision, full thickness skin excision, curettage and electrodesiccation, laser excision, cryotherapy, or moh's surgery as well risks to patient and patient agreed to proceed with destruction of malignant lesion. written consent obtained. After confirming site with patient, area was cleaned, followed by destruction of lesion. Destruction of lesion/s was performed.The patient tolerated the procedure well. Wound instructions were given to the patient. Patient advised about post-procedural wound healing and expectations.", 'destruction_type': 'dpm', 'location': 'Chest', 'laterality': None, 'quantity': 1, 'method': 'Cryosurgery', 'choice': None, 'size': None}, {'label': 'destruction_2', 'text': "Destruction Malignant Lesion (DM) BCC\nLocation: RIGHT UPPER BACK\nQuantity: 1\nMethod: Electrosurgery\nSize: 2 x 2 cm\nDiscussed diagnosis, treatments options e.g. shave excision, simple scissor excision, full thickness skin excision, curettage and electrodesiccation, laser excision, cryotherapy, or moh's surgery as well risks to patient and patient agreed to proceed with destruction of malignant lesion. written consent obtained. After confirming site with patient, area was cleaned, followed by destruction of lesion. Destruction of lesion/s was performed.The patient tolerated the procedure well. Wound instructions were given to the patient. Patient advised about post-procedural wound healing and expectations.", 'destruction_type': 'dm', 'location': 'RIGHT UPPER BACK', 'laterality': 'RT', 'quantity': 1, 'method': 'Electrosurgery', 'choice': None, 'size': 2.0}, {'label': 'destruction_3', 'text': 'Destruction Malignant Lesion (DM) SCC\nLocation: MID UPPER BACK\nQuantity: 1\nMethod: Electrosurgery\nSize: 2 x 2 cm', 'destruction_type': 'dm', 'location': 'MID UPPER BACK', 'laterality': None, 'quantity': 1, 'method': 'Electrosurgery', 'choice': None, 'size': 2.0}], 'has_chemical_peel': False, 'chemical_peel_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_filler': False, 'filler_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_excision': False, 'excision_sections': [], 'has_ipl': False, 'ipl_sections': [], 'has_closure': False, 'closure_sections': [], 'has_biopsy': False, 'biopsy_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_srt': False, 'srt_sections': [], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': [], 'chemical_peel_aggregated': []}
+2026-06-03 12:21:01.735 | INFO     | app.services.medical_engine:retrieve:151 - 🔴 DESTRUCTION DETECTED
+2026-06-03 12:21:01.735 | INFO     | app.services.medical_engine:retrieve:160 - 📌 Destruction Section → label=destruction_1 | type=dpm | qty=1 | size=None | location=Chest
+2026-06-03 12:21:53.618 | INFO     | services.retriever:_destruction_premalignant_filter:221 - 📦 Raw DPM candidates: 3
+2026-06-03 12:21:53.618 | INFO     | services.retriever:_destruction_premalignant_filter:253 - ✅ DPM filtered candidates: 3
+2026-06-03 12:21:53.923 | INFO     | app.services.medical_engine:retrieve:176 - ↳ Retrieved 3 destruction candidates
+2026-06-03 12:21:53.923 | INFO     | app.services.medical_engine:retrieve:160 - 📌 Destruction Section → label=destruction_2 | type=dm | qty=1 | size=2.0 | location=RIGHT UPPER BACK
+2026-06-03 12:21:56.348 | INFO     | services.retriever:_destruction_malignant_filter:291 - 📦 Raw DM candidates: 20
+2026-06-03 12:21:56.348 | INFO     | services.retriever:_destruction_malignant_filter:317 - 🧠 DM anatomical group=trunk
+2026-06-03 12:21:56.364 | INFO     | services.retriever:_destruction_malignant_filter:377 - ✅ DM MATCH | code=17262 | size=2.0 | range=1.1-2.0
+2026-06-03 12:21:56.364 | INFO     | services.retriever:_destruction_malignant_filter:395 - 🎯 FINAL DM candidates: 1
+2026-06-03 12:21:56.364 | INFO     | services.retriever:_destruction_malignant_filter:400 - 📦 DM FINAL CODES: ['17262']
+2026-06-03 12:21:56.664 | INFO     | app.services.medical_engine:retrieve:176 - ↳ Retrieved 1 destruction candidates
+2026-06-03 12:21:56.665 | INFO     | app.services.medical_engine:retrieve:160 - 📌 Destruction Section → label=destruction_3 | type=dm | qty=1 | size=2.0 | location=MID UPPER BACK
+2026-06-03 12:21:58.460 | INFO     | services.retriever:_destruction_malignant_filter:291 - 📦 Raw DM candidates: 20
+2026-06-03 12:21:58.460 | INFO     | services.retriever:_destruction_malignant_filter:317 - 🧠 DM anatomical group=trunk
+2026-06-03 12:21:58.460 | INFO     | services.retriever:_destruction_malignant_filter:377 - ✅ DM MATCH | code=17262 | size=2.0 | range=1.1-2.0
+2026-06-03 12:21:58.460 | INFO     | services.retriever:_destruction_malignant_filter:395 - 🎯 FINAL DM candidates: 1
+2026-06-03 12:21:58.460 | INFO     | services.retriever:_destruction_malignant_filter:400 - 📦 DM FINAL CODES: ['17262']
+2026-06-03 12:21:58.766 | INFO     | app.services.medical_engine:retrieve:176 - ↳ Retrieved 1 destruction candidates
+2026-06-03 12:21:58.766 | INFO     | app.services.medical_engine:retrieve:611 - ✅ Total combined candidates (deduped): 4
+2026-06-03 12:21:58.766 | INFO     | app.services.medical_engine:llm_call:660 - 🧠 Calling LLM with structured parser
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_closure_addon:241 - 🔧 Enforcing closure add-ons (DETERMINISTIC MODE)...
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:443 - 🔧 Enforcing destruction quantities...
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:469 - 📦 Candidate lookup built: 4 CPTs
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:494 - 🔍 Processing destruction CPT: 17000
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:523 - 📊 CPT=17000 | qty_from_parser=1 | addon=False
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:537 - ✅ DPM primary detected → forcing qty=1
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:494 - 🔍 Processing destruction CPT: 17262
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:523 - 📊 CPT=17262 | qty_from_parser=1 | addon=False
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:545 - ✅ Standard destruction CPT → forcing qty=1
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:494 - 🔍 Processing destruction CPT: 17262
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:523 - 📊 CPT=17262 | qty_from_parser=1 | addon=False
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:enforce_destruction_quantity:545 - ✅ Standard destruction CPT → forcing qty=1
+2026-06-03 12:22:06.353 | SUCCESS  | utils.engine_utils:enforce_destruction_quantity:564 - ✅ Destruction quantity enforcement completed
+2026-06-03 12:22:06.353 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
+2026-06-03 12:22:06.353 | SUCCESS  | app.services.medical_engine:llm_call:709 - ✅ All deterministic enforcement rules applied
