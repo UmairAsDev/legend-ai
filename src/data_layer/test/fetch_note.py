@@ -73,7 +73,7 @@ async def notes(note_ids):
 
 # ------------------- JSON STORAGE -------------------
 
-def append_to_json(new_data, file_path="dermaplanning_notes.json"):
+def append_to_json(new_data, file_path="diamond_glow_notes.json"):
     """
     Append + deduplicate notes into a JSON file
     """
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
     async def main():
         try:
-            note_ids = [537899, 551261, 625562, 670804, 700331, 718817, 730336]
+            note_ids = [583895, 601725, 630564, 664498, 723319, 728775]
 
             data = await notes(note_ids)
 

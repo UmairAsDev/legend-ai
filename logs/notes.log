@@ -41746,3 +41746,200 @@ Discussed diagnosis, alternative treatment, risks and benefits of each treatment
 2026-06-03 18:02:14.108 | INFO     | utils.engine_utils:enforce_destruction_quantity:448 - ℹ️ No destruction sections found
 2026-06-03 18:02:14.108 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
 2026-06-03 18:02:14.110 | SUCCESS  | app.services.medical_engine:llm_call:732 - ✅ All deterministic enforcement rules applied
+2026-06-03 19:09:50.484 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 670804
+2026-06-03 19:09:50.502 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 670804
+2026-06-03 19:09:51.109 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 670804
+2026-06-03 19:09:51.699 | INFO     | services.clinical_parser:extract_closure_sections:184 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-06-03 19:09:51.701 | INFO     | services.clinical_parser:extract_closure_sections:202 - 📏 Total closure size matches: 0
+2026-06-03 19:09:51.701 | INFO     | services.clinical_parser:extract_closure_sections:297 - 📊 FINAL CLOSURES: []
+2026-06-03 19:09:51.705 | INFO     | services.clinical_parser:extract_filler_material_sections:1143 - ℹ️ No filler material detected
+2026-06-03 19:09:51.705 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1611 - 🔍 Extracting dermaplanning sections...
+2026-06-03 19:09:51.706 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1630 - 📦 Dermaplanning blocks detected=1
+2026-06-03 19:09:51.706 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1636 - 🔍 Processing Dermaplanning block 1
+2026-06-03 19:09:51.707 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1666 - ✅ Dermaplanning parsed | location=Face and Neck | qty=1
+2026-06-03 19:09:51.707 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1684 - 📊 FINAL Dermaplanning sections=1
+2026-06-03 19:09:51.707 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1685 - 📊 Dermaplanning DATA=[{'label': 'dermaplanning_1', 'text': 'Dermaplanning (DermPl)\nLocation: Face and Neck\xa0\nQuantity: 1\nChemical: Vitalize Peel\xa0\nArea treated: Full Face\xa0\nDiscussed diagnosis, alternative treatment, risks and benefits of each treatment. Side effects discussed included but is not limited to erythema, edema, infection, delayed healing, pain, burning sensation, pigment problems, blisters, scarring, keloids, , allergic reactions, recurrence of problems and worsening and/or no treatment effects of current skin condition. A written consent was obtained from the patient after explanation. Area to be treated was prepared. Using a gauze applicator, a layer of chemical peel was applied equally on treatment area. The area was then rinsed off using water. The patient tolerated the procedure well', 'location': 'Face and Neck', 'laterality': None, 'quantity': 1}]
+2026-06-03 19:09:51.707 | INFO     | services.clinical_parser:extract_destruction_sections:478 - 🔍 Extracting destruction sections...
+2026-06-03 19:09:51.707 | INFO     | services.clinical_parser:extract_destruction_sections:630 - 📊 Total destruction sections: 0
+2026-06-03 19:09:51.710 | INFO     | services.clinical_parser:extract_chemical_peel_sections:1417 - 🔍 Extracting chemical peel sections...
+2026-06-03 19:09:51.710 | INFO     | services.clinical_parser:extract_chemical_peel_sections:1444 - 🔍 Processing chemical peel block 1
+2026-06-03 19:09:51.711 | INFO     | services.clinical_parser:extract_chemical_peel_sections:1562 - ✅ Chemical Peel → type=chemical_peel | location=Full Face | method= | chemical=
+2026-06-03 19:09:51.711 | INFO     | services.clinical_parser:extract_chemical_peel_sections:1586 - 📊 Total chemical peel sections: 1
+2026-06-03 19:09:51.712 | INFO     | services.clinical_parser:extract_filler_sections:1281 - ℹ️ No filler detected
+2026-06-03 19:09:51.713 | INFO     | services.clinical_parser:extract_ipl_sections:971 - ℹ️ No IPL keywords detected
+2026-06-03 19:09:51.714 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-06-03 19:09:51.714 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-06-03 19:09:51.716 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-06-03 19:09:51.716 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-06-03 19:09:51.716 | INFO     | utils.engine_utils:aggregate_shave_removals:608 - 🪒 Aggregated shave removals: []
+2026-06-03 19:09:51.717 | INFO     | utils.engine_utils:aggregate_chemical_peels:621 - 🔧 Aggregating chemical peels...
+2026-06-03 19:09:51.717 | INFO     | utils.engine_utils:aggregate_chemical_peels:654 - 📊 Aggregated chemical peels=1
+2026-06-03 19:09:53.615 | INFO     | app.services.medical_engine:retrieve:118 - 🧠 Retrieval Decision | Parsed: {'has_filler_material': False, 'filler_material_sections': [], 'has_dermaplanning': True, 'dermaplanning_sections': [{'label': 'dermaplanning_1', 'text': 'Dermaplanning (DermPl)\nLocation: Face and Neck\xa0\nQuantity: 1\nChemical: Vitalize Peel\xa0\nArea treated: Full Face\xa0\nDiscussed diagnosis, alternative treatment, risks and benefits of each treatment. Side effects discussed included but is not limited to erythema, edema, infection, delayed healing, pain, burning sensation, pigment problems, blisters, scarring, keloids, , allergic reactions, recurrence of problems and worsening and/or no treatment effects of current skin condition. A written consent was obtained from the patient after explanation. Area to be treated was prepared. Using a gauze applicator, a layer of chemical peel was applied equally on treatment area. The area was then rinsed off using water. The patient tolerated the procedure well', 'location': 'Face and Neck', 'laterality': None, 'quantity': 1}], 'has_destruction': False, 'destruction_sections': [], 'has_chemical_peel': True, 'chemical_peel_sections': [{'type': 'chemical_peel', 'location': 'Full Face', 'laterality': None, 'quantity': 1, 'method': '', 'chemical': '', 'choice': '', 'area_treated': '', 'text': 'Chemical Peel (PEEL)\nLocation: Full Face\nStep 1: Prepping Solution\nLot:\xa0 122617\nExp: 07/27\nStep 2: Vitalize Peeling Solution\nLot: 122618\nExp: 07/26\nStep 3: Vitalize Retinol Solution\nLot: 122619\nExp: 07/26'}], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_filler': False, 'filler_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_excision': False, 'excision_sections': [], 'has_ipl': False, 'ipl_sections': [], 'has_closure': False, 'closure_sections': [], 'has_biopsy': False, 'biopsy_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_srt': False, 'srt_sections': [], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': [], 'chemical_peel_aggregated': [{'type': 'chemical_peel', 'method': '', 'location': 'Full Face', 'quantity': 1, 'sections': [{'type': 'chemical_peel', 'location': 'Full Face', 'laterality': None, 'quantity': 1, 'method': '', 'chemical': '', 'choice': '', 'area_treated': '', 'text': 'Chemical Peel (PEEL)\nLocation: Full Face\nStep 1: Prepping Solution\nLot:\xa0 122617\nExp: 07/27\nStep 2: Vitalize Peeling Solution\nLot: 122618\nExp: 07/26\nStep 3: Vitalize Retinol Solution\nLot: 122619\nExp: 07/26'}]}]}
+2026-06-03 19:09:53.615 | INFO     | app.services.medical_engine:retrieve:436 - 🔴 Dermaplanning DETECTED
+2026-06-03 19:09:53.619 | INFO     | services.retriever:dermaplanning_filter:1833 - 🎯 Dermaplanning filter | location=face and neck
+2026-06-03 19:09:58.720 | INFO     | services.retriever:dermaplanning_filter:1865 - 📦 Dermaplanning raw candidates=1
+2026-06-03 19:09:58.721 | INFO     | services.retriever:dermaplanning_filter:1866 - 📦 Dermaplanning RAW CODES=['N0002']
+2026-06-03 19:09:59.028 | INFO     | app.services.medical_engine:retrieve:445 - 🎯 Dermaplanning deterministic candidates=1
+2026-06-03 19:09:59.028 | INFO     | app.services.medical_engine:retrieve:463 - 🔴 CHEMICAL PEEL DETECTED
+2026-06-03 19:09:59.028 | INFO     | app.services.medical_engine:retrieve:472 - 📌 Chemical Peel section → type=chemical_peel | location=Full Face | method= | choice=
+2026-06-03 19:09:59.034 | INFO     | services.retriever:chemical_peel_filter:1728 - 🔍 Chemical Peel filter → type=chemical peel | method= | choice=
+2026-06-03 19:10:01.211 | INFO     | services.retriever:chemical_peel_filter:1764 - 📦 Raw chemical peel candidates: 9
+2026-06-03 19:10:01.212 | WARNING  | services.retriever:chemical_peel_filter:1789 - ⚠️ No chemical peel method match → fallback CP001
+2026-06-03 19:10:01.508 | INFO     | app.services.medical_engine:retrieve:481 - 🎯 Chemical Peel candidates=1
+2026-06-03 19:10:01.509 | INFO     | app.services.medical_engine:retrieve:634 - ✅ Total combined candidates (deduped): 2
+2026-06-03 19:10:01.509 | INFO     | app.services.medical_engine:llm_call:683 - 🧠 Calling LLM with structured parser
+2026-06-03 19:10:05.780 | INFO     | utils.engine_utils:enforce_closure_addon:241 - 🔧 Enforcing closure add-ons (DETERMINISTIC MODE)...
+2026-06-03 19:10:05.780 | INFO     | utils.engine_utils:enforce_destruction_quantity:443 - 🔧 Enforcing destruction quantities...
+2026-06-03 19:10:05.781 | INFO     | utils.engine_utils:enforce_destruction_quantity:448 - ℹ️ No destruction sections found
+2026-06-03 19:10:05.781 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
+2026-06-03 19:10:05.782 | SUCCESS  | app.services.medical_engine:llm_call:732 - ✅ All deterministic enforcement rules applied
+2026-06-03 19:33:10.440 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 548000
+2026-06-03 19:33:10.510 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 548000
+2026-06-03 19:33:14.097 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 548000
+2026-06-03 19:33:14.706 | INFO     | services.clinical_parser:extract_closure_sections:184 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-06-03 19:33:14.708 | INFO     | services.clinical_parser:extract_closure_sections:202 - 📏 Total closure size matches: 0
+2026-06-03 19:33:14.708 | INFO     | services.clinical_parser:extract_closure_sections:297 - 📊 FINAL CLOSURES: []
+2026-06-03 19:33:14.710 | INFO     | services.clinical_parser:extract_filler_material_sections:1143 - ℹ️ No filler material detected
+2026-06-03 19:33:14.710 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1608 - ℹ️ No dermaplanning detected
+2026-06-03 19:33:14.710 | INFO     | services.clinical_parser:extract_destruction_sections:478 - 🔍 Extracting destruction sections...
+2026-06-03 19:33:14.711 | INFO     | services.clinical_parser:extract_destruction_sections:630 - 📊 Total destruction sections: 0
+2026-06-03 19:33:14.712 | INFO     | services.clinical_parser:extract_filler_sections:1281 - ℹ️ No filler detected
+2026-06-03 19:33:14.712 | INFO     | services.clinical_parser:extract_ipl_sections:971 - ℹ️ No IPL keywords detected
+2026-06-03 19:33:14.712 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-06-03 19:33:14.712 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-06-03 19:33:14.712 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-06-03 19:33:14.713 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-06-03 19:33:14.713 | INFO     | utils.engine_utils:aggregate_shave_removals:608 - 🪒 Aggregated shave removals: []
+2026-06-03 19:33:14.715 | INFO     | utils.engine_utils:aggregate_chemical_peels:621 - 🔧 Aggregating chemical peels...
+2026-06-03 19:33:14.715 | INFO     | utils.engine_utils:aggregate_chemical_peels:654 - 📊 Aggregated chemical peels=0
+2026-06-03 19:33:17.514 | INFO     | app.services.medical_engine:retrieve:118 - 🧠 Retrieval Decision | Parsed: {'has_filler_material': False, 'filler_material_sections': [], 'has_dermaplanning': False, 'dermaplanning_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_chemical_peel': False, 'chemical_peel_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_filler': False, 'filler_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_excision': False, 'excision_sections': [], 'has_ipl': False, 'ipl_sections': [], 'has_closure': False, 'closure_sections': [], 'has_biopsy': False, 'biopsy_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_srt': False, 'srt_sections': [], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': [], 'chemical_peel_aggregated': []}
+2026-06-03 19:33:17.514 | INFO     | app.services.medical_engine:retrieve:641 - 🟡 PROCEDURE DETECTED → semantic search
+2026-06-03 19:33:17.515 | INFO     | services.retriever:search:437 - 🔍 Running multi-table vector search...
+2026-06-03 19:34:12.006 | INFO     | services.retriever:search:450 - ✅ Retrieved 40 candidates
+2026-06-03 19:34:12.007 | INFO     | app.services.medical_engine:retrieve:645 - ⚠️ Procedure-based candidates: 40
+2026-06-03 19:34:12.010 | INFO     | app.services.medical_engine:llm_call:683 - 🧠 Calling LLM with structured parser
+2026-06-03 19:34:15.762 | INFO     | utils.engine_utils:enforce_closure_addon:241 - 🔧 Enforcing closure add-ons (DETERMINISTIC MODE)...
+2026-06-03 19:34:15.774 | INFO     | utils.engine_utils:enforce_destruction_quantity:443 - 🔧 Enforcing destruction quantities...
+2026-06-03 19:34:15.775 | INFO     | utils.engine_utils:enforce_destruction_quantity:448 - ℹ️ No destruction sections found
+2026-06-03 19:34:15.775 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
+2026-06-03 19:34:15.778 | SUCCESS  | app.services.medical_engine:llm_call:732 - ✅ All deterministic enforcement rules applied
+2026-06-04 18:07:48.759 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 723319
+2026-06-04 18:07:48.827 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 723319
+2026-06-04 18:07:52.742 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 723319
+2026-06-04 18:07:53.392 | INFO     | services.clinical_parser:extract_closure_sections:184 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-06-04 18:07:53.425 | INFO     | services.clinical_parser:extract_closure_sections:202 - 📏 Total closure size matches: 0
+2026-06-04 18:07:53.425 | INFO     | services.clinical_parser:extract_closure_sections:297 - 📊 FINAL CLOSURES: []
+2026-06-04 18:07:53.425 | INFO     | services.clinical_parser:extract_filler_material_sections:1143 - ℹ️ No filler material detected
+2026-06-04 18:07:53.425 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1608 - ℹ️ No dermaplanning detected
+2026-06-04 18:07:53.425 | INFO     | services.clinical_parser:extract_destruction_sections:478 - 🔍 Extracting destruction sections...
+2026-06-04 18:07:53.434 | INFO     | services.clinical_parser:extract_destruction_sections:630 - 📊 Total destruction sections: 0
+2026-06-04 18:07:53.435 | INFO     | services.clinical_parser:extract_filler_sections:1281 - ℹ️ No filler detected
+2026-06-04 18:07:53.435 | INFO     | services.clinical_parser:extract_ipl_sections:971 - ℹ️ No IPL keywords detected
+2026-06-04 18:07:53.435 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-06-04 18:07:53.439 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-06-04 18:07:53.442 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-06-04 18:07:53.443 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-06-04 18:07:53.443 | INFO     | utils.engine_utils:aggregate_shave_removals:608 - 🪒 Aggregated shave removals: []
+2026-06-04 18:07:53.443 | INFO     | utils.engine_utils:aggregate_chemical_peels:621 - 🔧 Aggregating chemical peels...
+2026-06-04 18:07:53.443 | INFO     | utils.engine_utils:aggregate_chemical_peels:654 - 📊 Aggregated chemical peels=0
+2026-06-04 18:07:55.623 | INFO     | app.services.medical_engine:retrieve:118 - 🧠 Retrieval Decision | Parsed: {'has_filler_material': False, 'filler_material_sections': [], 'has_dermaplanning': False, 'dermaplanning_sections': [], 'has_destruction': False, 'destruction_sections': [], 'has_chemical_peel': False, 'chemical_peel_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_filler': False, 'filler_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_excision': False, 'excision_sections': [], 'has_ipl': False, 'ipl_sections': [], 'has_closure': False, 'closure_sections': [], 'has_biopsy': False, 'biopsy_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_srt': False, 'srt_sections': [], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': [], 'chemical_peel_aggregated': []}
+2026-06-04 18:07:55.623 | INFO     | app.services.medical_engine:retrieve:641 - 🟡 PROCEDURE DETECTED → semantic search
+2026-06-04 18:07:55.624 | INFO     | services.retriever:search:437 - 🔍 Running multi-table vector search...
+2026-06-04 18:09:03.040 | INFO     | services.retriever:search:450 - ✅ Retrieved 40 candidates
+2026-06-04 18:09:03.192 | INFO     | app.services.medical_engine:retrieve:645 - ⚠️ Procedure-based candidates: 40
+2026-06-04 18:09:03.192 | INFO     | app.services.medical_engine:llm_call:683 - 🧠 Calling LLM with structured parser
+2026-06-04 18:09:12.024 | INFO     | utils.engine_utils:enforce_closure_addon:241 - 🔧 Enforcing closure add-ons (DETERMINISTIC MODE)...
+2026-06-04 18:09:12.025 | INFO     | utils.engine_utils:enforce_destruction_quantity:443 - 🔧 Enforcing destruction quantities...
+2026-06-04 18:09:12.025 | INFO     | utils.engine_utils:enforce_destruction_quantity:448 - ℹ️ No destruction sections found
+2026-06-04 18:09:12.027 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
+2026-06-04 18:09:12.029 | SUCCESS  | app.services.medical_engine:llm_call:732 - ✅ All deterministic enforcement rules applied
+2026-06-05 19:39:31.934 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 601725
+2026-06-05 19:39:32.012 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 601725
+2026-06-05 19:39:36.209 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 601725
+2026-06-05 19:39:36.846 | INFO     | services.clinical_parser:extract_closure_sections:184 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-06-05 19:39:36.846 | INFO     | services.clinical_parser:extract_closure_sections:202 - 📏 Total closure size matches: 0
+2026-06-05 19:39:36.846 | INFO     | services.clinical_parser:extract_closure_sections:297 - 📊 FINAL CLOSURES: []
+2026-06-05 19:39:36.846 | INFO     | services.clinical_parser:extract_filler_material_sections:1143 - ℹ️ No filler material detected
+2026-06-05 19:39:36.846 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1608 - ℹ️ No dermaplanning detected
+2026-06-05 19:39:36.846 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1711 - 🔍 Extracting Diamond Glow sections...
+2026-06-05 19:39:36.846 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1737 - 🔍 Processing Diamond Glow block 1
+2026-06-05 19:39:36.856 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1771 - ✅ Diamond Glow → location=Face | quantity=1
+2026-06-05 19:39:37.127 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1737 - 🔍 Processing Diamond Glow block 2
+2026-06-05 19:39:37.128 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1771 - ✅ Diamond Glow → location= | quantity=1
+2026-06-05 19:39:37.128 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1789 - 📊 Total Diamond Glow sections: 2
+2026-06-05 19:39:37.128 | INFO     | services.clinical_parser:extract_destruction_sections:478 - 🔍 Extracting destruction sections...
+2026-06-05 19:39:37.128 | INFO     | services.clinical_parser:extract_destruction_sections:630 - 📊 Total destruction sections: 0
+2026-06-05 19:39:37.128 | INFO     | services.clinical_parser:extract_filler_sections:1281 - ℹ️ No filler detected
+2026-06-05 19:39:37.128 | INFO     | services.clinical_parser:extract_ipl_sections:971 - ℹ️ No IPL keywords detected
+2026-06-05 19:39:37.137 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-06-05 19:39:37.138 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-06-05 19:39:37.138 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-06-05 19:39:37.138 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-06-05 19:39:37.141 | INFO     | utils.engine_utils:aggregate_shave_removals:608 - 🪒 Aggregated shave removals: []
+2026-06-05 19:39:37.142 | INFO     | utils.engine_utils:aggregate_chemical_peels:621 - 🔧 Aggregating chemical peels...
+2026-06-05 19:39:37.143 | INFO     | utils.engine_utils:aggregate_chemical_peels:654 - 📊 Aggregated chemical peels=0
+2026-06-05 19:39:41.162 | INFO     | app.services.medical_engine:retrieve:118 - 🧠 Retrieval Decision | Parsed: {'has_filler_material': False, 'filler_material_sections': [], 'has_dermaplanning': False, 'dermaplanning_sections': [], 'has_diamond_glow': True, 'diamond_glow_sections': [{'type': 'diamond_glow', 'location': 'Face', 'laterality': None, 'quantity': 1, 'text': 'Diamond Glow (DG)\nLocation: Face\nQuantity: 1'}, {'type': 'diamond_glow', 'location': '', 'laterality': None, 'quantity': 1, 'text': 'Diamond Glow\nA written consent taken from the patient after explanation. Area to be treated was prepared using RD Revitalizing Cleanser and RD Skin Balancing Toner. Treatment performed using Diamond Glow machine with Pore clarifying Advanced Pro-Infusion Serum to neck and face. and HA5\xa0Pro-Infusion Serum to the eyes and lips\nA total of two passes were performed. \nAfter treatment, Skin Medica Calming and purifying Masque applied for 10 minutes. Aveeno Moisturizing Lotion used with hand and arm massage. Masque removed with a steamed towel. TNS ceramide treatment cream and HA5 used with facial massage. After facial massage,\xa0Sunscreen by Colorescience sunforgettable total protection GLOW SPF-50 was applied after the procedure.\xa0Patient tolerated the treatment well.\nNeck\nGrit: 80\nVacuum Setting: 3.0\nFlow Setting: 50%\nFace\nGrit: 80\nVacuum Setting: 4.0\nFlow Setting: 50%\nEyes\nGrit: 00\nVacuum Setting: 2.7\nFlow Setting: 100%\nLips\nGrit: 00\nVacuum Setting: 3.5\nFlow Setting 100%'}], 'has_destruction': False, 'destruction_sections': [], 'has_chemical_peel': False, 'chemical_peel_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_filler': False, 'filler_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_excision': False, 'excision_sections': [], 'has_ipl': False, 'ipl_sections': [], 'has_closure': False, 'closure_sections': [], 'has_biopsy': False, 'biopsy_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_srt': False, 'srt_sections': [], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': [], 'chemical_peel_aggregated': []}
+2026-06-05 19:39:41.163 | INFO     | app.services.medical_engine:retrieve:464 - 🔴 DIAMOND GLOW DETECTED
+2026-06-05 19:39:41.163 | INFO     | services.retriever:diamond_glow_filter:1885 - 🎯 Diamond Glow filter | location=Face
+2026-06-05 19:40:13.419 | INFO     | services.retriever:diamond_glow_filter:1914 - 📦 Diamond Glow candidates=1
+2026-06-05 19:40:13.705 | INFO     | app.services.medical_engine:retrieve:479 - 🎯 Diamond Glow candidates=1
+2026-06-05 19:40:13.705 | INFO     | services.retriever:diamond_glow_filter:1885 - 🎯 Diamond Glow filter | location=
+2026-06-05 19:40:15.462 | INFO     | services.retriever:diamond_glow_filter:1914 - 📦 Diamond Glow candidates=1
+2026-06-05 19:40:15.755 | INFO     | app.services.medical_engine:retrieve:479 - 🎯 Diamond Glow candidates=1
+2026-06-05 19:40:15.756 | INFO     | app.services.medical_engine:retrieve:674 - ✅ Total combined candidates (deduped): 1
+2026-06-05 19:40:15.756 | INFO     | app.services.medical_engine:llm_call:723 - 🧠 Calling LLM with structured parser
+2026-06-05 19:40:20.207 | INFO     | utils.engine_utils:enforce_closure_addon:241 - 🔧 Enforcing closure add-ons (DETERMINISTIC MODE)...
+2026-06-05 19:40:20.208 | INFO     | utils.engine_utils:enforce_destruction_quantity:443 - 🔧 Enforcing destruction quantities...
+2026-06-05 19:40:20.208 | INFO     | utils.engine_utils:enforce_destruction_quantity:448 - ℹ️ No destruction sections found
+2026-06-05 19:40:20.208 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
+2026-06-05 19:40:20.210 | SUCCESS  | app.services.medical_engine:llm_call:772 - ✅ All deterministic enforcement rules applied
+2026-06-05 19:56:19.624 | INFO     | app.services.engine_runner:process:14 - 🚀 Running LangGraph pipeline for note 601725
+2026-06-05 19:56:19.678 | INFO     | app.services.medical_engine:fetch:38 - 📥 Fetching note: 601725
+2026-06-05 19:56:23.291 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 601725
+2026-06-05 19:56:23.900 | INFO     | services.clinical_parser:extract_closure_sections:184 - 🔍 CLOSURE: event-based extraction (FINAL FIX)
+2026-06-05 19:56:23.904 | INFO     | services.clinical_parser:extract_closure_sections:202 - 📏 Total closure size matches: 0
+2026-06-05 19:56:23.904 | INFO     | services.clinical_parser:extract_closure_sections:297 - 📊 FINAL CLOSURES: []
+2026-06-05 19:56:23.904 | INFO     | services.clinical_parser:extract_filler_material_sections:1143 - ℹ️ No filler material detected
+2026-06-05 19:56:23.904 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1621 - 🔍 Extracting dermaplaning sections.
+2026-06-05 19:56:23.905 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1640 - 📦 Dermaplaning blocks detected=1
+2026-06-05 19:56:23.905 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1649 - 🔍 Processing Dermaplaning block 1
+2026-06-05 19:56:23.907 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1682 - ✅ Dermaplaning parsed | location=Face | qty=1
+2026-06-05 19:56:23.907 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1703 - 📊 FINAL Dermaplaning sections=1
+2026-06-05 19:56:23.907 | INFO     | services.clinical_parser:extract_dermaplanning_sections:1708 - 📊 Dermaplaning DATA=[{'label': 'dermaplanning_1', 'type': 'dermaplanning', 'text': 'Dermaplaning (DermPl)\nLocation: Face\nQuantity: 1\nDiscussed possible risks and benefits of the procedure which includes but is not limited to erythema, edema and worsening of skin condition.\nArea to be treated was prepared using RD Revitalizing cleanser and RD Skin Balancing Toner. Dermaplaning was performed over forehead, cheeks, upper lip, chin and jawline.\xa0\nPatient tolerated well without a problem. Treatment was followed by DGF', 'location': 'Face', 'laterality': None, 'quantity': 1}]
+2026-06-05 19:56:23.908 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1733 - 🔍 Extracting Diamond Glow sections...
+2026-06-05 19:56:23.909 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1759 - 🔍 Processing Diamond Glow block 1
+2026-06-05 19:56:23.909 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1793 - ✅ Diamond Glow → location=Face | quantity=1
+2026-06-05 19:56:23.909 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1759 - 🔍 Processing Diamond Glow block 2
+2026-06-05 19:56:23.910 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1793 - ✅ Diamond Glow → location= | quantity=1
+2026-06-05 19:56:23.910 | INFO     | services.clinical_parser:extract_diamond_glow_sections:1811 - 📊 Total Diamond Glow sections: 2
+2026-06-05 19:56:23.911 | INFO     | services.clinical_parser:extract_destruction_sections:478 - 🔍 Extracting destruction sections...
+2026-06-05 19:56:23.912 | INFO     | services.clinical_parser:extract_destruction_sections:630 - 📊 Total destruction sections: 0
+2026-06-05 19:56:23.912 | INFO     | services.clinical_parser:extract_filler_sections:1281 - ℹ️ No filler detected
+2026-06-05 19:56:23.913 | INFO     | services.clinical_parser:extract_ipl_sections:971 - ℹ️ No IPL keywords detected
+2026-06-05 19:56:23.913 | INFO     | utils.engine_utils:aggregate_closures:78 - 🔧 Aggregating closures...
+2026-06-05 19:56:23.914 | INFO     | utils.engine_utils:aggregate_closures:98 - 🧾 ===== CLOSURE DEBUG =====
+2026-06-05 19:56:23.914 | INFO     | utils.engine_utils:aggregate_closures:110 - 🧾 ==========================
+2026-06-05 19:56:23.914 | INFO     | app.services.medical_engine:parse:89 - 🧾 biopsyNotes AFTER CLEAN: None
+2026-06-05 19:56:23.915 | INFO     | utils.engine_utils:aggregate_shave_removals:608 - 🪒 Aggregated shave removals: []
+2026-06-05 19:56:23.915 | INFO     | utils.engine_utils:aggregate_chemical_peels:621 - 🔧 Aggregating chemical peels...
+2026-06-05 19:56:23.915 | INFO     | utils.engine_utils:aggregate_chemical_peels:654 - 📊 Aggregated chemical peels=0
+2026-06-05 19:56:25.240 | INFO     | app.services.medical_engine:retrieve:118 - 🧠 Retrieval Decision | Parsed: {'has_filler_material': False, 'filler_material_sections': [], 'has_dermaplanning': True, 'dermaplanning_sections': [{'label': 'dermaplanning_1', 'type': 'dermaplanning', 'text': 'Dermaplaning (DermPl)\nLocation: Face\nQuantity: 1\nDiscussed possible risks and benefits of the procedure which includes but is not limited to erythema, edema and worsening of skin condition.\nArea to be treated was prepared using RD Revitalizing cleanser and RD Skin Balancing Toner. Dermaplaning was performed over forehead, cheeks, upper lip, chin and jawline.\xa0\nPatient tolerated well without a problem. Treatment was followed by DGF', 'location': 'Face', 'laterality': None, 'quantity': 1}], 'has_diamond_glow': True, 'diamond_glow_sections': [{'type': 'diamond_glow', 'location': 'Face', 'laterality': None, 'quantity': 1, 'text': 'Diamond Glow (DG)\nLocation: Face\nQuantity: 1'}, {'type': 'diamond_glow', 'location': '', 'laterality': None, 'quantity': 1, 'text': 'Diamond Glow\nA written consent taken from the patient after explanation. Area to be treated was prepared using RD Revitalizing Cleanser and RD Skin Balancing Toner. Treatment performed using Diamond Glow machine with Pore clarifying Advanced Pro-Infusion Serum to neck and face. and HA5\xa0Pro-Infusion Serum to the eyes and lips\nA total of two passes were performed. \nAfter treatment, Skin Medica Calming and purifying Masque applied for 10 minutes. Aveeno Moisturizing Lotion used with hand and arm massage. Masque removed with a steamed towel. TNS ceramide treatment cream and HA5 used with facial massage. After facial massage,\xa0Sunscreen by Colorescience sunforgettable total protection GLOW SPF-50 was applied after the procedure.\xa0Patient tolerated the treatment well.\nNeck\nGrit: 80\nVacuum Setting: 3.0\nFlow Setting: 50%\nFace\nGrit: 80\nVacuum Setting: 4.0\nFlow Setting: 50%\nEyes\nGrit: 00\nVacuum Setting: 2.7\nFlow Setting: 100%\nLips\nGrit: 00\nVacuum Setting: 3.5\nFlow Setting 100%'}], 'has_destruction': False, 'destruction_sections': [], 'has_chemical_peel': False, 'chemical_peel_sections': [], 'has_laser_treatment': False, 'laser_treatment_sections': [], 'has_shave_removal': False, 'shave_removal_sections': [], 'has_debridement': False, 'debridement_sections': [], 'has_filler': False, 'filler_sections': [], 'has_xtrac': False, 'xtrac_sections': [], 'has_excision': False, 'excision_sections': [], 'has_ipl': False, 'ipl_sections': [], 'has_closure': False, 'closure_sections': [], 'has_biopsy': False, 'biopsy_sections': [], 'has_mohs': False, 'mohs_sections': [], 'has_srt': False, 'srt_sections': [], 'has_procedure': True, 'closure_aggregated': [], 'shave_removal_aggregated': [], 'chemical_peel_aggregated': []}
+2026-06-05 19:56:25.240 | INFO     | app.services.medical_engine:retrieve:436 - 🔴 Dermaplanning DETECTED
+2026-06-05 19:56:25.245 | INFO     | services.retriever:dermaplanning_filter:1833 - 🎯 Dermaplanning filter | location=face
+2026-06-05 19:57:33.515 | INFO     | services.retriever:dermaplanning_filter:1865 - 📦 Dermaplanning raw candidates=1
+2026-06-05 19:57:33.515 | INFO     | services.retriever:dermaplanning_filter:1866 - 📦 Dermaplanning RAW CODES=['N0002']
+2026-06-05 19:57:33.731 | INFO     | app.services.medical_engine:retrieve:445 - 🎯 Dermaplanning deterministic candidates=1
+2026-06-05 19:57:33.731 | INFO     | app.services.medical_engine:retrieve:464 - 🔴 DIAMOND GLOW DETECTED
+2026-06-05 19:57:33.731 | INFO     | services.retriever:diamond_glow_filter:1885 - 🎯 Diamond Glow filter | location=Face
+2026-06-05 19:57:35.182 | INFO     | services.retriever:diamond_glow_filter:1914 - 📦 Diamond Glow candidates=1
+2026-06-05 19:57:35.393 | INFO     | app.services.medical_engine:retrieve:479 - 🎯 Diamond Glow candidates=1
+2026-06-05 19:57:35.393 | INFO     | services.retriever:diamond_glow_filter:1885 - 🎯 Diamond Glow filter | location=
+2026-06-05 19:57:36.418 | INFO     | services.retriever:diamond_glow_filter:1914 - 📦 Diamond Glow candidates=1
+2026-06-05 19:57:36.624 | INFO     | app.services.medical_engine:retrieve:479 - 🎯 Diamond Glow candidates=1
+2026-06-05 19:57:36.625 | INFO     | app.services.medical_engine:retrieve:674 - ✅ Total combined candidates (deduped): 2
+2026-06-05 19:57:36.626 | INFO     | app.services.medical_engine:llm_call:723 - 🧠 Calling LLM with structured parser
+2026-06-05 19:57:41.073 | INFO     | utils.engine_utils:enforce_closure_addon:241 - 🔧 Enforcing closure add-ons (DETERMINISTIC MODE)...
+2026-06-05 19:57:41.073 | INFO     | utils.engine_utils:enforce_destruction_quantity:443 - 🔧 Enforcing destruction quantities...
+2026-06-05 19:57:41.074 | INFO     | utils.engine_utils:enforce_destruction_quantity:448 - ℹ️ No destruction sections found
+2026-06-05 19:57:41.074 | INFO     | utils.engine_utils:apply_modifiers:758 - 🔧 Applying modifier rules...
+2026-06-05 19:57:41.076 | SUCCESS  | app.services.medical_engine:llm_call:772 - ✅ All deterministic enforcement rules applied

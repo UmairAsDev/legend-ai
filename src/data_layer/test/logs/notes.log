@@ -2987,3 +2987,40 @@ During task with name 'retrieve' and id '6da88c3c-d92b-98fe-2e76-b3ba2423574b'
 2026-06-03 16:15:07.304 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 700331
 2026-06-03 16:15:07.311 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 718817
 2026-06-03 16:15:07.934 | INFO     | __main__:append_to_json:106 - 6 records processed | Total stored: 6
+2026-06-03 19:31:28.641 | INFO     | __main__:append_to_json:83 - 1 records processed | Total stored: 1
+2026-06-03 19:32:32.151 | INFO     | __main__:append_to_json:83 - 12 records processed | Total stored: 12
+2026-06-03 19:52:36.251 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 538235
+2026-06-03 19:52:36.302 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 548000
+2026-06-03 19:52:36.304 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 587280
+2026-06-03 19:52:36.304 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 595998
+2026-06-03 19:52:36.393 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 607778
+2026-06-03 19:52:36.470 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 616099
+2026-06-03 19:52:36.484 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 648803
+2026-06-03 19:52:36.522 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 681404
+2026-06-03 19:52:37.102 | INFO     | __main__:append_to_json:106 - 8 records processed | Total stored: 8
+2026-06-03 20:03:20.822 | ERROR    | __main__:notes:49 - Error fetching notes: (pymysql.err.InterfaceError) Cancelled during execution
+(Background on this error at: https://sqlalche.me/e/20/rvf5)
+2026-06-03 20:04:27.555 | INFO     | __main__:append_to_json:83 - 1 records processed | Total stored: 12
+2026-06-03 20:06:03.879 | INFO     | __main__:append_to_json:83 - 668 records processed | Total stored: 668
+2026-06-03 20:07:35.523 | ERROR    | __main__:notes:50 - Error fetching notes: (pymysql.err.OperationalError) (1054, "Unknown column 'npn.patiendId' in 'field list'")
+[SQL: 
+                SELECT
+                    npn.noteId,
+                    npn.patiendId,
+                    npn.noteDate
+                FROM newProgressNotes npn
+                WHERE
+                    (npn.mohsNotes LIKE "%%Diamond Glow%%")
+                    OR (npn.biopsyNotes LIKE "%%Diamond Glow%%")
+                    OR (npn.procedure LIKE "%%Diamond Glow%%")
+                    AND npn.noteDate > '2020-01-01';
+                ]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-06-03 20:08:01.114 | INFO     | __main__:append_to_json:84 - 668 records processed | Total stored: 668
+2026-06-03 20:32:15.428 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 583895
+2026-06-03 20:32:15.460 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 601725
+2026-06-03 20:32:15.472 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 630564
+2026-06-03 20:32:15.479 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 664498
+2026-06-03 20:32:15.486 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 723319
+2026-06-03 20:32:15.493 | INFO     | utils.helper:htmlparser:29 - Cleaning HTML tags for note ID: 728775
+2026-06-03 20:32:16.069 | INFO     | __main__:append_to_json:106 - 6 records processed | Total stored: 6

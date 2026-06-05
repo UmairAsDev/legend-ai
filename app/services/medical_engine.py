@@ -457,6 +457,46 @@ class CodingNodes:
 
 
             # -------------------------
+            # 🔴 DIAMOND GLOW
+            # -------------------------
+            if parsed.get("has_diamond_glow"):
+
+                logger.info("🔴 DIAMOND GLOW DETECTED")
+
+                for sec in parsed.get(
+                    "diamond_glow_sections",
+                    []
+                ):
+
+                    try:
+                        res = await (
+                            self.retriever
+                            .diamond_glow_filter(
+                                section=sec
+                            )
+                        )
+
+                        logger.info(
+                            f"🎯 Diamond Glow "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "diamond_glow"
+                            r["diamond_glow_location"] = sec.get("location")
+                            r["diamond_glow_quantity"] = sec.get("quantity")
+
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+                        logger.exception(
+                            f"❌ Diamond Glow "
+                            f"retrieval failed: {e}"
+                        )
+
+
+            # -------------------------
             # 🔴 CHEMICAL PEEL
             # -------------------------
             if parsed.get("has_chemical_peel"):

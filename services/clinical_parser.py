@@ -1592,48 +1592,62 @@ class ClinicalParser:
         
 
     # =========================================================
-    # 🔹 DERMAPLANNING EXTRACTION
+    # 🔹 DERMAPLANING / DERMAPLANNING EXTRACTION
     # =========================================================
     def extract_dermaplanning_sections(self, text: str):
 
         try:
-
             if not text:
-                logger.warning("⚠️ Dermaplanning parser received empty text")
+                logger.warning("⚠️ Dermaplaning parser received empty text")
                 return []
 
             text_lower = text.lower()
 
-            if "dermaplanning (dermpl)" not in text_lower:
-                logger.info("ℹ️ No dermaplanning detected")
+            # -------------------------------------------------
+            # 🔴 SUPPORT BOTH SPELLINGS
+            # Dermaplaning  = common spelling
+            # Dermaplanning = existing internal spelling
+            # -------------------------------------------------
+            dermaplaning_present = re.search(
+                r"\bdermaplan+n?ing\s*\(dermpl\)",
+                text_lower,
+                re.IGNORECASE
+            )
+
+            if not dermaplaning_present:
+                logger.info("ℹ️ No dermaplaning detected")
                 return []
 
-            logger.info("🔍 Extracting dermaplanning sections...")
+            logger.info("🔍 Extracting dermaplaning sections.")
 
             sections = []
 
-            # Match only the filler section content
-            dermaplanning_blocks = re.finditer(
+            # -------------------------------------------------
+            # 🔴 PROCEDURE BOUNDARIES
+            # Stops before next procedure header like:
+            # Diamond Glow (DG), Chemical Peel (PEEL), Filler, IPL, etc.
+            # -------------------------------------------------
+            dermaplaning_blocks = re.finditer(
                 r"""
-                Dermaplanning\s*\(DermPl\)      # Start of dermaplanning section
-                .*?                      # Capture everything inside it
-                (?=                      # Stop when next section begins
-                    \n[A-Za-z\s]+\([^)]+\)
-                    |\Z
-                )
+                (Dermaplan+n?ing\s*\(DermPl\).*?)
+                (?=\n\s*[A-Za-z][A-Za-z\s/+-]*\([^)]+\)|\Z)
                 """,
                 text,
                 re.IGNORECASE | re.DOTALL | re.VERBOSE
             )
 
-            dermaplanning_blocks = list(dermaplanning_blocks)
-            logger.info(f"📦 Dermaplanning blocks detected={len(dermaplanning_blocks)}")
+            dermaplaning_blocks = list(dermaplaning_blocks)
+            logger.info(
+                f"📦 Dermaplaning blocks detected="
+                f"{len(dermaplaning_blocks)}"
+            )
 
-            for i, match in enumerate(dermaplanning_blocks):
+            for i, match in enumerate(dermaplaning_blocks):
 
                 try:
-                    block = match.group(0).strip()
-                    logger.info(f"🔍 Processing Dermaplanning block {i+1}")
+                    block = match.group(1).strip()
+                    logger.info(
+                        f"🔍 Processing Dermaplaning block {i+1}")
 
                     # -----------------------------------------
                     # LOCATION
@@ -1646,7 +1660,8 @@ class ClinicalParser:
 
                     location = (
                         loc_match.group(1).strip()
-                        if loc_match else ""
+                        if loc_match
+                        else ""
                     )
 
                     # -----------------------------------------
@@ -1660,36 +1675,145 @@ class ClinicalParser:
 
                     quantity = (
                         int(qty_match.group(1))
-                        if qty_match else 1
+                        if qty_match
+                        else 1
                     )
 
                     logger.info(
-                        f"✅ Dermaplanning parsed | "
+                        f"✅ Dermaplaning parsed | "
                         f"location={location} | "
                         f"qty={quantity}"
                     )
 
                     sections.append({
                         "label": f"dermaplanning_{i+1}",
+                        "type": "dermaplanning",
                         "text": block,
                         "location": location,
-                        "laterality": self.utils.extract_laterality(location),
+                        "laterality": self.utils.extract_laterality(
+                            location
+                        ),
                         "quantity": quantity
                     })
 
                 except Exception as e:
-                    logger.exception(f"❌ Dermaplanning block parsing failed: {e}")
+                    logger.exception(f"❌ Dermaplaning block parsing failed: {e}")
                     continue
 
-            logger.info(f"📊 FINAL Dermaplanning sections={len(sections)}")
-            logger.info(f"📊 Dermaplanning DATA={sections}")
+            logger.info(
+                f"📊 FINAL Dermaplaning sections="
+                f"{len(sections)}"
+            )
 
+            logger.info(f"📊 Dermaplaning DATA={sections}")
             return sections
 
         except Exception as e:
-            logger.exception(f"❌ Dermaplanning extraction failed: {e}")
+            logger.exception(f"❌ Dermaplaning extraction failed: {e}")
 
             return []
+        
+
+    # =========================================================
+    # 🔹 DIAMOND GLOW EXTRACTION
+    # =========================================================
+    def extract_diamond_glow_sections(
+        self,
+        text: str
+    ) -> List[Dict]:
+
+        if not text:
+            return []
+
+        text_lower = text.lower()
+
+        if not "diamond glow (dg)" in text.lower():
+            return []
+
+        logger.info(
+            "🔍 Extracting Diamond Glow sections..."
+        )
+
+        sections = []
+
+        pattern = re.compile(
+            r"("
+            r"(?:diamond\s*glow(?:\s*\(dg\))?|diamondglow)"
+            r".*?"
+            r")"
+            r"(?="
+            r"(?:"
+            r"\n\s*(?:diamond\s*glow(?:\s*\(dg\))?|diamondglow)"
+            r"|$"
+            r")"
+            r")",
+            re.IGNORECASE | re.DOTALL
+        )
+
+        matches = list(pattern.finditer(text))
+
+        for i, match in enumerate(matches):
+
+            block = match.group(1).strip()
+
+            logger.info(
+                f"🔍 Processing Diamond Glow block {i+1}"
+            )
+
+            # -------------------------
+            # LOCATION
+            # -------------------------
+            location_match = re.search(
+                r"Location:\s*([^\n\r]+)",
+                block,
+                re.IGNORECASE
+            )
+
+            location = (
+                location_match.group(1).strip()
+                if location_match
+                else ""
+            )
+
+            # -------------------------
+            # QUANTITY
+            # -------------------------
+            qty_match = re.search(
+                r"Quantity:\s*(\d+)",
+                block,
+                re.IGNORECASE
+            )
+
+            quantity = (
+                int(qty_match.group(1))
+                if qty_match
+                else 1
+            )
+
+            logger.info(
+                f"✅ Diamond Glow → "
+                f"location={location} | "
+                f"quantity={quantity}"
+            )
+
+            sections.append({
+                "type": "diamond_glow",
+                "location": location,
+                "laterality": (
+                    self.utils.extract_laterality(
+                        location
+                    )
+                ),
+                "quantity": quantity,
+                "text": block
+            })
+
+        logger.info(
+            f"📊 Total Diamond Glow sections: "
+            f"{len(sections)}"
+        )
+
+        return sections
         
 
     # =========================================================
@@ -1718,6 +1842,7 @@ class ClinicalParser:
         
         filler_material_sections = self.extract_filler_material_sections(procedure_text)
         dermaplanning_sections = self.extract_dermaplanning_sections(procedure_text)
+        diamond_glow_sections = self.extract_diamond_glow_sections(procedure_text)
         destruction_sections = self.extract_destruction_sections(procedure_text)
         chemical_sections = self.extract_chemical_peel_sections(procedure_text)
         laser_sections = self.extract_laser_treatment_sections(procedure_text)
@@ -1734,6 +1859,9 @@ class ClinicalParser:
 
             "has_dermaplanning": len(dermaplanning_sections) >0,
             "dermaplanning_sections": dermaplanning_sections,
+
+            "has_diamond_glow": len(diamond_glow_sections) > 0,
+            "diamond_glow_sections": diamond_glow_sections,
 
             "has_destruction": len(destruction_sections) > 0,
             "destruction_sections": destruction_sections,
