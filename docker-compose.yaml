@@ -10,12 +10,12 @@ services:
     env_file:
       - .env
     ports:
-      - "8002:8002"
+      - "8000:8000"
     volumes:
       - logs:/app/logs
     healthcheck:
       test: ["CMD", "python", "-c",
-             "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')"]
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
       timeout: 10s
       start_period: 30s
