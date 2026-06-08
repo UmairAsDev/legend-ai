@@ -27,34 +27,18 @@ class ShaveRemovalSelector:
         cls,
         size: Optional[float],
         location_group: Optional[str],
-        procedure_type: Optional[str] = None,
     ) -> List[dict]:
-
-        # Prevent biopsy notes from generating shave-removal codes
-        if procedure_type not in {
-            "shave_removal",
-            "shave_excision",
-        }:
-            logger.debug(
-                f"ShaveRemovalSelector skipped: procedure_type={procedure_type}"
-            )
-            return []
 
         candidates = load_codes_by_name(_PRO_NAME)
         group = location_group or "trunk"
 
-        match = None
-
-        # Require lesion size for shave-removal coding
-        if size is None:
-            logger.warning(
-                "ShaveRemovalSelector: missing lesion size; unable to determine CPT"
-            )
-            return []
+        # When size is unknown assign the base (smallest) code for the group.
+        # Base codes have minSize=0 so passing 0.0 always yields the first range.
+        effective_size = float(size) if size is not None else 0.0
 
         match = match_by_size(
             candidates,
-            float(size),
+            effective_size,
             group,
         )
 

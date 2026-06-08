@@ -68,20 +68,50 @@ class DestructionSelector:
 
     # ── DBM (Destruction Benign) ────────────────────────────────────
 
+    # Description keywords that identify non-dermatology (genital/anal) codes.
+    # These are only appropriate when the documented location is anus, penis,
+    # vulva, or vagina.  For all other skin sites they must be excluded so that
+    # the standard dermatology codes (e.g., 17110/17111) are selected instead.
+    _GENITAL_ANAL_DESC_KEYWORDS = ("anus", "anal", "penis", "penile", "vulva", "vagina", "perineal")
+
+    # Location keywords that indicate the procedure IS at a genital/anal site.
+    _GENITAL_ANAL_LOC_KEYWORDS  = ("anus", "anal", "perianal", "rectum", "rectal",
+                                    "penis", "penile", "scrotum", "scrotal",
+                                    "vulva", "vagina", "perineal", "perineum",
+                                    "genitalia", "genital")
+
     @classmethod
-    def select_dbm(cls, quantity: int) -> List[dict]:
+    def _is_genital_anal_location(cls, location: Optional[str]) -> bool:
+        if not location:
+            return False
+        loc = location.lower()
+        return any(k in loc for k in cls._GENITAL_ANAL_LOC_KEYWORDS)
+
+    @classmethod
+    def select_dbm(cls, quantity: int, location: Optional[str] = None) -> List[dict]:
         if quantity <= 0:
             return []
 
-        codes   = load_codes_by_name(_DBM_NAME)
+        codes = load_codes_by_name(_DBM_NAME)
+
+        # For standard skin sites, exclude anal/genital codes so the dermatology
+        # codes (17110/17111) are always preferred over procedure-specific codes.
+        if not cls._is_genital_anal_location(location):
+            codes = [
+                c for c in codes
+                if not any(k in (c.get("description") or "").lower()
+                           for k in cls._GENITAL_ANAL_DESC_KEYWORDS)
+            ]
+
         matched = match_by_qty(codes, quantity)
         row     = matched[0] if matched else (codes[0] if codes else None)
         if not row:
             return []
 
-        logger.info(f"DestructionSelector DBM: {row['code']} qty={quantity}")
+        logger.info(f"DestructionSelector DBM: {row['code']} qty={quantity} loc={location!r}")
         return [make_code(row, quantity=quantity, source="destruction_db",
-                          selection_data={"quantity": quantity, "subtype": "dbm"})]
+                          selection_data={"quantity": quantity, "subtype": "dbm",
+                                          "location": location})]
 
     # ── DM (Destruction Malignant) ──────────────────────────────────
 
@@ -145,7 +175,7 @@ class DestructionSelector:
         if dtype == "dpm":
             return cls.select_dpm(quantity)
         if dtype in ("db", "dbm"):
-            return cls.select_dbm(quantity)
+            return cls.select_dbm(quantity, location=location)
         if dtype == "dm":
             return cls.select_dm(size, location, quantity)
         if dtype in ("dvp", "vascular"):

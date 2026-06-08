@@ -8,6 +8,7 @@ from services.code_selectors.closure_selector import ClosureSelector
 from services.code_selectors.srt_selector import SrtSelector
 from services.code_selectors.debridement_selector import DebridementSelector
 from services.code_selectors.xtrac_selector import XtracSelector
+from services.code_selectors.ipl_selector import IplSelector
 
 __all__ = [
     "AttSelector",
@@ -20,4 +21,5 @@ __all__ = [
     "SrtSelector",
     "DebridementSelector",
     "XtracSelector",
+    "IplSelector",
 ]

@@ -448,6 +448,45 @@ def normalize_llm_output(raw: Dict[str, Any]) -> Dict[str, Any]:
 # ENFORCEMENT: E/M CODE AND MODIFIERS
 # =============================================================
 
+def _em_suppressed(parsed: Dict[str, Any]) -> bool:
+    """
+    Return True when the visit type prohibits a separately-billed E/M code.
+
+    Rules (deterministic — no guessing):
+      • Mohs micrographic surgery: major surgery; E/M is not billed separately
+        on the operative day.
+      • SRT (radiation therapy): radiation delivery does not include an E/M.
+      • Laser treatment: procedure-only visit; no separate E/M.
+      • Debridement: wound-care visit; no separate E/M.
+      • Filler-only visit: cosmetic service; insurance does not cover E/M.
+        "Filler-only" means filler is present AND no medical procedures are
+        documented (no excision, biopsy, destruction, shave removal, or Mohs).
+
+    Excision: NOT suppressed here — excision commonly co-bills E/M with -25
+    when a separately identifiable evaluation is documented.  Confirmed by
+    pending clarification; will be revisited once the user confirms.
+    """
+    if parsed.get("has_mohs"):
+        return True
+    if parsed.get("has_srt"):
+        return True
+    if parsed.get("has_laser_treatment"):
+        return True
+    if parsed.get("has_debridement"):
+        return True
+
+    # Filler-only: cosmetic visit with no medical procedures
+    if parsed.get("has_filler") or parsed.get("has_filler_material"):
+        has_medical = any(parsed.get(f) for f in (
+            "has_excision", "has_biopsy", "has_destruction",
+            "has_shave_removal", "has_mohs",
+        ))
+        if not has_medical:
+            return True
+
+    return False
+
+
 def enforce_em_and_modifiers(
     parsed: Dict[str, Any],
     llm_output: Dict[str, Any],
@@ -456,10 +495,11 @@ def enforce_em_and_modifiers(
 ) -> Dict[str, Any]:
     """
     Post-LLM deterministic enforcement:
-    1. Select E/M code using explicit code → documented time → explicit level → MDM level.
-    2. Assign modifier -25 (or -57) to the E/M code.
-    3. Assign LT/RT laterality modifiers to eligible CPT codes (site-scoped).
-    4. Assign modifier -59 to secondary non-add-on codes at distinct sites
+    1. Suppress E/M when procedure type prohibits it (Mohs, SRT, laser, etc.).
+    2. Select E/M code using explicit code → documented time → explicit level → MDM level.
+    3. Assign modifier -25 (or -57) to the E/M code.
+    4. Assign LT/RT laterality modifiers to eligible CPT codes (site-scoped).
+    5. Assign modifier -59 to secondary non-add-on codes at distinct sites
        (Phase 8: site-aware; falls back to legacy logic when sites unavailable).
 
     For E/M-only notes (no CPT codes), linked_dx is populated from the note's
@@ -492,6 +532,19 @@ def enforce_em_and_modifiers(
                 logger.warning(
                     "No site data — -59 modifier not assigned. Manual review required."
                 )
+
+        # ── Suppress E/M when procedure type prohibits it ──────────────────
+        if _em_suppressed(parsed):
+            logger.info(
+                "E/M suppressed: procedure type prohibits separate E/M billing "
+                f"(mohs={parsed.get('has_mohs')} srt={parsed.get('has_srt')} "
+                f"laser={parsed.get('has_laser_treatment')} "
+                f"debridement={parsed.get('has_debridement')} "
+                f"filler={parsed.get('has_filler') or parsed.get('has_filler_material')})"
+            )
+            llm_output["codes"]["em_code"] = {"code": "", "modifier": None, "linked_dx": []}
+            apply_cpt_modifiers()
+            return llm_output
 
         # E/M code priority: explicit → MDM → time → level
         em_row = None

@@ -104,8 +104,8 @@ _SPECIAL_TOKENS = {
 _CLOSURE_GROUPS = {
     "critical":    {"nose", "lip", "lips", "ear", "ears", "eyelid", "eyelids"},
     "high_risk":   {"face", "cheek", "forehead", "chin", "jaw", "temple",
-                    "hand", "hands", "foot", "feet", "neck", "genitalia",
-                    "axilla", "axillae", "mouth"},
+                    "mouth", "hand", "hands", "foot", "feet", "neck", "genitalia",
+                    "axilla", "axillae"},
     "extremities": {"scalp", "arm", "forearm", "leg", "foreleg"},
     # trunk is the default — any unmatched location
 }
@@ -123,8 +123,8 @@ LOCATION_DESC_KEYWORDS: dict[str, list[str]] = {
     "special":     ["scalp", "neck", "hand", "foot", "feet", "genitalia"],
     "trunk":       ["trunk", "arm", "leg"],
     "critical":    ["nose", "lip", "ear", "eyelid"],
-    "high_risk":   ["face", "axillae", "hand", "foot", "feet", "genitalia",
-                    "neck", "chin", "cheek", "forehead", "mouth"],
+    "high_risk":   ["forehead", "cheeks", "cheek", "chin", "mouth", "neck",
+                    "axillae", "genitalia", "hand", "foot", "feet"],
     "extremities": ["scalp", "arm", "leg"],
 }
 

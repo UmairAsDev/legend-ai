@@ -32,6 +32,37 @@ class BiopsySelector:
     """
 
     @classmethod
+    def select_tragus(cls, location: str) -> List[dict]:
+        """
+        Return CPT code for ear/tragus biopsy with RT or LT modifier.
+
+        The code is identified by searching for 'tragus' in its description —
+        no CPT number is hardcoded.  Modifier is derived from 'right'/'left'
+        in the location text; omitted when laterality is not documented.
+        """
+        all_codes = load_codes_by_name(_PRO_NAME)
+        tragus_codes = [
+            c for c in all_codes
+            if "tragus" in (c.get("description") or "").lower()
+        ]
+        if not tragus_codes:
+            logger.warning("BiopsySelector: no tragus code found in proCodeList — falling back to standard biopsy")
+            return []
+
+        row = tragus_codes[0]
+        code = make_code(row, quantity=1, source="biopsy", confidence="confirmed",
+                         selection_data={"method": "tragus", "location": location})
+
+        loc_lower = (location or "").lower()
+        if "right" in loc_lower:
+            code["modifier"] = "RT"
+        elif "left" in loc_lower:
+            code["modifier"] = "LT"
+
+        logger.info(f"BiopsySelector tragus: {row['code']} modifier={code['modifier']} loc={location!r}")
+        return [code]
+
+    @classmethod
     def select(cls, method: Optional[str], count: int = 1) -> List[dict]:
         if count <= 0:
             return []

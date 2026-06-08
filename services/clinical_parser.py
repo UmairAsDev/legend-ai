@@ -179,10 +179,12 @@ class ClinicalParser:
 
         size_patterns = [
             r"final closure size.*?(?:was|is|:)?\s*([\d\.]+)",
-            r"final closure size.*?([\d\.]+)\s*cm2",
+            r"final closure size.*?([\d\.]+)\s*cm2?",
             r"closure size.*?(?:was|is|:)?\s*([\d\.]+)",
             r"closure length.*?(?:was|is|:)?\s*([\d\.]+)",
             r"length of closure.*?(?:was|is|:)?\s*([\d\.]+)",
+            # Additional format: "repair size was X" seen in some Mohs notes
+            r"repair\s+(?:size|length)\s*(?:was|is|:)\s*([\d\.]+)",
         ]
 
         # 🔴 FIX: COLLECT ALL MATCHES (NO BREAK)
@@ -233,9 +235,13 @@ class ClinicalParser:
 
             LOCATION_MAP = {
                 "extremities": ["scalp", "arm", "leg"],
-                "high_risk": ["hand", "foot", "genital", "axillae", "neck", "chin", "cheek", "forehead"],
+                "high_risk": [
+                    "face", "temple", "jaw", "mouth",
+                    "hand", "foot", "genital", "axillae",
+                    "neck", "chin", "cheek", "forehead",
+                ],
                 "critical": ["nose", "lip", "ear", "eyelid"],
-                "trunk": ["back", "chest", "abdomen", "trunk"]
+                "trunk": ["back", "chest", "abdomen", "trunk"],
             }
 
             location_group = "unknown"
@@ -248,7 +254,9 @@ class ClinicalParser:
             # fallback
             if location_group == "unknown":
                 snippet_loc = re.search(
-                    r"(scalp|arm|leg|hand|foot|nose|lip|ear|eyelid|neck|chin|cheek|forehead|back|chest|abdomen)",
+                    r"(scalp|arm|leg|hand|foot|nose|lip|ear|eyelid|"
+                    r"neck|chin|cheek|forehead|face|temple|jaw|mouth|"
+                    r"back|chest|abdomen)",
                     snippet_lower
                 )
                 if snippet_loc:
@@ -399,41 +407,9 @@ class ClinicalParser:
                 "text": block,
             })
 
-        # ---------------------------------------------------------------
-        # PATH 2: Free-text debridement — no (DBR) tag, plain narrative
-        # e.g. "Debridement of wound edges and base was done."
-        # Only runs when structured path found nothing.
-        # ---------------------------------------------------------------
-        if not sections:
-            text_lower = text.lower()
-            wound_deb = re.search(
-                r"debridement\s+of\s+(?:wound|ulcer|base|edge|tissue)",
-                text_lower
-            )
-            nail_deb = re.search(r"nail\s+debridement|debridement\s+of\s+nail", text_lower)
-            derm_deb = any(k in text_lower for k in DERM_KEYWORDS) and "debridement" in text_lower
-
-            if wound_deb or nail_deb or derm_deb:
-                if "partial thickness" in text_lower or "superficial" in text_lower:
-                    depth = "partial"
-                elif "full thickness" in text_lower:
-                    depth = "full"
-                elif "subcutaneous" in text_lower:
-                    depth = "subcutaneous"
-                else:
-                    depth = "unknown"
-
-                nail = bool(nail_deb) or any(k in text_lower for k in ["nail", "toenail", "fingernail"])
-                is_wound = bool(wound_deb) or any(k in text_lower for k in WOUND_KEYWORDS)
-                is_dermatologic = derm_deb
-
-                logger.info(f"Debridement free-text: depth={depth} nail={nail} wound={is_wound}")
-                sections.append({
-                    "depth": depth, "nail": nail, "dermatologic": is_dermatologic,
-                    "is_wound": is_wound, "quantity": 1,
-                    "location": "", "method": "", "choice": "",
-                    "text": text[:200],
-                })
+        # PATH 2 (free-text) removed: casual narrative mentions such as
+        # "debridement of wound edges done" must NOT generate a billable code.
+        # Only structured Debridement (DBR) blocks with explicit fields produce codes.
 
         logger.info(f"Valid debridement sections: {len(sections)}")
         return sections
@@ -628,7 +604,7 @@ class ClinicalParser:
                 continue
 
             # -------------------------
-            # LOCATION (REQUIRED)
+            # LOCATION (OPTIONAL — default trunk)
             # -------------------------
             loc_match = re.search(
                 r"Location:\s*([^\n\r]+)",
@@ -643,12 +619,11 @@ class ClinicalParser:
 
             if not location:
                 logger.warning(
-                    "⚠️ Skipping shave section → missing location"
+                    "⚠️ Shave section missing location — defaulting to trunk"
                 )
-                continue
 
             # -------------------------
-            # METHOD (REQUIRED)
+            # METHOD (OPTIONAL — not needed for code selection)
             # -------------------------
             method_match = re.search(
                 r"Method:\s*([^\n\r]+)",
@@ -661,16 +636,12 @@ class ClinicalParser:
                 if method_match else ""
             )
 
-            if not method:
-                logger.warning(
-                    "⚠️ Skipping shave section → missing method"
-                )
-                continue
-
             try:
 
                 location_group = (
                     self.utils.classify_shave_location_group(location)
+                    if location
+                    else "trunk"
                 )
 
                 size = None
@@ -1018,10 +989,10 @@ class ClinicalParser:
 
                         method_lower = method.lower()
 
-                        for key, value in IPL_METHOD_MAP.items():
-
-                            if key in method_lower:
-                                normalized_method = value
+                        for key, synonyms in IPL_METHOD_MAP.items():
+                            # key is the canonical name; synonyms is the list of aliases
+                            if key in method_lower or any(s in method_lower for s in synonyms):
+                                normalized_method = key   # always store the canonical string
                                 break
 
                         if not normalized_method:

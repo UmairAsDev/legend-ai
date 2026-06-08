@@ -23,6 +23,7 @@ from services.code_selectors import (
     DebridementSelector,
     DestructionSelector,
     ExcisionSelector,
+    IplSelector,
     MohsSelector,
     ShaveRemovalSelector,
     SrtSelector,
@@ -518,34 +519,52 @@ class CodingNodes:
 
     async def _retrieve_biopsy(self, parsed: dict) -> List[dict]:
         biopsy_sections = parsed.get("biopsy_sections", [])
-        total_count = len(biopsy_sections)
-        # Use the first section's site_id as a representative tag.
-        # Multi-site biopsy refinement is tracked for a future per-section pass.
-        first_site_id = biopsy_sections[0].get("site_id", "") if biopsy_sections else ""
+        results: List[dict] = []
 
-        method = None
+        # Split tragus biopsies (→ 69100 + RT/LT) from standard biopsies
+        tragus_sections  = []
+        regular_sections = []
         for sec in biopsy_sections:
-            text = (sec.get("text") or "").lower()
-            if "punch" in text:
-                method = "punch"
-                break
-            if "shave" in text or "tangential" in text:
-                method = "tangential"
-                break
-            if "incision" in text:
-                method = "incisional"
-                break
+            loc = (sec.get("location") or "").lower()
+            if "tragus" in loc or loc in ("ear", "external ear"):
+                tragus_sections.append(sec)
+            else:
+                regular_sections.append(sec)
 
-        selected = BiopsySelector.select(method, total_count)
-        if selected:
-            self._tag(selected, first_site_id)
-            return selected
+        # Tragus: one code per section with laterality modifier
+        for sec in tragus_sections:
+            selected = BiopsySelector.select_tragus(sec.get("location") or "")
+            if selected:
+                self._tag(selected, sec.get("site_id", ""))
+                results.extend(selected)
 
-        logger.warning(
-            "BiopsySelector failed — no retriever fallback. "
-            "Biopsy will appear in unresolved procedures."
-        )
-        return []
+        # Standard biopsies: aggregate by method, total count
+        if regular_sections:
+            first_site_id = regular_sections[0].get("site_id", "")
+            method = None
+            for sec in regular_sections:
+                text = (sec.get("text") or "").lower()
+                if "punch" in text:
+                    method = "punch"
+                    break
+                if "shave" in text or "tangential" in text:
+                    method = "tangential"
+                    break
+                if "incision" in text:
+                    method = "incisional"
+                    break
+
+            selected = BiopsySelector.select(method, len(regular_sections))
+            if selected:
+                self._tag(selected, first_site_id)
+                results.extend(selected)
+            else:
+                logger.warning(
+                    "BiopsySelector failed — no retriever fallback. "
+                    "Biopsy will appear in unresolved procedures."
+                )
+
+        return results
 
     async def _retrieve_shave_removal(self, parsed: dict) -> List[dict]:
         results = []
@@ -559,8 +578,10 @@ class CodingNodes:
                 location_group=sec.get("location_group"),
             )
             if selected:
+                agg_qty = sec.get("quantity") or 1
                 for r in selected:
-                    r["shave_quantity"] = sec.get("quantity")
+                    r["quantity"] = str(agg_qty)  # aggregated lesion count drives billing
+                    r["shave_quantity"] = agg_qty
                 self._tag(selected, site_id)
                 results.extend(selected)
                 continue
@@ -734,16 +755,17 @@ class CodingNodes:
     async def _retrieve_ipl(self, parsed: dict) -> List[dict]:
         results = []
         for sec in parsed.get("ipl_sections", []):
-            site_id = sec.get("site_id", "")
-            try:
-                res = await self.retriever.ipl_filter(section=sec)
-                for r in res:
-                    r["confidence"] = "candidate"
-                    r["source"]     = "ipl"
-                self._tag(res, site_id)
-                results.extend(res)
-            except Exception as e:
-                logger.exception(f"IPL retrieval failed: {e}")
+            site_id    = sec.get("site_id", "")
+            method     = sec.get("method")
+            total_area = sec.get("treatment_area")
+
+            selected = IplSelector.select(method=method, total_area=total_area)
+            if selected:
+                self._tag(selected, site_id)
+                results.extend(selected)
+                continue
+
+            logger.warning("IplSelector returned no codes — skipping IPL section")
         return results
 
     async def _retrieve_filler_material(self, parsed: dict) -> List[dict]:
