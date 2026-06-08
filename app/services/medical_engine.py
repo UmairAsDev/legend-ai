@@ -426,9 +426,73 @@ class CodingNodes:
                         all_candidates.extend(res)
 
                     except Exception as e:
+                        logger.exception(f"❌ Filler retrieval failed: {e}")
 
+
+            # -------------------------
+            # 🔴 DERMAPLANNING
+            # -------------------------
+            if parsed.get("has_dermaplanning"):
+                logger.info("🔴 Dermaplanning DETECTED")
+
+                for sec in parsed.get(
+                    "dermaplanning_sections",
+                    []
+                ):
+
+                    try:
+                        res = await self.retriever.dermaplanning_filter(section=sec)
+                        logger.info(f"🎯 Dermaplanning deterministic candidates={len(res)}")
+
+                        for r in res:
+
+                            r["source"] = f"dermaplanning"
+                            r["dermaplanning_location"] = sec.get("location")
+                            r["dermaplanning_quantity"] = sec.get("quantity")
+                            
+                        all_candidates.extend(res)
+
+                    except Exception as e:
+                        logger.exception(f"❌ Dermaplanning retrieval failed: {e}")
+
+
+            # -------------------------
+            # 🔴 DIAMOND GLOW
+            # -------------------------
+            if parsed.get("has_diamond_glow"):
+
+                logger.info("🔴 DIAMOND GLOW DETECTED")
+
+                for sec in parsed.get(
+                    "diamond_glow_sections",
+                    []
+                ):
+
+                    try:
+                        res = await (
+                            self.retriever
+                            .diamond_glow_filter(
+                                section=sec
+                            )
+                        )
+
+                        logger.info(
+                            f"🎯 Diamond Glow "
+                            f"candidates={len(res)}"
+                        )
+
+                        for r in res:
+
+                            r["source"] = "diamond_glow"
+                            r["diamond_glow_location"] = sec.get("location")
+                            r["diamond_glow_quantity"] = sec.get("quantity")
+
+                        all_candidates.extend(res)
+
+                    except Exception as e:
                         logger.exception(
-                            f"❌ Filler retrieval failed: {e}"
+                            f"❌ Diamond Glow "
+                            f"retrieval failed: {e}"
                         )
 
 
@@ -436,7 +500,6 @@ class CodingNodes:
             # 🔴 CHEMICAL PEEL
             # -------------------------
             if parsed.get("has_chemical_peel"):
-
                 logger.info("🔴 CHEMICAL PEEL DETECTED")
 
                 for sec in parsed.get(

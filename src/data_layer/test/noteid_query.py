@@ -25,15 +25,16 @@ async def notes():
         try:
             query = text(
                 """
-                SELECT 
-                    npn.noteId, 
+                SELECT
+                    npn.noteId,
+                    npn.patientId,
                     npn.noteDate
                 FROM newProgressNotes npn
-                WHERE 
-                    (npn.mohsNotes LIKE '%Soft Tissue Excision%')
-                    OR (npn.biopsyNotes LIKE '%Soft Tissue Excision%')
-                    OR (npn.procedure LIKE '%Soft Tissue Excision%')
-                    AND npn.noteDate > '2020-01-01'
+                WHERE
+                    (npn.mohsNotes LIKE "%Diamond Glow%")
+                    OR (npn.biopsyNotes LIKE "%Diamond Glow%")
+                    OR (npn.procedure LIKE "%Diamond Glow%")
+                    AND npn.noteDate > '2020-01-01';
                 """
             )
 
@@ -52,7 +53,7 @@ async def notes():
 
 # ------------------- JSON STORAGE -------------------
 
-def append_to_json(new_data, file_path="soft_tissue_id.json"):
+def append_to_json(new_data, file_path="diamond_glow_id.json"):
     """
     Append + deduplicate notes into a JSON file
     """

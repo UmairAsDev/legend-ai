@@ -1815,3 +1815,109 @@ class CodeRetriever:
             )
 
             return rows
+        
+
+    # =========================================================
+    # 🔹 FILLER FILTER
+    # =========================================================
+    async def dermaplanning_filter(self, section):
+
+        try:
+            async with get_db_session() as db:
+
+                location = (
+                    section.get("location")
+                    or ""
+                ).lower().strip()
+
+                logger.info(
+                    f"🎯 Dermaplanning filter | "
+                    f"location={location}"
+                )
+
+                # =====================================================
+                # 🔴 LOAD DERMAPLANNING CODE
+                # =====================================================
+                query = """
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE
+                    proCode in ('N0002')
+                """
+
+                result = await db.execute(text(query))
+                rows = [
+                    self._clean_row(r)
+                    for r in result.mappings().all()
+                ]
+
+                logger.info(f"📦 Dermaplanning raw candidates={len(rows)}")
+                logger.info(f"📦 Dermaplanning RAW CODES={[r['code'] for r in rows]}")
+
+                return rows
+
+        except Exception as e:
+            logger.exception(f"❌ Dermaplanning filter failed: {e}")
+            return []
+        
+    
+    # =========================================================
+    # 🔹 DIAMOND GLOW FILTER
+    # =========================================================
+    async def diamond_glow_filter(
+        self,
+        section
+    ):
+        try:
+            async with get_db_session() as db:
+
+                logger.info(
+                    f"🎯 Diamond Glow filter | "
+                    f"location={section.get('location')}"
+                )
+
+                query = """
+                SELECT
+                    proCode AS code,
+                    codeDesc AS description,
+                    proName,
+                    associatedWithProCode,
+                    minQty,
+                    maxQty,
+                    CAST(minsize AS FLOAT) AS "minSize",
+                    CAST(maxsize AS FLOAT) AS "maxSize",
+                    chargePerUnit,
+                    0.0 AS distance,
+                    'cpt' AS type
+                FROM cpt_embeddings
+                WHERE LOWER(proName) = 'diamond glow'
+                """
+
+                result = await db.execute(text(query))
+
+                rows = [
+                    self._clean_row(r)
+                    for r in result.mappings().all()
+                ]
+
+                logger.info(
+                    f"📦 Diamond Glow candidates="
+                    f"{len(rows)}"
+                )
+
+                return rows
+
+        except Exception as e:
+            logger.exception(f"❌ Diamond Glow filter failed: {e}")
+            return []
