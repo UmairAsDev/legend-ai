@@ -1,0 +1,26 @@
+services:
+  legend-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: legend-ai:latest
+    container_name: legend-ai
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8002:8002"
+    volumes:
+      - logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+
+volumes:
+  logs:
+    driver: local

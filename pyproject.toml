@@ -28,5 +28,6 @@ dependencies = [
     "setuptools>=82.0.1",
     "sqlalchemy>=2.0.49",
     "tavily-python>=0.7.25",
+    "duckduckgo-search>=6.0.0",
     "uvicorn>=0.44.0",
 ]

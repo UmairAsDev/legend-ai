@@ -16,11 +16,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
-_LOG_PATH = Path("logs/audit.jsonl")
+_LOG_PATH = Path(__file__).parent.parent / "logs" / "audit.jsonl"
+_MAX_BYTES = 10 * 1024 * 1024  # rotate at 10 MB
 
 
 def _ensure_log_dir() -> None:
     _LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _rotate_if_needed() -> None:
+    """Rename audit.jsonl → audit.jsonl.1 when it exceeds _MAX_BYTES."""
+    if _LOG_PATH.exists() and _LOG_PATH.stat().st_size > _MAX_BYTES:
+        _LOG_PATH.rename(_LOG_PATH.with_suffix(".jsonl.1"))
 
 
 def log_coding_decision(
@@ -104,6 +111,7 @@ def log_coding_decision(
     }
 
     try:
+        _rotate_if_needed()
         with open(_LOG_PATH, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
     except Exception as e:

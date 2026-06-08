@@ -10,6 +10,17 @@ from fastapi import FastAPI
 from loguru import logger
 from sqlalchemy import text
 
+_LOG_DIR = Path(__file__).parent / "logs"
+_LOG_DIR.mkdir(exist_ok=True)
+logger.add(
+    _LOG_DIR / "app.log",
+    rotation="10 MB",
+    retention="30 days",
+    compression="gz",
+    level="INFO",
+    enqueue=True,
+)
+
 sys.path.append(str(Path(__file__).parent))
 
 from database.sqldb.conn import conn as mysql_engine, get_db_session as mysql_session
